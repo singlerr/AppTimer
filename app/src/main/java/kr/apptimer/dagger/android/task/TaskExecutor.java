@@ -27,26 +27,28 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package kr.apptimer.dagger.module;
+package kr.apptimer.dagger.android.task;
 
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
-import dagger.Module;
-import dagger.Provides;
-import javax.inject.Singleton;
-import kr.apptimer.base.InjectApplicationContext;
+import android.content.Intent;
 
 /***
- * Provider of {@link android.content.Context}
+ * Executes a task reserved at a time by
+ * {@link android.app.AlarmManager#setAndAllowWhileIdle(int, long, PendingIntent)}
  *
- * @apiNote {@link android.content.Context} is singleton
  * @author Singlerr
  */
-@Module
-public final class ApplicationContextProvider {
+public final class TaskExecutor extends BroadcastReceiver {
 
-  @Singleton
-  @Provides
-  public Context provideContext() {
-    return InjectApplicationContext.getInstance();
+  public static final String TASK_EXECUTOR_BUNDLE = "task_executor";
+
+  @Override
+  public void onReceive(Context context, Intent intent) {
+    if (intent.hasExtra(TASK_EXECUTOR_BUNDLE)) {
+      SerializableTask task = (SerializableTask) intent.getSerializableExtra(TASK_EXECUTOR_BUNDLE);
+      task.run();
+    }
   }
 }

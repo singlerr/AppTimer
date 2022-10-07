@@ -27,26 +27,60 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package kr.apptimer.dagger.module;
+package kr.apptimer.dagger.android;
 
+import android.annotation.SuppressLint;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
-import dagger.Module;
-import dagger.Provides;
+import android.content.Intent;
+import android.os.Build;
+import java.util.Date;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import kr.apptimer.base.InjectApplicationContext;
+import kr.apptimer.dagger.android.task.SerializableTask;
+import kr.apptimer.dagger.android.task.TaskExecutor;
 
 /***
- * Provider of {@link android.content.Context}
+ * Schedule a task at a specific time(or date) by
+ * {@link android.app.AlarmManager}
  *
- * @apiNote {@link android.content.Context} is singleton
  * @author Singlerr
  */
-@Module
-public final class ApplicationContextProvider {
+@Singleton
+public final class TaskScheduler {
 
-  @Singleton
-  @Provides
-  public Context provideContext() {
-    return InjectApplicationContext.getInstance();
+  private final Context context;
+
+  private final AlarmManager alarmManager;
+
+  @Inject
+  public TaskScheduler(InjectApplicationContext context) {
+
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+      throw new IllegalStateException("Only android version >= 23");
+    }
+    this.context = context;
+    this.alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+  }
+
+  /***
+   * Schedule a task at a specific time
+   *
+   * @param task
+   *            task
+   * @param time
+   *            time at the task to be executed
+   */
+  @SuppressLint("NewApi")
+  public void scheduleTask(SerializableTask task, Date time) {
+    Intent intent = new Intent(context, TaskExecutor.class);
+    intent.putExtra(TaskExecutor.TASK_EXECUTOR_BUNDLE, task);
+
+    PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
+
+    alarmManager.setExactAndAllowWhileIdle(
+        AlarmManager.RTC_WAKEUP, time.getTime(), pendingIntent);
   }
 }

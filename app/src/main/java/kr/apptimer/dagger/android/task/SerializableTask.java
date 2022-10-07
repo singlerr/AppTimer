@@ -27,26 +27,20 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package kr.apptimer.dagger.module;
+package kr.apptimer.dagger.android.task;
 
-import android.content.Context;
-import dagger.Module;
-import dagger.Provides;
-import javax.inject.Singleton;
-import kr.apptimer.base.InjectApplicationContext;
+import java.io.Serializable;
 
 /***
- * Provider of {@link android.content.Context}
+ * A serializable substitute class of {@link Runnable} which originally not
+ * serializable.
  *
- * @apiNote {@link android.content.Context} is singleton
  * @author Singlerr
  */
-@Module
-public final class ApplicationContextProvider {
+public interface SerializableTask extends Serializable {
 
-  @Singleton
-  @Provides
-  public Context provideContext() {
-    return InjectApplicationContext.getInstance();
-  }
+  /***
+   * Run task Define what this task must do here.
+   */
+  void run();
 }
