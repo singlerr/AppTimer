@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import kr.apptimer.base.InjectApplicationContext;
+import kr.apptimer.dagger.android.task.SerializableTask;
 
 /***
  * Call {@link android.content.Intent} to request removing android application(package).

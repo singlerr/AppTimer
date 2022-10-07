@@ -50,7 +50,7 @@ public interface InstalledApplicationDao {
    * @return all {@link InstalledApplication} stored in database
    */
   @Query("SELECT * FROM installedapplication")
-  List<InstalledApplication> getAll();
+  List<InstalledApplication> findAll();
 
   /***
    * Returns unique {@link InstalledApplication} by {@param name}
