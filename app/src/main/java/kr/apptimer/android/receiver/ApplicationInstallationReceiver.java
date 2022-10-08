@@ -34,6 +34,7 @@ import android.content.Context;
 import android.content.Intent;
 import javax.inject.Inject;
 import kr.apptimer.base.InjectApplicationContext;
+import kr.apptimer.dagger.android.NotificationHelper;
 import kr.apptimer.database.LocalDatabase;
 
 /***
@@ -45,11 +46,15 @@ public final class ApplicationInstallationReceiver extends BroadcastReceiver {
 
   @Inject LocalDatabase database;
 
+  @Inject NotificationHelper notificationHelper;
+
   public ApplicationInstallationReceiver() {
     super();
     InjectApplicationContext.getInstance().getContext().inject(this);
   }
 
   @Override
-  public void onReceive(Context context, Intent intent) {}
+  public void onReceive(Context context, Intent intent) {
+    notificationHelper.sendNotification("test", intent.getData().getEncodedSchemeSpecificPart());
+  }
 }

@@ -30,6 +30,7 @@ android {
 }
 def roomVersion = "2.4.3"
 dependencies {
+
     /***
      * Dependency - Lombok
      */
@@ -65,9 +66,13 @@ spotless {
         indentWithTabs()
         endWithNewline()
         removeUnusedImports()
-        googleJavaFormat()
         formatAnnotations()
+
+        googleJavaFormat()
+
 
         licenseHeaderFile "$rootDir/LICENSE"
     }
 }
+
+build.dependsOn spotlessJavaCheck

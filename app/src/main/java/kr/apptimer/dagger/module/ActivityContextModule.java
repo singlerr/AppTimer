@@ -27,38 +27,17 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package kr.apptimer.dagger.android;
+package kr.apptimer.dagger.module;
 
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import dagger.Module;
+import kr.apptimer.dagger.context.ActivityContext;
+import kr.apptimer.dagger.context.ApplicationContext;
 
 /***
- * Call {@link android.content.Intent} to request removing android application(package).
- * Can be injected into other classes by dagger.
+ * 2. To create subcomponent, creating module class manually is must.
+ * @see ApplicationContext#activityContextFactory()
+ * And this module must be added to {@link Module} in {@link kr.apptimer.dagger.context.ApplicationContext}
  * @author Singlerr
  */
-@Singleton
-public final class ApplicationRemovalExecutor {
-
-  private Context context;
-
-  @Inject
-  public ApplicationRemovalExecutor(Context context) {
-    this.context = context;
-  }
-
-  public void requestRemoval(String packageUri) {
-    requestRemoval(Uri.parse(packageUri));
-  }
-
-  public void requestRemoval(Uri uri) {
-    requestRemoval(context, new Intent(Intent.ACTION_DELETE, uri));
-  }
-
-  private void requestRemoval(Context context, Intent intent) {
-    context.startActivity(intent);
-  }
-}
+@Module(subcomponents = ActivityContext.class)
+public final class ActivityContextModule {}

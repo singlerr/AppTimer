@@ -31,26 +31,27 @@ package kr.apptimer.dagger.context;
 
 import dagger.Component;
 import javax.inject.Singleton;
-
 import kr.apptimer.android.receiver.AlarmRestorer;
 import kr.apptimer.android.receiver.ApplicationInstallationReceiver;
 import kr.apptimer.android.service.AppExpirationOverlayService;
-import kr.apptimer.base.InjectedAppCompatActivity;
+import kr.apptimer.dagger.module.ActivityContextModule;
 import kr.apptimer.dagger.module.ApplicationContextProvider;
 import kr.apptimer.dagger.module.DatabaseProvider;
 
 @Singleton
-@Component(modules = {DatabaseProvider.class, ApplicationContextProvider.class})
+@Component(
+    modules = {
+      DatabaseProvider.class,
+      ApplicationContextProvider.class,
+      ActivityContextModule.class
+    })
 public interface ApplicationContext {
 
   /***
-   * This tells Dagger that {@link InjectedAppCompatActivity} requests injection
-   * so that fields with {@link javax.inject.Inject} become not null
-   *
-   * @param activity
-   *            activity
+   * 3. To create subcomponent, you must create a function that exposes {@link kr.apptimer.dagger.context.ActivityContext.Factory}
+   * @return factory of {@link ActivityContext}
    */
-  void inject(InjectedAppCompatActivity activity);
+  ActivityContext.Factory activityContextFactory();
 
   /***
    * This tells Dagger that {@link ApplicationInstallationReceiver} requests

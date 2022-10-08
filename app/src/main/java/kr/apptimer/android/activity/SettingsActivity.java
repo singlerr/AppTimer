@@ -27,16 +27,32 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package kr.apptimer;
+package kr.apptimer.android.activity;
 
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.Nullable;
+import javax.inject.Inject;
+import kr.apptimer.base.InjectedAppCompatActivity;
+import kr.apptimer.dagger.android.NotificationHelper;
+import kr.apptimer.dagger.context.ActivityContext;
+import kr.apptimer.database.LocalDatabase;
 
-public class MainActivity extends AppCompatActivity {
+public final class SettingsActivity extends InjectedAppCompatActivity {
+
+  @Inject LocalDatabase database;
+
+  @Inject NotificationHelper notificationHelper;
 
   @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_main);
+  public void onActivityCreate(@Nullable Bundle savedInstanceState) {
+    notificationHelper.sendNotification("test", "test");
+  }
+
+  @Override
+  public void bindListeners() {}
+
+  @Override
+  protected void inject(ActivityContext context) {
+    context.inject(this);
   }
 }

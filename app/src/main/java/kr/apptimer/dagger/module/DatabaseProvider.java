@@ -42,7 +42,6 @@ import kr.apptimer.database.LocalDatabase;
  * @apiNote {@link kr.apptimer.database.LocalDatabase} is singleton
  * @author Singlerr
  */
-
 @Module
 public final class DatabaseProvider {
 

@@ -60,11 +60,13 @@ public final class InstalledApplication {
   /***
    * Name of application
    */
-  @NonNull @ColumnInfo(name = "app_name")
+  @NonNull
+  @ColumnInfo(name = "app_name")
   private String name;
   /***
    * Time when application is newly installed
    */
-  @NonNull @ColumnInfo(name = "app_installed_time")
+  @NonNull
+  @ColumnInfo(name = "app_installed_time")
   private Date time;
 }

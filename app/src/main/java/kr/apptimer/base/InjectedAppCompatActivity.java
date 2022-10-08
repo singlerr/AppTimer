@@ -32,6 +32,7 @@ package kr.apptimer.base;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import kr.apptimer.dagger.context.ActivityContext;
 import kr.apptimer.dagger.context.ApplicationContext;
 
 /***
@@ -41,16 +42,34 @@ import kr.apptimer.dagger.context.ApplicationContext;
  */
 public abstract class InjectedAppCompatActivity extends AppCompatActivity {
 
+  private ActivityContext activityContext;
+
+  /***
+   * Called after calling {@link kr.apptimer.dagger.context.ActivityContext#inject(any extends InjectedAppCompatActivity)} in context of {@link #onCreate(Bundle)}
+   * @param savedInstanceState
+   */
   public abstract void onActivityCreate(@Nullable Bundle savedInstanceState);
+
+  /***
+   * Register listener for {@link android.view.View} here
+   */
+  public abstract void bindListeners();
 
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
-    getContext().inject(this);
     super.onCreate(savedInstanceState);
+    activityContext = getContext().activityContextFactory().create();
+    inject(activityContext);
     onActivityCreate(savedInstanceState);
   }
 
   protected ApplicationContext getContext() {
     return ((InjectApplicationContext) getApplication()).getContext();
   }
+
+  /***
+   * Fill the method body to inject subclass of this using {@param context}
+   * @param context {@link ActivityContext}
+   */
+  protected abstract void inject(ActivityContext context);
 }

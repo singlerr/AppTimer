@@ -29,36 +29,43 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package kr.apptimer.dagger.android;
 
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
+import android.app.PendingIntent;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import kr.apptimer.dagger.android.task.SerializableTask;
+import kr.apptimer.database.data.InstalledApplication;
 
 /***
- * Call {@link android.content.Intent} to request removing android application(package).
- * Can be injected into other classes by dagger.
+ * Cache storing {@link android.app.PendingIntent} of alarm which removes application
  * @author Singlerr
  */
 @Singleton
-public final class ApplicationRemovalExecutor {
+public final class IntentCache {
 
-  private Context context;
+  /***
+   * String: {@link InstalledApplication#getPackageUri()}
+   * PendingIntent: {@link TaskScheduler#scheduleTask(SerializableTask, Date)}
+   */
+  private HashMap<String, PendingIntent> caches;
 
   @Inject
-  public ApplicationRemovalExecutor(Context context) {
-    this.context = context;
+  public IntentCache() {}
+
+  public PendingIntent getCachedIntent(String packageUri) {
+    return caches.get(packageUri);
   }
 
-  public void requestRemoval(String packageUri) {
-    requestRemoval(Uri.parse(packageUri));
+  public String getPackageUri(PendingIntent intent) {
+    for (Map.Entry<String, PendingIntent> entry : caches.entrySet()) {
+      if (entry.getValue().equals(intent)) return entry.getKey();
+    }
+    return null;
   }
 
-  public void requestRemoval(Uri uri) {
-    requestRemoval(context, new Intent(Intent.ACTION_DELETE, uri));
-  }
-
-  private void requestRemoval(Context context, Intent intent) {
-    context.startActivity(intent);
+  public void putCache(String packageUri, PendingIntent intent) {
+    caches.put(packageUri, intent);
   }
 }

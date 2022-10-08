@@ -55,7 +55,8 @@ public final class AppExpirationOverlayService extends Service {
 
   private View view;
 
-  @Nullable @Override
+  @Nullable
+  @Override
   public IBinder onBind(Intent intent) {
     return null;
   }

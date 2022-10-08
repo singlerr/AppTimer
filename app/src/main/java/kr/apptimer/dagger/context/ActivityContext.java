@@ -27,38 +27,38 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package kr.apptimer.dagger.android;
+package kr.apptimer.dagger.context;
 
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import dagger.Subcomponent;
+import kr.apptimer.android.activity.SettingsActivity;
+import kr.apptimer.base.InjectedAppCompatActivity;
 
 /***
- * Call {@link android.content.Intent} to request removing android application(package).
- * Can be injected into other classes by dagger.
+ * Subcomponent for activity classes which extend {@link kr.apptimer.base.InjectedAppCompatActivity}
+ * Handle injecting in child classes of {@link kr.apptimer.base.InjectedAppCompatActivity}
+ * @apiNote if you need to inject any subclass of {@link InjectedAppCompatActivity}, declare new inject method
  * @author Singlerr
  */
-@Singleton
-public final class ApplicationRemovalExecutor {
+@Subcomponent
+public interface ActivityContext {
 
-  private Context context;
-
-  @Inject
-  public ApplicationRemovalExecutor(Context context) {
-    this.context = context;
+  /***
+   * 1. To create subcomponent, creating factory class manually is must.
+   * @see kr.apptimer.dagger.module.ActivityContextModule
+   * Factory that is used to create instance of {@link ActivityContext}
+   * @author Singlerr
+   */
+  @Subcomponent.Factory
+  interface Factory {
+    ActivityContext create();
   }
 
-  public void requestRemoval(String packageUri) {
-    requestRemoval(Uri.parse(packageUri));
-  }
-
-  public void requestRemoval(Uri uri) {
-    requestRemoval(context, new Intent(Intent.ACTION_DELETE, uri));
-  }
-
-  private void requestRemoval(Context context, Intent intent) {
-    context.startActivity(intent);
-  }
+  /***
+   * This tells Dagger that {@link SettingsActivity} requests injection
+   * so that fields with {@link javax.inject.Inject} become not null
+   *
+   * @param activity
+   *            activity
+   */
+  void inject(SettingsActivity activity);
 }
