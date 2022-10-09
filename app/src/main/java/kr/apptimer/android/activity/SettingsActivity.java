@@ -29,14 +29,25 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package kr.apptimer.android.activity;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import javax.inject.Inject;
+import kr.apptimer.android.utils.PermissionRequest;
 import kr.apptimer.base.InjectedAppCompatActivity;
 import kr.apptimer.dagger.android.NotificationHelper;
 import kr.apptimer.dagger.context.ActivityContext;
 import kr.apptimer.database.LocalDatabase;
 
+/***
+ * Activity shown first on start of application
+ * Request permission here.
+ * @author Singlerr
+ */
 public final class SettingsActivity extends InjectedAppCompatActivity {
 
   @Inject LocalDatabase database;
@@ -45,7 +56,31 @@ public final class SettingsActivity extends InjectedAppCompatActivity {
 
   @Override
   public void onActivityCreate(@Nullable Bundle savedInstanceState) {
-    notificationHelper.sendNotification("test", "test");
+    //Request permission here with PermissionRequestBuilder
+    PermissionRequest request =
+        PermissionRequest.builder()
+            .context(this)
+            .withPermission(
+                PermissionRequest.Permission.builder()
+                    .permission(Manifest.permission.SCHEDULE_EXACT_ALARM)
+                    .when(
+                        ctx ->
+                            Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+                                && ContextCompat.checkSelfPermission(
+                                        ctx, Manifest.permission.SCHEDULE_EXACT_ALARM)
+                                    != PackageManager.PERMISSION_GRANTED)
+                    .build())
+            .withPermission(
+                PermissionRequest.Permission.builder()
+                    .permission(Manifest.permission.SYSTEM_ALERT_WINDOW)
+                    .when(
+                        ctx ->
+                            Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                                && Settings.canDrawOverlays(ctx))
+                    .build())
+            .build();
+
+    request.execute();
   }
 
   @Override
