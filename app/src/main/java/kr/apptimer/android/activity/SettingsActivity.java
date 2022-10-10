@@ -30,14 +30,15 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package kr.apptimer.android.activity;
 
 import android.Manifest;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+import java.util.List;
 import javax.inject.Inject;
-import kr.apptimer.android.utils.PermissionRequest;
 import kr.apptimer.base.InjectedAppCompatActivity;
 import kr.apptimer.dagger.android.NotificationHelper;
 import kr.apptimer.dagger.context.ActivityContext;
@@ -56,31 +57,23 @@ public final class SettingsActivity extends InjectedAppCompatActivity {
 
   @Override
   public void onActivityCreate(@Nullable Bundle savedInstanceState) {
-    //Request permission here with PermissionRequestBuilder
-    PermissionRequest request =
-        PermissionRequest.builder()
-            .context(this)
-            .withPermission(
-                PermissionRequest.Permission.builder()
-                    .permission(Manifest.permission.SCHEDULE_EXACT_ALARM)
-                    .when(
-                        ctx ->
-                            Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
-                                && ContextCompat.checkSelfPermission(
-                                        ctx, Manifest.permission.SCHEDULE_EXACT_ALARM)
-                                    != PackageManager.PERMISSION_GRANTED)
-                    .build())
-            .withPermission(
-                PermissionRequest.Permission.builder()
-                    .permission(Manifest.permission.SYSTEM_ALERT_WINDOW)
-                    .when(
-                        ctx ->
-                            Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                                && Settings.canDrawOverlays(ctx))
-                    .build())
-            .build();
+    Dexter.withContext(this)
+        .withPermissions(
+                Manifest.permission.SCHEDULE_EXACT_ALARM)
+        .withListener(
+            new MultiplePermissionsListener() {
+              @Override
+              public void onPermissionsChecked(
+                  MultiplePermissionsReport multiplePermissionsReport) {
+                  System.out.println(multiplePermissionsReport.areAllPermissionsGranted());
+              }
 
-    request.execute();
+              @Override
+              public void onPermissionRationaleShouldBeShown(
+                  List<PermissionRequest> list, PermissionToken permissionToken) {}
+            })
+            .onSameThread()
+        .check();
   }
 
   @Override

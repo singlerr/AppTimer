@@ -28,9 +28,15 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 }
+
+
+def permissionLibVersion = "6.2.3"
 def roomVersion = "2.4.3"
 dependencies {
-
+    /***
+     * Dependency - RxPermission - An android lib for easy permission request
+     */
+    implementation "com.karumi:dexter:${permissionLibVersion}"
     /***
      * Dependency - Lombok
      */

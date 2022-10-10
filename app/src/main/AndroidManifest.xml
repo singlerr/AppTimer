@@ -8,7 +8,7 @@
         </intent>
     </queries>
 
-    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" tools:remove="android:maxSdkVersion" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     <application
         android:name=".base.InjectApplicationContext"
@@ -21,6 +21,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppTimer"
         tools:targetApi="31">
+        <service android:name=".android.service.AppExpirationOverlayService" android:enabled="true" android:permission="android.permission.SYSTEM_ALERT_WINDOW"/>
         <activity
             android:name=".android.activity.SettingsActivity"
             android:exported="true">

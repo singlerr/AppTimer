@@ -34,7 +34,6 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import java.util.ArrayList;
 import java.util.List;
 import kr.apptimer.utils.Consumer;
 import kr.apptimer.utils.Predicate;
@@ -45,19 +44,17 @@ import lombok.Singular;
 /***
  * Utility class for requesting android permission by pipeline
  * Easily request permission with {@link PermissionRequest#builder()}
+ * @deprecated Do not use. Just leave for legacy. It does not work properly, use Dexter library instead
  * @author Singlerr
  */
+@Deprecated()
 @Builder
 public final class PermissionRequest {
 
   @Singular("withPermission")
-  private List<Permission> pipeline = new ArrayList<>();
+  private List<Permission> pipeline;
 
   private final AppCompatActivity context;
-
-  public PermissionRequest(AppCompatActivity context) {
-    this.context = context;
-  }
 
   /***
    * Start requesting permissions in order.
@@ -65,8 +62,8 @@ public final class PermissionRequest {
   public void execute() {
     for (Permission permission : pipeline) {
       // Works only passes condition
-      if (permission.condition.test(context)) {
-        Consumer<Context> alternativeExecutor = permission.executor;
+      if (permission.getCondition().test(context)) {
+        Consumer<Context> alternativeExecutor = permission.getExecutor();
         // When executor is null, then request permission in my way.
         if (alternativeExecutor == null) {
           requestPermission(permission);
@@ -84,8 +81,10 @@ public final class PermissionRequest {
             new ActivityResultContracts.RequestPermission(),
             isGranted -> {
               if (isGranted) {
-                permission.onSuccess.run();
-              } else permission.onFailed.run();
+                if (permission.onSuccess != null) permission.onSuccess.run();
+              } else {
+                if (permission.onFailed != null) permission.onFailed.run();
+              }
             });
     launcher.launch(permission.action);
   }
