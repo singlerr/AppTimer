@@ -35,6 +35,8 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
+import kr.apptimer.R;
 import lombok.Getter;
 
 /***
@@ -65,5 +67,6 @@ public final class OverlayViewModel {
                 | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
             PixelFormat.TRANSLUCENT);
     this.layoutParams.gravity = Gravity.CENTER;
+    this.layoutId = R.layout.activity_main;
   }
 }

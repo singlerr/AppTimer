@@ -29,9 +29,14 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package kr.apptimer.base;
 
+import android.content.BroadcastReceiver;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import kr.apptimer.android.receiver.ApplicationInstallationReceiver;
 import kr.apptimer.dagger.context.ActivityContext;
 import kr.apptimer.dagger.context.ApplicationContext;
 
@@ -41,6 +46,7 @@ import kr.apptimer.dagger.context.ApplicationContext;
  * @author Singlerr
  */
 public abstract class InjectedAppCompatActivity extends AppCompatActivity {
+
 
   private ActivityContext activityContext;
 
@@ -54,6 +60,11 @@ public abstract class InjectedAppCompatActivity extends AppCompatActivity {
    * Register listener for {@link android.view.View} here
    */
   public abstract void bindListeners();
+  /***
+   * Fill the method body to inject subclass of this using {@param context}
+   * @param context {@link ActivityContext}
+   */
+  protected abstract void inject(ActivityContext context);
 
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -63,13 +74,9 @@ public abstract class InjectedAppCompatActivity extends AppCompatActivity {
     onActivityCreate(savedInstanceState);
   }
 
+
   protected ApplicationContext getContext() {
     return ((InjectApplicationContext) getApplication()).getContext();
   }
 
-  /***
-   * Fill the method body to inject subclass of this using {@param context}
-   * @param context {@link ActivityContext}
-   */
-  protected abstract void inject(ActivityContext context);
 }

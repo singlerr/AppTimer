@@ -38,6 +38,7 @@ import java.util.List;
 import javax.inject.Inject;
 import kr.apptimer.base.InjectApplicationContext;
 import kr.apptimer.dagger.android.ApplicationRemovalExecutor;
+import kr.apptimer.dagger.android.NotificationHelper;
 import kr.apptimer.dagger.android.TaskScheduler;
 import kr.apptimer.dagger.android.task.SerializableTask;
 import kr.apptimer.database.LocalDatabase;
@@ -49,6 +50,9 @@ import kr.apptimer.database.data.InstalledApplication;
  * @author Singlerr
  */
 public final class AlarmRestorer extends BroadcastReceiver {
+
+  @Inject
+  NotificationHelper helper;
 
   @Inject TaskScheduler scheduler;
 
@@ -63,6 +67,7 @@ public final class AlarmRestorer extends BroadcastReceiver {
 
   @Override
   public void onReceive(Context context, Intent intent) {
+
     if (intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)) {
       List<InstalledApplication> reservedApplications =
           database.installedApplicationDao().findAll();

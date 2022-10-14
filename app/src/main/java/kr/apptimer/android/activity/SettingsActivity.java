@@ -30,7 +30,15 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package kr.apptimer.android.activity;
 
 import android.Manifest;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
+
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
@@ -39,6 +47,8 @@ import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import java.util.List;
 import javax.inject.Inject;
+
+import kr.apptimer.android.service.AppExpirationOverlayService;
 import kr.apptimer.base.InjectedAppCompatActivity;
 import kr.apptimer.dagger.android.NotificationHelper;
 import kr.apptimer.dagger.context.ActivityContext;
@@ -57,23 +67,15 @@ public final class SettingsActivity extends InjectedAppCompatActivity {
 
   @Override
   public void onActivityCreate(@Nullable Bundle savedInstanceState) {
-    Dexter.withContext(this)
-        .withPermissions(
-                Manifest.permission.SCHEDULE_EXACT_ALARM)
-        .withListener(
-            new MultiplePermissionsListener() {
-              @Override
-              public void onPermissionsChecked(
-                  MultiplePermissionsReport multiplePermissionsReport) {
-                  System.out.println(multiplePermissionsReport.areAllPermissionsGranted());
-              }
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      Intent perm = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+              Uri.parse("package:" + getPackageName()));
 
-              @Override
-              public void onPermissionRationaleShouldBeShown(
-                  List<PermissionRequest> list, PermissionToken permissionToken) {}
-            })
-            .onSameThread()
-        .check();
+      startActivityForResult(perm,-1);
+    }
+    //Show overlay
+    Intent service = new Intent(this, AppExpirationOverlayService.class);
+    startService(service);
   }
 
   @Override

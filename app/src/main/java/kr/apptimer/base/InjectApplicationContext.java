@@ -30,6 +30,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package kr.apptimer.base;
 
 import android.app.Application;
+import android.content.BroadcastReceiver;
+import android.content.Intent;
+import android.content.IntentFilter;
+
+import kr.apptimer.android.receiver.ApplicationInstallationReceiver;
 import kr.apptimer.dagger.context.ApplicationContext;
 import kr.apptimer.dagger.context.DaggerApplicationContext;
 import lombok.Getter;
@@ -41,6 +46,9 @@ import lombok.Getter;
  */
 public final class InjectApplicationContext extends Application {
 
+
+  private BroadcastReceiver appInstallationReceiver;
+
   @Getter private static InjectApplicationContext instance;
 
   @Getter private final ApplicationContext context = DaggerApplicationContext.create();
@@ -49,4 +57,20 @@ public final class InjectApplicationContext extends Application {
 
     instance = this;
   }
+
+  @Override
+  public void onCreate() {
+    super.onCreate();
+    appInstallationReceiver = registerReceiver();
+  }
+  private BroadcastReceiver registerReceiver(){
+    BroadcastReceiver receiver = new ApplicationInstallationReceiver();
+    IntentFilter filter = new IntentFilter();
+    filter.addAction(Intent.ACTION_PACKAGE_ADDED);
+    filter.addDataScheme("package");
+
+    registerReceiver(receiver,filter);
+    return receiver;
+  }
+
 }
