@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
-    id "com.diffplug.spotless" version "6.11.0"
+    id 'com.diffplug.spotless' version '6.11.0'
+    id 'com.google.gms.google-services' version '4.3.13'
 }
 
 android {
@@ -33,6 +34,12 @@ android {
 def permissionLibVersion = "6.2.3"
 def roomVersion = "2.4.3"
 dependencies {
+    /***
+     * Dependency - Firebase BOM
+     */
+    implementation platform('com.google.firebase:firebase-bom:31.0.3')
+    implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.firebase:firebase-database'
     /***
      * Dependency - RxPermission - An android lib for easy permission request
      */

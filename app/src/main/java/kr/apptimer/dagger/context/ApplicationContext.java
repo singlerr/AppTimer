@@ -37,13 +37,15 @@ import kr.apptimer.android.service.AppExpirationOverlayService;
 import kr.apptimer.dagger.module.ActivityContextModule;
 import kr.apptimer.dagger.module.ApplicationContextProvider;
 import kr.apptimer.dagger.module.DatabaseProvider;
+import kr.apptimer.dagger.module.FirebaseProvider;
 
 @Singleton
 @Component(
     modules = {
       DatabaseProvider.class,
       ApplicationContextProvider.class,
-      ActivityContextModule.class
+      ActivityContextModule.class,
+            FirebaseProvider.class
     })
 public interface ApplicationContext {
 

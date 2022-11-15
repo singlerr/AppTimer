@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "595554661834",
+    "project_id": "apptimer-1c049",
+    "storage_bucket": "apptimer-1c049.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:595554661834:android:e3cd6e12b2c7ce3c520b33",
+        "android_client_info": {
+          "package_name": "kr.apptimer.AppTimer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "595554661834-65e2pp2ainsdh75iic40nv2hvhd3ldig.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAyz9Na1grjhJWzT3QQcKF9YiM6Zne2AEY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "595554661834-65e2pp2ainsdh75iic40nv2hvhd3ldig.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
