@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_marginBottom="50dp"
+    android:layout_gravity="center"
+    android:layout_width="370dp"
+    android:layout_height="200dp"
+    android:orientation="vertical"
+    android:background="@drawable/overlay">
+
+    <TextView
+        android:layout_marginTop="40dp"
+        android:layout_width="20sp"
+        android:layout_height="20sp"
+        android:layout_gravity="center|right"
+        android:text="분"
+        android:textColor="#000000"
+        android:layout_marginRight="56dp"/>
+    <TextView
+        android:layout_width="20sp"
+        android:layout_height="20sp"
+        android:layout_gravity="center"
+        android:text="시"
+        android:textColor="#000000"
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="3dp"
+        />
+
+    <TextView
+        android:layout_width="20sp"
+        android:layout_height="20sp"
+        android:layout_gravity="center"
+        android:layout_marginTop="40dp"
+        android:layout_marginRight="112dp"
+        android:text="일"
+        android:textColor="#000000" />
+
+    <NumberPicker
+        android:id="@+id/hour"
+        android:layout_gravity="center"
+        android:layout_width="85dp"
+        android:layout_height="60dp"
+        android:background="@drawable/btn3"
+        android:theme="@style/Numberpicker"
+        />
+    <NumberPicker
+        android:id="@+id/day"
+        android:layout_marginLeft="28dp"
+        android:layout_gravity="center|left"
+        android:layout_width="85dp"
+        android:layout_height="60dp"
+        android:background="@drawable/btn3"
+        android:theme="@style/Numberpicker"
+        />
+    <NumberPicker
+        android:id="@+id/minute"
+        android:layout_marginRight="28dp"
+        android:layout_gravity="center|right"
+        android:layout_width="85dp"
+        android:layout_height="60dp"
+        android:background="@drawable/btn3"
+        android:theme="@style/Numberpicker"/>
+    <Button
+        android:id="@+id/cancel"
+        android:layout_width="365dp"
+        android:layout_height="30dp"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="2dp"
+        android:background="#ffffff"
+        android:text="취소"
+        android:textColor="#000000" />
+    <View
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="35dp"
+        android:layout_width="380dp"
+        android:layout_height="1dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="#bebebe" />
+
+    <TextView
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:text="이 앱은 사람들이 삭제예약을 하였습니다"
+        android:textColor="#000000"
+        android:textSize="16dp"
+        android:layout_marginLeft="65dp"
+        android:layout_marginTop="15dp"/>
+
+
+</FrameLayout>

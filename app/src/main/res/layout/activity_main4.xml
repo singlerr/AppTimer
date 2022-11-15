@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="327dp"
+        android:layout_height="229dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="140dp"
+        android:background="@drawable/rectan">
+
+        <View
+            android:layout_width="294dp"
+            android:layout_height="1dp"
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_marginBottom="40dp"
+            android:background="#000000"
+            />
+        <TextView
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="25dp"
+            android:layout_marginLeft="40dp"
+            android:layout_width="27dp"
+            android:layout_height="14dp"
+            android:text="시간"
+            android:textColor="#000000"
+            android:textSize="12sp"
+            android:textStyle="normal" />
+        <TextView
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginBottom="25dp"
+            android:layout_width="27dp"
+            android:layout_height="14dp"
+            android:text="시간"
+            android:textColor="#000000"
+            android:textSize="12sp"
+            android:textStyle="normal" />
+        <TextView
+            android:layout_gravity="bottom|right"
+            android:layout_marginBottom="25dp"
+            android:layout_marginRight="40dp"
+            android:layout_width="27dp"
+            android:layout_height="14dp"
+            android:text="시간"
+            android:textColor="#000000"
+            android:textSize="12sp"
+            android:textStyle="normal" />
+        <View
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="41dp"
+            android:layout_marginLeft="40dp"
+            android:layout_width="23dp"
+            android:layout_height="138dp"
+            android:background="#80c2fe"
+        />
+        <View
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginRight="3dp"
+            android:layout_marginBottom="41dp"
+            android:layout_width="23dp"
+            android:layout_height="88dp"
+            android:background="#80c2fe"
+            />
+        <View
+            android:layout_gravity="bottom|right"
+            android:layout_marginBottom="41dp"
+            android:layout_marginRight="45dp"
+            android:layout_width="23dp"
+            android:layout_height="118dp"
+            android:background="#80c2fe"/>
+        <TextView
+            android:layout_gravity="center"
+            android:layout_marginBottom="23dp"
+            android:layout_width="12dp"
+            android:layout_height="14dp"
+            android:text="7"
+            android:textColor="#000000"
+            android:textSize="12sp"
+            android:textStyle="normal" />
+        <TextView
+            android:layout_gravity="right"
+            android:layout_marginTop="55dp"
+            android:layout_marginRight="49dp"
+            android:layout_width="15dp"
+            android:layout_height="14dp"
+            android:text="10"
+            android:textColor="#000000"
+            android:textSize="12sp"
+            android:textStyle="normal" />
+        <TextView
+            android:layout_marginTop="35dp"
+            android:layout_marginLeft="44dp"
+            android:layout_width="15dp"
+            android:layout_height="14dp"
+            android:text="12"
+            android:textColor="#000000"
+            android:textSize="12sp"
+            android:textStyle="normal" />
+    </FrameLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="통계 버튼을 눌러 통계를 볼 수 있습니다"
+        android:textStyle="normal"
+        android:textSize="20sp"
+        android:textColor="#000000"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="240dp"
+        />
+
+    <View
+        android:layout_width="22dp"
+        android:layout_height="21dp"
+        android:background="@drawable/circle"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="70dp"
+        android:layout_marginLeft="170dp"
+        />
+
+    <View
+        android:layout_width="22dp"
+        android:layout_height="21dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="120dp"
+        android:layout_marginBottom="70dp"
+        android:background="@drawable/whitecircle" />
+    <View
+        android:layout_width="22dp"
+        android:layout_height="21dp"
+        android:background="@drawable/whitecircle"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="70dp"
+        android:layout_marginLeft="270dp"
+        />
+    <View
+        android:layout_width="22dp"
+        android:layout_height="21dp"
+        android:background="@drawable/whitecircle"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="70dp"
+        android:layout_marginLeft="220dp"
+        />
+</RelativeLayout>
