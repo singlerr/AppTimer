@@ -51,8 +51,7 @@ import kr.apptimer.database.data.InstalledApplication;
  */
 public final class AlarmRestorer extends BroadcastReceiver {
 
-  @Inject
-  NotificationHelper helper;
+  @Inject NotificationHelper helper;
 
   @Inject TaskScheduler scheduler;
 

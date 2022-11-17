@@ -45,7 +45,7 @@ import kr.apptimer.dagger.module.FirebaseProvider;
       DatabaseProvider.class,
       ApplicationContextProvider.class,
       ActivityContextModule.class,
-            FirebaseProvider.class
+      FirebaseProvider.class
     })
 public interface ApplicationContext {
 

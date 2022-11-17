@@ -29,16 +29,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package kr.apptimer.android.activity;
 
-import android.Manifest;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-
 import androidx.annotation.Nullable;
 import javax.inject.Inject;
-
 import kr.apptimer.android.service.AppExpirationOverlayService;
 import kr.apptimer.base.InjectedAppCompatActivity;
 import kr.apptimer.dagger.android.NotificationHelper;
@@ -59,12 +56,13 @@ public final class SettingsActivity extends InjectedAppCompatActivity {
   @Override
   public void onActivityCreate(@Nullable Bundle savedInstanceState) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      Intent perm = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-              Uri.parse("package:" + getPackageName()));
+      Intent perm =
+          new Intent(
+              Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
 
-      startActivityForResult(perm,-1);
+      startActivityForResult(perm, -1);
     }
-    //Show overlay
+    // Show overlay
     Intent service = new Intent(this, AppExpirationOverlayService.class);
     startService(service);
   }

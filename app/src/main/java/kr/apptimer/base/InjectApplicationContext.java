@@ -33,7 +33,6 @@ import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
-
 import kr.apptimer.android.receiver.ApplicationInstallationReceiver;
 import kr.apptimer.dagger.context.ApplicationContext;
 import kr.apptimer.dagger.context.DaggerApplicationContext;
@@ -45,7 +44,6 @@ import lombok.Getter;
  * @author Singlerr
  */
 public final class InjectApplicationContext extends Application {
-
 
   private BroadcastReceiver appInstallationReceiver;
 
@@ -63,14 +61,14 @@ public final class InjectApplicationContext extends Application {
     super.onCreate();
     appInstallationReceiver = registerReceiver();
   }
-  private BroadcastReceiver registerReceiver(){
+
+  private BroadcastReceiver registerReceiver() {
     BroadcastReceiver receiver = new ApplicationInstallationReceiver();
     IntentFilter filter = new IntentFilter();
     filter.addAction(Intent.ACTION_PACKAGE_ADDED);
     filter.addDataScheme("package");
 
-    registerReceiver(receiver,filter);
+    registerReceiver(receiver, filter);
     return receiver;
   }
-
 }
