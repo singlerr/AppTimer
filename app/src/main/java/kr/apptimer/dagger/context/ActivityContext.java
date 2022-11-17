@@ -30,6 +30,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package kr.apptimer.dagger.context;
 
 import dagger.Subcomponent;
+import kr.apptimer.android.activity.ReservationCancellationActivity;
 import kr.apptimer.android.activity.SettingsActivity;
 import kr.apptimer.base.InjectedAppCompatActivity;
 
@@ -61,4 +62,13 @@ public interface ActivityContext {
    *            activity
    */
   void inject(SettingsActivity activity);
+
+  /***
+   * This tells Dagger that {@link ReservationCancellationActivity} requests injection
+   * so that fields with {@link javax.inject.Inject} become not null
+   *
+   * @param activity
+   *            activity
+   */
+  void inject(ReservationCancellationActivity activity);
 }

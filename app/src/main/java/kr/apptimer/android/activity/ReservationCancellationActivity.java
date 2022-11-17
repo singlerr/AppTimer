@@ -11,23 +11,13 @@ import android.widget.CheckBox;
 import android.widget.GridLayout;
 import android.widget.Toast;
 
-import android.Manifest;
 import android.content.Intent;
-import android.net.Uri;
-import android.os.Build;
-import android.os.Bundle;
-import android.provider.Settings;
-
-import androidx.annotation.Nullable;
-import javax.inject.Inject;
 
 import kr.apptimer.android.service.AppExpirationOverlayService;
 import kr.apptimer.base.InjectedAppCompatActivity;
-import kr.apptimer.dagger.android.NotificationHelper;
 import kr.apptimer.dagger.context.ActivityContext;
-import kr.apptimer.database.LocalDatabase;
 
-public class Reservation_Cancellation_Activity extends InjectedAppCompatActivity implements View.OnClickListener{
+public class ReservationCancellationActivity extends InjectedAppCompatActivity implements View.OnClickListener{
     Button removeButton;
     Button addButton;
     GridLayout gridLayout;
@@ -35,12 +25,6 @@ public class Reservation_Cancellation_Activity extends InjectedAppCompatActivity
     AlertDialog alertDialog;
     @Override
     public void onActivityCreate(Bundle savedInstanceState) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Intent perm = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                    Uri.parse("package:" + getPackageName()));
-
-            startActivityForResult(perm,-1);
-        }
         //Show overlay
         Intent service = new Intent(this, AppExpirationOverlayService.class);
         startService(service);
@@ -63,10 +47,10 @@ public class Reservation_Cancellation_Activity extends InjectedAppCompatActivity
                             i--;
                         }
                     }
-                    Toast toast = Toast.makeText(Reservation_Cancellation_Activity.this, "예약이 취소되었습니다.", Toast.LENGTH_SHORT);
+                    Toast toast = Toast.makeText(ReservationCancellationActivity.this, "예약이 취소되었습니다.", Toast.LENGTH_SHORT);
                     toast.show();
                 } else if (which == DialogInterface.BUTTON_NEGATIVE) {
-                    Toast toast = Toast.makeText(Reservation_Cancellation_Activity.this, "취소되었습니다.", Toast.LENGTH_SHORT);
+                    Toast toast = Toast.makeText(ReservationCancellationActivity.this, "취소되었습니다.", Toast.LENGTH_SHORT);
                     toast.show();
                 }
             }
