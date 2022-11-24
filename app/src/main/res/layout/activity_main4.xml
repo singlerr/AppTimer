@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#ffffff"
     android:orientation="vertical">
 
     <FrameLayout
         android:layout_width="327dp"
         android:layout_height="229dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="140dp"
+        android:layout_marginTop="80dp"
         android:background="@drawable/rectan">
 
         <View
@@ -110,39 +113,6 @@
         android:textColor="#000000"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="240dp"
-        />
-
-    <View
-        android:layout_width="22dp"
-        android:layout_height="21dp"
-        android:background="@drawable/circle"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="70dp"
-        android:layout_marginLeft="170dp"
-        />
-
-    <View
-        android:layout_width="22dp"
-        android:layout_height="21dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginLeft="120dp"
-        android:layout_marginBottom="70dp"
-        android:background="@drawable/whitecircle" />
-    <View
-        android:layout_width="22dp"
-        android:layout_height="21dp"
-        android:background="@drawable/whitecircle"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="70dp"
-        android:layout_marginLeft="270dp"
-        />
-    <View
-        android:layout_width="22dp"
-        android:layout_height="21dp"
-        android:background="@drawable/whitecircle"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="70dp"
-        android:layout_marginLeft="220dp"
+        android:layout_marginBottom="160dp"
         />
 </RelativeLayout>

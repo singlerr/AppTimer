@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.myapplication">
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
 
     <application
         android:allowBackup="true"
@@ -13,51 +15,49 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication"
         tools:targetApi="31">
-        <activity android:name="kr.apptimer.android.activity.ReservationCancellationActivity"
-            android:exported="false"/>
-        <activity
-            android:name=".MainActivity11"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivity10"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivity9"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivity8"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivity7"
-            android:exported="false" />
-
-        <service
-            android:name=".MainActivity6"
-            android:enabled="true"
-            android:exported="false"
-            android:permission="android.permission.SYSTEM_ALERT_WINDOW" />
-
-        <activity
-            android:name=".MainActivity5"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivity4"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivity3"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivity2"
-            android:exported="false" />
         <activity
             android:name=".MainActivity"
-            android:exported="true">
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".Access"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".slider"
+            android:exported="true">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".MainActivity12"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".ReservationCancellationActivity"
+            android:exported="false" />
+        <service
+            android:name=".MainActivity6"
+            android:enabled="true"
+            android:exported="false"
+            android:permission="android.permission.SYSTEM_ALERT_WINDOW" />
+
     </application>
 
 </manifest>
