@@ -31,6 +31,8 @@ package kr.apptimer.android.activity.main;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ListView;
+
 import androidx.annotation.Nullable;
 import kr.apptimer.base.InjectedAppCompatActivity;
 import kr.apptimer.dagger.context.ActivityContext;
@@ -44,7 +46,9 @@ public final class ReservedAppListActivity extends InjectedAppCompatActivity {
    * @param savedInstanceState
    */
   @Override
-  public void onActivityCreate(@Nullable Bundle savedInstanceState) {}
+  public void onActivityCreate(@Nullable Bundle savedInstanceState) {
+
+  }
 
   /***
    * Register listener for {@link View} here

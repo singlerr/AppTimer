@@ -16,41 +16,7 @@
         <activity android:name="kr.apptimer.android.activity.ReservationCancellationActivity"
             android:exported="false"/>
         <activity
-            android:name=".MainActivity11"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivity10"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivity9"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivity8"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivity7"
-            android:exported="false" />
-
-        <service
-            android:name=".MainActivity6"
-            android:enabled="true"
-            android:exported="false"
-            android:permission="android.permission.SYSTEM_ALERT_WINDOW" />
-
-        <activity
-            android:name=".MainActivity5"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivity4"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivity3"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivity2"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivity"
+            android:name="kr.apptimer.android.activity.main.ReservedAppListActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
