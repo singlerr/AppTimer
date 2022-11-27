@@ -32,12 +32,16 @@ package kr.apptimer.android.service;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import androidx.annotation.Nullable;
 import javax.inject.Inject;
+
+import kr.apptimer.android.receiver.ApplicationInstallationReceiver;
 import kr.apptimer.base.InjectApplicationContext;
 import kr.apptimer.dagger.android.OverlayViewModel;
 
@@ -49,17 +53,56 @@ import kr.apptimer.dagger.android.OverlayViewModel;
  */
 public final class AppExpirationOverlayService extends Service {
 
-  @Inject OverlayViewModel viewModel;
-
-  private WindowManager windowManager;
-
-  private View view;
 
   @Nullable
   @Override
   public IBinder onBind(Intent intent) {
     return null;
   }
+
+
+  private ApplicationInstallationReceiver receiver;
+  boolean isRunning=false;
+
+  @Override
+  public void onCreate() {
+    super.onCreate();
+    if(!isRunning) {
+      Log.d(getPackageName(), "Service onCreate");
+      IntentFilter intentFilter = new IntentFilter();
+      intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
+      intentFilter.addDataScheme("package");
+      receiver = new ApplicationInstallationReceiver();
+      this.registerReceiver(receiver, intentFilter);
+      isRunning=true;
+    }
+    else Log.d(getPackageName(),"Service is Already Running");
+  }
+
+  @Override
+  public int onStartCommand(Intent intent, int flags, int startId) {
+    if(!isRunning) {
+      IntentFilter intentFilter = new IntentFilter();
+      intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
+      intentFilter.addDataScheme("package");
+      receiver = new ApplicationInstallationReceiver();
+      this.registerReceiver(receiver, intentFilter);
+      isRunning=true;
+    }
+    return START_STICKY;
+  }
+
+  @Override
+  public void onDestroy() {
+    unregisterReceiver(receiver);
+    isRunning=false;
+  }
+  /*
+    @Inject OverlayViewModel viewModel;
+
+  private WindowManager windowManager;
+
+  private View view;
 
   @Override
   public void onCreate() {
@@ -82,5 +125,5 @@ public final class AppExpirationOverlayService extends Service {
     windowManager.removeView(view);
     windowManager = null;
     view = null;
-  }
+  }*/
 }
