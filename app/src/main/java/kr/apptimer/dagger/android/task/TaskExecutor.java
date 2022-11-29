@@ -42,13 +42,13 @@ import android.content.Intent;
  */
 public final class TaskExecutor extends BroadcastReceiver {
 
-  public static final String TASK_EXECUTOR_BUNDLE = "task_executor";
+    public static final String TASK_EXECUTOR_BUNDLE = "task_executor";
 
-  @Override
-  public void onReceive(Context context, Intent intent) {
-    if (intent.hasExtra(TASK_EXECUTOR_BUNDLE)) {
-      SerializableTask task = (SerializableTask) intent.getSerializableExtra(TASK_EXECUTOR_BUNDLE);
-      task.run();
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        if (intent.hasExtra(TASK_EXECUTOR_BUNDLE)) {
+            SerializableTask task = (SerializableTask) intent.getSerializableExtra(TASK_EXECUTOR_BUNDLE);
+            task.run();
+        }
     }
-  }
 }

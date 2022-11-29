@@ -51,82 +51,81 @@ import lombok.Singular;
 @Builder
 public final class PermissionRequest {
 
-  @Singular("withPermission")
-  private List<Permission> pipeline;
+    @Singular("withPermission")
+    private List<Permission> pipeline;
 
-  private final AppCompatActivity context;
-
-  /***
-   * Start requesting permissions in order.
-   */
-  public void execute() {
-    for (Permission permission : pipeline) {
-      // Works only passes condition
-      if (permission.getCondition().test(context)) {
-        Consumer<Context> alternativeExecutor = permission.getExecutor();
-        // When executor is null, then request permission in my way.
-        if (alternativeExecutor == null) {
-          requestPermission(permission);
-        } else {
-          // Do user-defined
-          alternativeExecutor.accept(context);
-        }
-      }
-    }
-  }
-
-  private void requestPermission(Permission permission) {
-    ActivityResultLauncher<String> launcher =
-        context.registerForActivityResult(
-            new ActivityResultContracts.RequestPermission(),
-            isGranted -> {
-              if (isGranted) {
-                if (permission.onSuccess != null) permission.onSuccess.run();
-              } else {
-                if (permission.onFailed != null) permission.onFailed.run();
-              }
-            });
-    launcher.launch(permission.action);
-  }
-
-  /***
-   * Subclass of {@link PermissionRequest} which contains condition of request of permission or permission invoker
-   * @author Singlerr
-   */
-  @Getter
-  public static class Permission {
-
-    private String action;
-
-    private Predicate<Context> condition;
-
-    @Nullable private Consumer<Context> executor;
-
-    private Runnable onSuccess;
-
-    private Runnable onFailed;
+    private final AppCompatActivity context;
 
     /***
-     * Creates information about permission
-     * @param permission String id of permission or action
-     * @param when decides whether request permission or not
-     * @param request {@link PermissionRequest} requests permission with suggested procedure
-     *                                         @see <a href="https://developer.android.com/training/permissions/requesting?hl=ko"></a>
-     * @param onSuccess callback when permission request is success
-     * @param onFailed callback when permission request is failed
+     * Start requesting permissions in order.
      */
-    @Builder
-    public Permission(
-        String permission,
-        Predicate<Context> when,
-        @Nullable Consumer<Context> request,
-        Runnable onSuccess,
-        Runnable onFailed) {
-      this.action = permission;
-      this.condition = when;
-      this.executor = request;
-      this.onSuccess = onSuccess;
-      this.onFailed = onFailed;
+    public void execute() {
+        for (Permission permission : pipeline) {
+            // Works only passes condition
+            if (permission.getCondition().test(context)) {
+                Consumer<Context> alternativeExecutor = permission.getExecutor();
+                // When executor is null, then request permission in my way.
+                if (alternativeExecutor == null) {
+                    requestPermission(permission);
+                } else {
+                    // Do user-defined
+                    alternativeExecutor.accept(context);
+                }
+            }
+        }
     }
-  }
+
+    private void requestPermission(Permission permission) {
+        ActivityResultLauncher<String> launcher =
+                context.registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                    if (isGranted) {
+                        if (permission.onSuccess != null) permission.onSuccess.run();
+                    } else {
+                        if (permission.onFailed != null) permission.onFailed.run();
+                    }
+                });
+        launcher.launch(permission.action);
+    }
+
+    /***
+     * Subclass of {@link PermissionRequest} which contains condition of request of permission or permission invoker
+     * @author Singlerr
+     */
+    @Getter
+    public static class Permission {
+
+        private String action;
+
+        private Predicate<Context> condition;
+
+        @Nullable
+        private Consumer<Context> executor;
+
+        private Runnable onSuccess;
+
+        private Runnable onFailed;
+
+        /***
+         * Creates information about permission
+         * @param permission String id of permission or action
+         * @param when decides whether request permission or not
+         * @param request {@link PermissionRequest} requests permission with suggested procedure
+         *                                         @see <a href="https://developer.android.com/training/permissions/requesting?hl=ko"></a>
+         * @param onSuccess callback when permission request is success
+         * @param onFailed callback when permission request is failed
+         */
+        @Builder
+        public Permission(
+                String permission,
+                Predicate<Context> when,
+                @Nullable Consumer<Context> request,
+                Runnable onSuccess,
+                Runnable onFailed) {
+            this.action = permission;
+            this.condition = when;
+            this.executor = request;
+            this.onSuccess = onSuccess;
+            this.onFailed = onFailed;
+        }
+    }
 }

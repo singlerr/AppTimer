@@ -43,22 +43,22 @@ import javax.inject.Singleton;
 @Singleton
 public final class ApplicationRemovalExecutor {
 
-  private Context context;
+    private Context context;
 
-  @Inject
-  public ApplicationRemovalExecutor(Context context) {
-    this.context = context;
-  }
+    @Inject
+    public ApplicationRemovalExecutor(Context context) {
+        this.context = context;
+    }
 
-  public void requestRemoval(String packageUri) {
-    requestRemoval(Uri.parse(packageUri));
-  }
+    public void requestRemoval(String packageUri) {
+        requestRemoval(Uri.parse(packageUri));
+    }
 
-  public void requestRemoval(Uri uri) {
-    requestRemoval(context, new Intent(Intent.ACTION_DELETE, uri));
-  }
+    public void requestRemoval(Uri uri) {
+        requestRemoval(context, new Intent(Intent.ACTION_DELETE, uri));
+    }
 
-  private void requestRemoval(Context context, Intent intent) {
-    context.startActivity(intent);
-  }
+    private void requestRemoval(Context context, Intent intent) {
+        context.startActivity(intent);
+    }
 }

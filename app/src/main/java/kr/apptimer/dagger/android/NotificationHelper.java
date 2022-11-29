@@ -47,55 +47,53 @@ import kr.apptimer.R;
 @Singleton
 public final class NotificationHelper {
 
-  private static final int NOTIFICATION_ID = 127;
+    private static final int NOTIFICATION_ID = 127;
 
-  private static final String CHANNEL_NAME = "app_timer_notification_name";
-  private static final String CHANNEL_ID = "app_timer_notification_id";
-  private static final String CHANNEL_DESCRIPTION = "app_timer_notification_description";
+    private static final String CHANNEL_NAME = "app_timer_notification_name";
+    private static final String CHANNEL_ID = "app_timer_notification_id";
+    private static final String CHANNEL_DESCRIPTION = "app_timer_notification_description";
 
-  private int iconId;
+    private int iconId;
 
-  private Context context;
+    private Context context;
 
-  private NotificationChannel channel;
+    private NotificationChannel channel;
 
-  @Inject
-  public NotificationHelper(Context context) {
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O)
-      throw new IllegalStateException("Only android version over " + Build.VERSION_CODES.O);
-    // TODO("Set iconId")
-    this.context = context;
-    createNotificationChannel();
-  }
+    @Inject
+    public NotificationHelper(Context context) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O)
+            throw new IllegalStateException("Only android version over " + Build.VERSION_CODES.O);
+        // TODO("Set iconId")
+        this.context = context;
+        createNotificationChannel();
+    }
 
-  @SuppressLint("InlinedApi")
-  private void createNotificationChannel() {
-    this.channel =
-        new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
-    this.channel.setDescription(CHANNEL_DESCRIPTION);
+    @SuppressLint("InlinedApi")
+    private void createNotificationChannel() {
+        this.channel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
+        this.channel.setDescription(CHANNEL_DESCRIPTION);
 
-    // Default
-    this.iconId = R.drawable.ic_launcher_background;
+        // Default
+        this.iconId = R.drawable.ic_launcher_background;
 
-    NotificationManager manager = context.getSystemService(NotificationManager.class);
-    manager.createNotificationChannel(channel);
-  }
-  /***
-   * Send notification with title {@param title} and content {@param content}
-   * @param title title of notification
-   * @param content content of notification
-   */
-  public void sendNotification(String title, String content) {
-    NotificationCompat.Builder builder =
-        new NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(iconId)
-            .setContentTitle(title)
-            .setContentText(content)
-            .setStyle(new NotificationCompat.BigTextStyle().bigText(content))
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+        NotificationManager manager = context.getSystemService(NotificationManager.class);
+        manager.createNotificationChannel(channel);
+    }
+    /***
+     * Send notification with title {@param title} and content {@param content}
+     * @param title title of notification
+     * @param content content of notification
+     */
+    public void sendNotification(String title, String content) {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
+                .setSmallIcon(iconId)
+                .setContentTitle(title)
+                .setContentText(content)
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(content))
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
-    NotificationManagerCompat manager = NotificationManagerCompat.from(context);
+        NotificationManagerCompat manager = NotificationManagerCompat.from(context);
 
-    manager.notify(NOTIFICATION_ID, builder.build());
-  }
+        manager.notify(NOTIFICATION_ID, builder.build());
+    }
 }

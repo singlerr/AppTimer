@@ -41,18 +41,18 @@ import kr.apptimer.database.data.InstalledApplication;
 @Singleton
 public final class AppAnalyticsHandler {
 
-  private DatabaseReference database;
+    private DatabaseReference database;
 
-  @Inject
-  public AppAnalyticsHandler(DatabaseReference database) {
-    this.database = database;
-  }
+    @Inject
+    public AppAnalyticsHandler(DatabaseReference database) {
+        this.database = database;
+    }
 
-  /***
-   * Add new {@link InstalledApplication} information to database
-   * @param info {@link InstalledApplication}
-   */
-  public void submitAppInformation(InstalledApplication info) {
-    database.push().setValue(info);
-  }
+    /***
+     * Add new {@link InstalledApplication} information to database
+     * @param info {@link InstalledApplication}
+     */
+    public void submitAppInformation(InstalledApplication info) {
+        database.push().setValue(info);
+    }
 }

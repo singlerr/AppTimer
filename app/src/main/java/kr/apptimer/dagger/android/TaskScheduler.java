@@ -50,59 +50,60 @@ import kr.apptimer.dagger.android.task.TaskExecutor;
 @Singleton
 public final class TaskScheduler {
 
-  private final Context context;
+    private final Context context;
 
-  private final AlarmManager alarmManager;
+    private final AlarmManager alarmManager;
 
-  @Inject IntentCache cache;
+    @Inject
+    IntentCache cache;
 
-  @Inject
-  public TaskScheduler(Context context) {
+    @Inject
+    public TaskScheduler(Context context) {
 
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-      throw new IllegalStateException("Only android version >= 23");
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            throw new IllegalStateException("Only android version >= 23");
+        }
+
+        this.context = context;
+        this.alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
     }
 
-    this.context = context;
-    this.alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-  }
+    /***
+     * Schedule a task at a specific time
+     *
+     * @param task
+     *            task
+     * @param time
+     *            time at the task to be executed
+     */
+    @SuppressLint("NewApi")
+    public void scheduleTask(SerializableTask task, Date time) {
+        Intent intent = new Intent(context, TaskExecutor.class);
+        intent.putExtra(TaskExecutor.TASK_EXECUTOR_BUNDLE, task);
 
-  /***
-   * Schedule a task at a specific time
-   *
-   * @param task
-   *            task
-   * @param time
-   *            time at the task to be executed
-   */
-  @SuppressLint("NewApi")
-  public void scheduleTask(SerializableTask task, Date time) {
-    Intent intent = new Intent(context, TaskExecutor.class);
-    intent.putExtra(TaskExecutor.TASK_EXECUTOR_BUNDLE, task);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
 
-    PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
+        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time.getTime(), pendingIntent);
+    }
 
-    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time.getTime(), pendingIntent);
-  }
+    /***
+     * Schedule a task at a specific time
+     *
+     * @param packageUri package uri of application to be uninstalled later
+     *
+     * @param task
+     *            task
+     * @param time
+     *            time at the task to be executed
+     */
+    @SuppressLint("NewApi")
+    public void scheduleTask(String packageUri, SerializableTask task, Date time) {
+        Intent intent = new Intent(context, TaskExecutor.class);
+        intent.putExtra(TaskExecutor.TASK_EXECUTOR_BUNDLE, task);
 
-  /***
-   * Schedule a task at a specific time
-   *
-   * @param packageUri package uri of application to be uninstalled later
-   *
-   * @param task
-   *            task
-   * @param time
-   *            time at the task to be executed
-   */
-  @SuppressLint("NewApi")
-  public void scheduleTask(String packageUri, SerializableTask task, Date time) {
-    Intent intent = new Intent(context, TaskExecutor.class);
-    intent.putExtra(TaskExecutor.TASK_EXECUTOR_BUNDLE, task);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
 
-    PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
-
-    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time.getTime(), pendingIntent);
-    cache.putCache(packageUri, pendingIntent);
-  }
+        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time.getTime(), pendingIntent);
+        cache.putCache(packageUri, pendingIntent);
+    }
 }

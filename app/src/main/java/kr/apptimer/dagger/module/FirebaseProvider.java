@@ -44,9 +44,9 @@ import javax.inject.Singleton;
 @Module
 public final class FirebaseProvider {
 
-  @Singleton
-  @Provides
-  public DatabaseReference provideFirebase() {
-    return FirebaseDatabase.getInstance().getReference();
-  }
+    @Singleton
+    @Provides
+    public DatabaseReference provideFirebase() {
+        return FirebaseDatabase.getInstance().getReference();
+    }
 }

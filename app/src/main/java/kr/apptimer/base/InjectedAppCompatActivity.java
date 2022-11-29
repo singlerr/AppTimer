@@ -42,33 +42,33 @@ import kr.apptimer.dagger.context.ApplicationContext;
  */
 public abstract class InjectedAppCompatActivity extends AppCompatActivity {
 
-  private ActivityContext activityContext;
+    private ActivityContext activityContext;
 
-  /***
-   * Called after calling {@link kr.apptimer.dagger.context.ActivityContext#inject(any extends InjectedAppCompatActivity)} in context of {@link #onCreate(Bundle)}
-   * @param savedInstanceState
-   */
-  public abstract void onActivityCreate(@Nullable Bundle savedInstanceState);
+    /***
+     * Called after calling {@link kr.apptimer.dagger.context.ActivityContext#inject(any extends InjectedAppCompatActivity)} in context of {@link #onCreate(Bundle)}
+     * @param savedInstanceState
+     */
+    public abstract void onActivityCreate(@Nullable Bundle savedInstanceState);
 
-  /***
-   * Register listener for {@link android.view.View} here
-   */
-  public abstract void bindListeners();
-  /***
-   * Fill the method body to inject subclass of this using {@param context}
-   * @param context {@link ActivityContext}
-   */
-  protected abstract void inject(ActivityContext context);
+    /***
+     * Register listener for {@link android.view.View} here
+     */
+    public abstract void bindListeners();
+    /***
+     * Fill the method body to inject subclass of this using {@param context}
+     * @param context {@link ActivityContext}
+     */
+    protected abstract void inject(ActivityContext context);
 
-  @Override
-  protected void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    activityContext = getContext().activityContextFactory().create();
-    inject(activityContext);
-    onActivityCreate(savedInstanceState);
-  }
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        activityContext = getContext().activityContextFactory().create();
+        inject(activityContext);
+        onActivityCreate(savedInstanceState);
+    }
 
-  protected ApplicationContext getContext() {
-    return ((InjectApplicationContext) getApplication()).getContext();
-  }
+    protected ApplicationContext getContext() {
+        return ((InjectApplicationContext) getApplication()).getContext();
+    }
 }

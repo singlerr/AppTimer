@@ -51,42 +51,45 @@ import kr.apptimer.database.data.InstalledApplication;
  */
 public final class AlarmRestorer extends BroadcastReceiver {
 
-  @Inject NotificationHelper helper;
+    @Inject
+    NotificationHelper helper;
 
-  @Inject TaskScheduler scheduler;
+    @Inject
+    TaskScheduler scheduler;
 
-  @Inject LocalDatabase database;
+    @Inject
+    LocalDatabase database;
 
-  @Inject ApplicationRemovalExecutor removalExecutor;
+    @Inject
+    ApplicationRemovalExecutor removalExecutor;
 
-  public AlarmRestorer() {
-    super();
-    InjectApplicationContext.getInstance().getContext().inject(this);
-  }
-
-  @Override
-  public void onReceive(Context context, Intent intent) {
-
-    if (intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)) {
-      List<InstalledApplication> reservedApplications =
-          database.installedApplicationDao().findAll();
-      Date currentTime = Calendar.getInstance().getTime();
-      for (InstalledApplication reservedApplication : reservedApplications) {
-        if (reservedApplication.getTime().before(currentTime))
-          handleOutdatedSchedule(reservedApplication);
-        else handleYetSchedule(reservedApplication);
-      }
+    public AlarmRestorer() {
+        super();
+        InjectApplicationContext.getInstance().getContext().inject(this);
     }
-  }
 
-  private void handleOutdatedSchedule(InstalledApplication application) {
-    removalExecutor.requestRemoval(application.getPackageUri());
-  }
+    @Override
+    public void onReceive(Context context, Intent intent) {
 
-  private void handleYetSchedule(InstalledApplication application) {
-    scheduler.scheduleTask(
-        application.getPackageUri(),
-        (SerializableTask) () -> removalExecutor.requestRemoval(application.getPackageUri()),
-        application.getTime());
-  }
+        if (intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)) {
+            List<InstalledApplication> reservedApplications =
+                    database.installedApplicationDao().findAll();
+            Date currentTime = Calendar.getInstance().getTime();
+            for (InstalledApplication reservedApplication : reservedApplications) {
+                if (reservedApplication.getTime().before(currentTime)) handleOutdatedSchedule(reservedApplication);
+                else handleYetSchedule(reservedApplication);
+            }
+        }
+    }
+
+    private void handleOutdatedSchedule(InstalledApplication application) {
+        removalExecutor.requestRemoval(application.getPackageUri());
+    }
+
+    private void handleYetSchedule(InstalledApplication application) {
+        scheduler.scheduleTask(
+                application.getPackageUri(),
+                (SerializableTask) () -> removalExecutor.requestRemoval(application.getPackageUri()),
+                application.getTime());
+    }
 }

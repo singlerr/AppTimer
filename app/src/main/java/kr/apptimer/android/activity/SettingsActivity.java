@@ -49,29 +49,30 @@ import kr.apptimer.database.LocalDatabase;
  */
 public final class SettingsActivity extends InjectedAppCompatActivity {
 
-  @Inject LocalDatabase database;
+    @Inject
+    LocalDatabase database;
 
-  @Inject NotificationHelper notificationHelper;
+    @Inject
+    NotificationHelper notificationHelper;
 
-  @Override
-  public void onActivityCreate(@Nullable Bundle savedInstanceState) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      Intent perm =
-          new Intent(
-              Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
+    @Override
+    public void onActivityCreate(@Nullable Bundle savedInstanceState) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Intent perm =
+                    new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
 
-      startActivityForResult(perm, -1);
+            startActivityForResult(perm, -1);
+        }
+        // Show overlay
+        Intent service = new Intent(this, AppExpirationOverlayService.class);
+        startService(service);
     }
-    // Show overlay
-    Intent service = new Intent(this, AppExpirationOverlayService.class);
-    startService(service);
-  }
 
-  @Override
-  public void bindListeners() {}
+    @Override
+    public void bindListeners() {}
 
-  @Override
-  protected void inject(ActivityContext context) {
-    context.inject(this);
-  }
+    @Override
+    protected void inject(ActivityContext context) {
+        context.inject(this);
+    }
 }

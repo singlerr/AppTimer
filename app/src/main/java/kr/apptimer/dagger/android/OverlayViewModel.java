@@ -48,24 +48,23 @@ import lombok.Getter;
 @Getter
 public final class OverlayViewModel {
 
-  private final WindowManager.LayoutParams layoutParams;
+    private final WindowManager.LayoutParams layoutParams;
 
-  private int layoutId;
+    private int layoutId;
 
-  @Inject
-  public OverlayViewModel() {
-    this.layoutParams =
-        new WindowManager.LayoutParams(
-            300,
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            150,
-            150,
-            WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
-            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-                | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
-                | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
-            PixelFormat.TRANSLUCENT);
-    this.layoutParams.gravity = Gravity.CENTER;
-    this.layoutId = R.layout.activity_main;
-  }
+    @Inject
+    public OverlayViewModel() {
+        this.layoutParams = new WindowManager.LayoutParams(
+                300,
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                150,
+                150,
+                WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                        | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+                        | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
+                PixelFormat.TRANSLUCENT);
+        this.layoutParams.gravity = Gravity.CENTER;
+        this.layoutId = R.layout.activity_overlay_on_package_added;
+    }
 }

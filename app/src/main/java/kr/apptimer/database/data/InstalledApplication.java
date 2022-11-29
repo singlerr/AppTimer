@@ -48,25 +48,26 @@ import lombok.Setter;
 @Entity
 public final class InstalledApplication {
 
-  @PrimaryKey private int id;
+    @PrimaryKey
+    private int id;
 
-  /***
-   * Package uri of application
-   */
-  @ColumnInfo(name = "package_uri")
-  @NonNull
-  private String packageUri;
+    /***
+     * Package uri of application
+     */
+    @ColumnInfo(name = "package_uri")
+    @NonNull
+    private String packageUri;
 
-  /***
-   * Name of application
-   */
-  @NonNull
-  @ColumnInfo(name = "app_name")
-  private String name;
-  /***
-   * Time when application is newly installed
-   */
-  @NonNull
-  @ColumnInfo(name = "app_installed_time")
-  private Date time;
+    /***
+     * Name of application
+     */
+    @NonNull
+    @ColumnInfo(name = "app_name")
+    private String name;
+    /***
+     * Time when application is newly installed
+     */
+    @NonNull
+    @ColumnInfo(name = "app_installed_time")
+    private Date time;
 }

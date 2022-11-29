@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -12,13 +11,14 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="100dp"
         android:background="#bebebe" />
+
     <View
-        android:layout_marginBottom="30dp"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
         android:layout_width="1dp"
         android:layout_height="70dp"
-        android:background="#bebebe"/>
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dp"
+        android:background="#bebebe" />
 
     <Button
         android:id="@+id/statistics"
@@ -27,10 +27,11 @@
         android:layout_alignParentBottom="true"
         android:layout_marginLeft="15dp"
         android:layout_marginBottom="20dp"
-        android:background="#fffff"
+        android:background="@android:color/white"
         android:text="통계"
         android:textColor="#000000"
-        android:textSize="16dp"/>
+        android:textSize="16dp" />
+
     <Button
         android:id="@+id/reservationNo"
         android:layout_width="190dp"
@@ -39,19 +40,17 @@
         android:layout_alignParentBottom="true"
         android:layout_marginRight="15dp"
         android:layout_marginBottom="20dp"
-        android:background="#fffff"
+        android:background="@android:color/white"
         android:text="예약취소"
         android:textColor="#000000"
-        android:textSize="16dp"/>
+        android:textSize="16dp" />
 
     <View
         android:layout_width="90dp"
         android:layout_height="90dp"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="20dp"
-        android:background="@drawable/btn"
-        />
-
+        android:background="@drawable/btn" />
 
 
 </RelativeLayout>

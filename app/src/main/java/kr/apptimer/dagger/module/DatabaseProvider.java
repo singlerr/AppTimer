@@ -45,9 +45,9 @@ import kr.apptimer.database.LocalDatabase;
 @Module
 public final class DatabaseProvider {
 
-  @Singleton
-  @Provides
-  public LocalDatabase provideLocalDatabase(Context context) {
-    return Room.databaseBuilder(context, LocalDatabase.class, "appDatabase").build();
-  }
+    @Singleton
+    @Provides
+    public LocalDatabase provideLocalDatabase(Context context) {
+        return Room.databaseBuilder(context, LocalDatabase.class, "appDatabase").build();
+    }
 }

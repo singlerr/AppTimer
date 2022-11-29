@@ -44,9 +44,9 @@ import kr.apptimer.base.InjectApplicationContext;
 @Module
 public final class ApplicationContextProvider {
 
-  @Singleton
-  @Provides
-  public Context provideContext() {
-    return InjectApplicationContext.getInstance();
-  }
+    @Singleton
+    @Provides
+    public Context provideContext() {
+        return InjectApplicationContext.getInstance();
+    }
 }

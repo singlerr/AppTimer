@@ -47,68 +47,68 @@ import kr.apptimer.base.InjectedAppCompatActivity;
 @Subcomponent
 public interface ActivityContext {
 
-  /***
-   * 1. To create subcomponent, creating factory class manually is must.
-   * @see kr.apptimer.dagger.module.ActivityContextModule
-   * Factory that is used to create instance of {@link ActivityContext}
-   * @author Singlerr
-   */
-  @Subcomponent.Factory
-  interface Factory {
-    ActivityContext create();
-  }
+    /***
+     * 1. To create subcomponent, creating factory class manually is must.
+     * @see kr.apptimer.dagger.module.ActivityContextModule
+     * Factory that is used to create instance of {@link ActivityContext}
+     * @author Singlerr
+     */
+    @Subcomponent.Factory
+    interface Factory {
+        ActivityContext create();
+    }
 
-  /***
-   * This tells Dagger that {@link SettingsActivity} requests injection
-   * so that fields with {@link javax.inject.Inject} become not null
-   *
-   * @param activity
-   *            activity
-   */
-  void inject(SettingsActivity activity);
+    /***
+     * This tells Dagger that {@link SettingsActivity} requests injection
+     * so that fields with {@link javax.inject.Inject} become not null
+     *
+     * @param activity
+     *            activity
+     */
+    void inject(SettingsActivity activity);
 
-  /***
-   * This tells Dagger that {@link ReservationCancellationActivity} requests injection
-   * so that fields with {@link javax.inject.Inject} become not null
-   *
-   * @param activity
-   *            activity
-   */
-  void inject(ReservationCancellationActivity activity);
+    /***
+     * This tells Dagger that {@link ReservationCancellationActivity} requests injection
+     * so that fields with {@link javax.inject.Inject} become not null
+     *
+     * @param activity
+     *            activity
+     */
+    void inject(ReservationCancellationActivity activity);
 
-  /***
-   * This tells Dagger that {@link PermissionRequestActivity} requests injection
-   * so that fields with {@link javax.inject.Inject} become not null
-   *
-   * @param activity
-   *            activity
-   */
-  void inject(PermissionRequestActivity activity);
+    /***
+     * This tells Dagger that {@link PermissionRequestActivity} requests injection
+     * so that fields with {@link javax.inject.Inject} become not null
+     *
+     * @param activity
+     *            activity
+     */
+    void inject(PermissionRequestActivity activity);
 
-  /***
-   * This tells Dagger that {@link IntroSlideActivity} requests injection
-   * so that fields with {@link javax.inject.Inject} become not null
-   *
-   * @param activity
-   *            activity
-   */
-  void inject(IntroSlideActivity activity);
+    /***
+     * This tells Dagger that {@link IntroSlideActivity} requests injection
+     * so that fields with {@link javax.inject.Inject} become not null
+     *
+     * @param activity
+     *            activity
+     */
+    void inject(IntroSlideActivity activity);
 
-  /***
-   * This tells Dagger that {@link ReservedAppListActivity} requests injection
-   * so that fields with {@link javax.inject.Inject} become not null
-   *
-   * @param activity
-   *            activity
-   */
-  void inject(ReservedAppListActivity activity);
+    /***
+     * This tells Dagger that {@link ReservedAppListActivity} requests injection
+     * so that fields with {@link javax.inject.Inject} become not null
+     *
+     * @param activity
+     *            activity
+     */
+    void inject(ReservedAppListActivity activity);
 
-  /***
-   * This tells Dagger that {@link DueTimeStatsActivity} requests injection
-   * so that fields with {@link javax.inject.Inject} become not null
-   *
-   * @param activity
-   *            activity
-   */
-  void inject(DueTimeStatsActivity activity);
+    /***
+     * This tells Dagger that {@link DueTimeStatsActivity} requests injection
+     * so that fields with {@link javax.inject.Inject} become not null
+     *
+     * @param activity
+     *            activity
+     */
+    void inject(DueTimeStatsActivity activity);
 }
