@@ -1,81 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
     <View
         android:id="@+id/line"
+        android:layout_width="386dp"
+        android:layout_height="2.1dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="130dp"
-        android:layout_width="386dp"
-        android:layout_height="2.1dp"
-        android:background="#000000">
-    </View>
+        android:background="#000000"></View>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="시간"
-        android:textColor="#000000"
-        android:textSize="20sp"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="100dp"
         android:layout_marginLeft="50dp"
-        />
+        android:layout_marginBottom="100dp"
+        android:text="시간"
+        android:textColor="#000000"
+        android:textSize="20sp" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="시간"
-        android:textColor="#000000"
-        android:textSize="20sp"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="100dp"
         android:layout_marginLeft="187dp"
-        />
+        android:layout_marginBottom="100dp"
+        android:text="시간"
+        android:textColor="#000000"
+        android:textSize="20sp" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="320dp"
+        android:layout_marginBottom="100dp"
         android:text="시간"
         android:textColor="#000000"
-        android:textSize="20sp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="100dp"
-        android:layout_marginLeft="320dp"
-        />
+        android:textSize="20sp" />
+
     <View
         android:id="@+id/appImage"
         android:layout_width="110dp"
         android:layout_height="110dp"
-        android:background="@drawable/btn"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"/>
+        android:layout_marginTop="20dp"
+        android:background="@drawable/btn" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/appImage"
+        android:layout_marginLeft="30dp"
         android:text="app name"
         android:textColor="#000000"
-        android:textSize="20sp"
-        android:layout_below="@id/appImage"
-        android:layout_marginLeft="30dp"/>
+        android:textSize="20sp" />
+
     <View
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:background="#80c2fe"
         android:layout_above="@id/line"
-        android:layout_marginLeft="48.5dp"/>
+        android:layout_marginLeft="48.5dp"
+        android:background="#80c2fe" />
+
     <View
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:background="#80c2fe"
         android:layout_above="@id/line"
-        android:layout_marginLeft="185dp"/>
+        android:layout_marginLeft="185dp"
+        android:background="#80c2fe" />
+
     <View
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:background="#80c2fe"
         android:layout_above="@id/line"
-        android:layout_marginLeft="317dp"/>
+        android:layout_marginLeft="317dp"
+        android:background="#80c2fe" />
 
 
 </RelativeLayout>

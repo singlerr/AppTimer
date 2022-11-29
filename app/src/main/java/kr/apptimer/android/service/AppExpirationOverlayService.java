@@ -32,12 +32,20 @@ package kr.apptimer.android.service;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Toast;
 import androidx.annotation.Nullable;
 import javax.inject.Inject;
+import kr.apptimer.R;
 import kr.apptimer.base.InjectApplicationContext;
 import kr.apptimer.dagger.android.OverlayViewModel;
 
@@ -49,38 +57,102 @@ import kr.apptimer.dagger.android.OverlayViewModel;
  */
 public final class AppExpirationOverlayService extends Service {
 
-  @Inject OverlayViewModel viewModel;
+    @Inject
+    OverlayViewModel viewModel;
 
-  private WindowManager windowManager;
+    private WindowManager windowManager;
 
-  private View view;
+    private View view;
 
-  @Nullable
-  @Override
-  public IBinder onBind(Intent intent) {
-    return null;
-  }
+    private Button buttonPositive;
+    private Button buttonNegative;
 
-  @Override
-  public void onCreate() {
-    super.onCreate();
-    InjectApplicationContext.getInstance().getContext().inject(this);
+    private EditText editDay;
+    private EditText editHour;
+    private EditText editMinute;
 
-    LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-    windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
+    private String packageName;
 
-    view = inflater.inflate(viewModel.getLayoutId(), null);
+    @Override
+    public void onCreate() {
+        super.onCreate();
 
-    windowManager.addView(view, viewModel.getLayoutParams());
-  }
+        InjectApplicationContext.getInstance().getContext().inject(this);
 
-  @Override
-  public void onDestroy() {
-    super.onDestroy();
-    if (windowManager == null || view == null) return;
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
 
-    windowManager.removeView(view);
-    windowManager = null;
-    view = null;
-  }
+        view = inflater.inflate(viewModel.getLayoutId(), null);
+
+        windowManager.addView(view, viewModel.getLayoutParams());
+
+        final ImageView appIcon = view.findViewById(R.id.addedPackageIcon);
+        try {
+            appIcon.setImageDrawable(getPackageManager().getApplicationIcon(packageName));
+        } catch (PackageManager.NameNotFoundException nameNotFoundException) {
+            Log.d(nameNotFoundException.toString(), nameNotFoundException.getMessage());
+        }
+        windowManager.addView(view, viewModel.getLayoutParams());
+
+        // View 연결
+        buttonPositive = view.findViewById(R.id.buttonPositive);
+        buttonNegative = view.findViewById(R.id.buttonNegative);
+        editDay = view.findViewById(R.id.editDay);
+        editHour = view.findViewById(R.id.editHour);
+        editMinute = view.findViewById(R.id.editMinute);
+
+        buttonNegative.setOnClickListener(view -> windowManager.removeView(view));
+        buttonPositive.setOnClickListener(view -> {
+            try {
+                if (validateTime(
+                        Integer.parseInt(editDay.getText().toString()),
+                        Integer.parseInt(editHour.getText().toString()),
+                        Integer.parseInt(editMinute.getText().toString()))) {
+                    Toast.makeText(getApplicationContext(), "예약되었습니다.", Toast.LENGTH_SHORT)
+                            .show();
+                    windowManager.removeView(view);
+                } else
+                    Toast.makeText(getApplicationContext(), "비정상적인 수치를 입력했습니다.", Toast.LENGTH_SHORT)
+                            .show();
+            } catch (NullPointerException e) {
+                Toast.makeText(getApplicationContext(), "빈 칸이 있습니다.", Toast.LENGTH_SHORT)
+                        .show();
+                Log.d(e.toString(), e.getMessage());
+            }
+        });
+        editDay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                InputMethodManager imm =
+                        (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.showSoftInput(view, 0);
+            }
+        });
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        packageName = intent.getStringExtra("pkgName");
+        return super.onStartCommand(intent, flags, startId);
+    }
+
+    private boolean validateTime(int day, int hour, int minute) {
+        return day >= 0 && hour >= 0 && hour <= 24 && minute >= 0 && minute <= 60;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (windowManager == null || view == null) return;
+
+        windowManager.removeView(view);
+        windowManager = null;
+        view = null;
+    }
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
 }

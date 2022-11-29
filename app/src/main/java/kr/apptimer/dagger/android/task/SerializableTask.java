@@ -39,8 +39,8 @@ import java.io.Serializable;
  */
 public interface SerializableTask extends Serializable {
 
-  /***
-   * Run task Define what this task must do here.
-   */
-  void run();
+    /***
+     * Run task Define what this task must do here.
+     */
+    void run();
 }

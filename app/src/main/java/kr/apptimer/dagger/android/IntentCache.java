@@ -45,27 +45,27 @@ import kr.apptimer.database.data.InstalledApplication;
 @Singleton
 public final class IntentCache {
 
-  /***
-   * String: {@link InstalledApplication#getPackageUri()}
-   * PendingIntent: {@link TaskScheduler#scheduleTask(SerializableTask, Date)}
-   */
-  private HashMap<String, PendingIntent> caches;
+    /***
+     * String: {@link InstalledApplication#getPackageUri()}
+     * PendingIntent: {@link TaskScheduler#scheduleTask(SerializableTask, Date)}
+     */
+    private HashMap<String, PendingIntent> caches;
 
-  @Inject
-  public IntentCache() {}
+    @Inject
+    public IntentCache() {}
 
-  public PendingIntent getCachedIntent(String packageUri) {
-    return caches.get(packageUri);
-  }
-
-  public String getPackageUri(PendingIntent intent) {
-    for (Map.Entry<String, PendingIntent> entry : caches.entrySet()) {
-      if (entry.getValue().equals(intent)) return entry.getKey();
+    public PendingIntent getCachedIntent(String packageUri) {
+        return caches.get(packageUri);
     }
-    return null;
-  }
 
-  public void putCache(String packageUri, PendingIntent intent) {
-    caches.put(packageUri, intent);
-  }
+    public String getPackageUri(PendingIntent intent) {
+        for (Map.Entry<String, PendingIntent> entry : caches.entrySet()) {
+            if (entry.getValue().equals(intent)) return entry.getKey();
+        }
+        return null;
+    }
+
+    public void putCache(String packageUri, PendingIntent intent) {
+        caches.put(packageUri, intent);
+    }
 }

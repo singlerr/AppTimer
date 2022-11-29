@@ -41,43 +41,43 @@ import kr.apptimer.dagger.module.FirebaseProvider;
 
 @Singleton
 @Component(
-    modules = {
-      DatabaseProvider.class,
-      ApplicationContextProvider.class,
-      ActivityContextModule.class,
-      FirebaseProvider.class
-    })
+        modules = {
+            DatabaseProvider.class,
+            ApplicationContextProvider.class,
+            ActivityContextModule.class,
+            FirebaseProvider.class
+        })
 public interface ApplicationContext {
 
-  /***
-   * 3. To create subcomponent, you must create a function that exposes {@link kr.apptimer.dagger.context.ActivityContext.Factory}
-   * @return factory of {@link ActivityContext}
-   */
-  ActivityContext.Factory activityContextFactory();
+    /***
+     * 3. To create subcomponent, you must create a function that exposes {@link kr.apptimer.dagger.context.ActivityContext.Factory}
+     * @return factory of {@link ActivityContext}
+     */
+    ActivityContext.Factory activityContextFactory();
 
-  /***
-   * This tells Dagger that {@link ApplicationInstallationReceiver} requests
-   * injection so that fields with {@link javax.inject.Inject} become not null
-   *
-   * @param receiver
-   *            receiver instance
-   */
-  void inject(ApplicationInstallationReceiver receiver);
-  /***
-   * This tells Dagger that {@link AppExpirationOverlayService} requests injection
-   * so that fields with {@link javax.inject.Inject} become not null
-   *
-   * @param service
-   *            service instance
-   */
-  void inject(AppExpirationOverlayService service);
+    /***
+     * This tells Dagger that {@link ApplicationInstallationReceiver} requests
+     * injection so that fields with {@link javax.inject.Inject} become not null
+     *
+     * @param receiver
+     *            receiver instance
+     */
+    void inject(ApplicationInstallationReceiver receiver);
+    /***
+     * This tells Dagger that {@link AppExpirationOverlayService} requests injection
+     * so that fields with {@link javax.inject.Inject} become not null
+     *
+     * @param service
+     *            service instance
+     */
+    void inject(AppExpirationOverlayService service);
 
-  /***
-   * This tells Dagger that {@link AlarmRestorer} requests injection
-   * so that fields with {@link javax.inject.Inject} become not null
-   *
-   * @param restorer
-   *            boot broadcast receiver instance
-   */
-  void inject(AlarmRestorer restorer);
+    /***
+     * This tells Dagger that {@link AlarmRestorer} requests injection
+     * so that fields with {@link javax.inject.Inject} become not null
+     *
+     * @param restorer
+     *            boot broadcast receiver instance
+     */
+    void inject(AlarmRestorer restorer);
 }

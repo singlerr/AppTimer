@@ -45,30 +45,32 @@ import lombok.Getter;
  */
 public final class InjectApplicationContext extends Application {
 
-  private BroadcastReceiver appInstallationReceiver;
+    private BroadcastReceiver appInstallationReceiver;
 
-  @Getter private static InjectApplicationContext instance;
+    @Getter
+    private static InjectApplicationContext instance;
 
-  @Getter private final ApplicationContext context = DaggerApplicationContext.create();
+    @Getter
+    private final ApplicationContext context = DaggerApplicationContext.create();
 
-  public InjectApplicationContext() {
+    public InjectApplicationContext() {
 
-    instance = this;
-  }
+        instance = this;
+    }
 
-  @Override
-  public void onCreate() {
-    super.onCreate();
-    appInstallationReceiver = registerReceiver();
-  }
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        appInstallationReceiver = registerReceiver();
+    }
 
-  private BroadcastReceiver registerReceiver() {
-    BroadcastReceiver receiver = new ApplicationInstallationReceiver();
-    IntentFilter filter = new IntentFilter();
-    filter.addAction(Intent.ACTION_PACKAGE_ADDED);
-    filter.addDataScheme("package");
+    private BroadcastReceiver registerReceiver() {
+        BroadcastReceiver receiver = new ApplicationInstallationReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_PACKAGE_ADDED);
+        filter.addDataScheme("package");
 
-    registerReceiver(receiver, filter);
-    return receiver;
-  }
+        registerReceiver(receiver, filter);
+        return receiver;
+    }
 }

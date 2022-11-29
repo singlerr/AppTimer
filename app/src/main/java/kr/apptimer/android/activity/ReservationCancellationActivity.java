@@ -46,73 +46,69 @@ import kr.apptimer.dagger.context.ActivityContext;
  * Activity which user can cancel application removal reservation
  */
 public final class ReservationCancellationActivity extends InjectedAppCompatActivity
-    implements View.OnClickListener, DialogInterface.OnClickListener {
-  private Button removeButton;
-  private Button addButton;
-  private GridLayout gridLayout;
-  private Drawable backgroundDrawable;
-  private AlertDialog alertDialog;
+        implements View.OnClickListener, DialogInterface.OnClickListener {
+    private Button removeButton;
+    private Button addButton;
+    private GridLayout gridLayout;
+    private Drawable backgroundDrawable;
+    private AlertDialog alertDialog;
 
-  @Override
-  public void onActivityCreate(Bundle savedInstanceState) {
-    addButton = findViewById(kr.apptimer.R.id.addButton);
-    removeButton = findViewById(kr.apptimer.R.id.removeButton);
-    gridLayout = findViewById(kr.apptimer.R.id.layout_1);
-    backgroundDrawable = getDrawable(kr.apptimer.R.drawable.icon_basic);
-  }
+    @Override
+    public void onActivityCreate(Bundle savedInstanceState) {
+        addButton = findViewById(kr.apptimer.R.id.addButton);
+        removeButton = findViewById(kr.apptimer.R.id.removeButton);
+        gridLayout = findViewById(kr.apptimer.R.id.layout_1);
+        backgroundDrawable = getDrawable(kr.apptimer.R.drawable.icon_basic);
+    }
 
-  @Override
-  public void onClick(DialogInterface dialog, int which) {
-    if (dialog == alertDialog) {
-      if (which == DialogInterface.BUTTON_POSITIVE) {
-        CheckBox childView;
-        for (int i = 0; i < gridLayout.getChildCount(); i++) {
-          childView = (CheckBox) gridLayout.getChildAt(i);
-          if (childView.isChecked()) {
-            gridLayout.removeView(childView);
-            i--;
-          }
+    @Override
+    public void onClick(DialogInterface dialog, int which) {
+        if (dialog == alertDialog) {
+            if (which == DialogInterface.BUTTON_POSITIVE) {
+                CheckBox childView;
+                for (int i = 0; i < gridLayout.getChildCount(); i++) {
+                    childView = (CheckBox) gridLayout.getChildAt(i);
+                    if (childView.isChecked()) {
+                        gridLayout.removeView(childView);
+                        i--;
+                    }
+                }
+                Toast toast = Toast.makeText(ReservationCancellationActivity.this, "예약이 취소되었습니다.", Toast.LENGTH_SHORT);
+                toast.show();
+            } else if (which == DialogInterface.BUTTON_NEGATIVE) {
+                Toast toast = Toast.makeText(ReservationCancellationActivity.this, "취소되었습니다.", Toast.LENGTH_SHORT);
+                toast.show();
+            }
         }
-        Toast toast =
-            Toast.makeText(
-                ReservationCancellationActivity.this, "예약이 취소되었습니다.", Toast.LENGTH_SHORT);
-        toast.show();
-      } else if (which == DialogInterface.BUTTON_NEGATIVE) {
-        Toast toast =
-            Toast.makeText(ReservationCancellationActivity.this, "취소되었습니다.", Toast.LENGTH_SHORT);
-        toast.show();
-      }
     }
-  }
 
-  @Override
-  public void onClick(View view) {
-    if (view == addButton) {
-      CheckBox checkBox = new CheckBox(this);
-      checkBox.setBackground(backgroundDrawable);
-      checkBox.setGravity(Gravity.TOP | Gravity.LEFT);
-      gridLayout.addView(checkBox);
-    } else if (view == removeButton) {
-      AlertDialog.Builder builder =
-          new AlertDialog.Builder(this)
-              .setIcon(android.R.drawable.ic_dialog_alert)
-              .setTitle("알림")
-              .setMessage("삭제 예정을 취소하시겠어요?")
-              .setPositiveButton("예", this)
-              .setNegativeButton("아니요", this);
-      alertDialog = builder.create();
-      alertDialog.show();
+    @Override
+    public void onClick(View view) {
+        if (view == addButton) {
+            CheckBox checkBox = new CheckBox(this);
+            checkBox.setBackground(backgroundDrawable);
+            checkBox.setGravity(Gravity.TOP | Gravity.LEFT);
+            gridLayout.addView(checkBox);
+        } else if (view == removeButton) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setTitle("알림")
+                    .setMessage("삭제 예정을 취소하시겠어요?")
+                    .setPositiveButton("예", this)
+                    .setNegativeButton("아니요", this);
+            alertDialog = builder.create();
+            alertDialog.show();
+        }
     }
-  }
 
-  @Override
-  public void bindListeners() {
-    addButton.setOnClickListener(this);
-    removeButton.setOnClickListener(this);
-  }
+    @Override
+    public void bindListeners() {
+        addButton.setOnClickListener(this);
+        removeButton.setOnClickListener(this);
+    }
 
-  @Override
-  protected void inject(ActivityContext context) {
-    context.inject(this);
-  }
+    @Override
+    protected void inject(ActivityContext context) {
+        context.inject(this);
+    }
 }

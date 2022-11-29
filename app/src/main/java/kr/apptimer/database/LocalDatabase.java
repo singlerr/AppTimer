@@ -46,10 +46,10 @@ import kr.apptimer.database.utils.DateConverter;
 @TypeConverters(DateConverter.class)
 public abstract class LocalDatabase extends RoomDatabase {
 
-  /***
-   * Returns {@link InstalledApplicationDao} instance
-   *
-   * @return {@link InstalledApplicationDao} instance
-   */
-  public abstract InstalledApplicationDao installedApplicationDao();
+    /***
+     * Returns {@link InstalledApplicationDao} instance
+     *
+     * @return {@link InstalledApplicationDao} instance
+     */
+    public abstract InstalledApplicationDao installedApplicationDao();
 }

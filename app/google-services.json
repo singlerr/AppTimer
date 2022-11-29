@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:595554661834:android:e3cd6e12b2c7ce3c520b33",
         "android_client_info": {
-          "package_name": "kr.apptimer.AppTimer"
+          "package_name": "kr.apptimer"
         }
       },
       "oauth_client": [
