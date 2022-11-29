@@ -12,9 +12,10 @@ import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.material.tabs.TabLayout;
+
 import kr.apptimer.R;
 import kr.apptimer.android.page.PagerAdater;
-import com.google.android.material.tabs.TabLayout;
 
 
 public class slider extends AppCompatActivity {
@@ -23,6 +24,9 @@ public class slider extends AppCompatActivity {
     protected void onCreate(Bundle savedInstance){
         super.onCreate(savedInstance);
         setContentView(R.layout.activity_slider);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            startActivity(new Intent(android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM, Uri.parse("package:" + getPackageName())));
+        }
         permissionCheck();
         TabLayout tabLayout=findViewById(R.id.tabLayout);
         ViewPager viewPager=findViewById(R.id.vpPager);
@@ -33,7 +37,7 @@ public class slider extends AppCompatActivity {
         StartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(),MainActivity3.class);
+                Intent intent = new Intent(getApplicationContext(),MainActivity.class);
                 startActivity(intent);
             }
         });
