@@ -38,7 +38,7 @@ import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 import kr.apptimer.R;
 
-public class Permisson extends AppCompatActivity {
+public class PermissionPage extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +59,22 @@ public class Permisson extends AppCompatActivity {
             });
         } else {
             setContentView(R.layout.activity_main7);
+            Button StaticButton = findViewById(R.id.statistics);
+            StaticButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getApplicationContext(), statistics.class);
+                    startActivity(intent);
+                }
+            });
+            Button cancelReservationButton = findViewById(R.id.reservationNo);
+            cancelReservationButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getApplicationContext(), ReservationCancelPage.class);
+                    startActivity(intent);
+                }
+            });
         }
     }
 }

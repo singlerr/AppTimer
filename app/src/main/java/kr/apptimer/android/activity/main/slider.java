@@ -50,6 +50,9 @@ public class slider extends AppCompatActivity {
     protected void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
         setContentView(R.layout.activity_slider);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            startActivity(new Intent(android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM, Uri.parse("package:" + getPackageName())));
+        }
         permissionCheck();
         TabLayout tabLayout = findViewById(R.id.tabLayout);
         ViewPager viewPager = findViewById(R.id.vpPager);
