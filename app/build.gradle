@@ -31,19 +31,20 @@ android {
 }
 
 
+
 def permissionLibVersion = "6.2.3"
 def roomVersion = "2.4.3"
 dependencies {
+    /***
+     * Android chart library
+     */
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
     /***
      * Dependency - Firebase BOM
      */
     implementation platform('com.google.firebase:firebase-bom:31.0.3')
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-database'
-    /***
-     * Dependency - RxPermission - An android lib for easy permission request
-     */
-    implementation "com.karumi:dexter:${permissionLibVersion}"
     /***
      * Dependency - Lombok
      */
