@@ -27,30 +27,24 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package kr.apptimer.android.activity.misc;
+package kr.apptimer.android.activity.main;
 
 import android.os.Bundle;
-import android.view.View;
 import androidx.annotation.Nullable;
+import kr.apptimer.R;
 import kr.apptimer.base.InjectedAppCompatActivity;
 import kr.apptimer.dagger.context.ActivityContext;
 
-/***
- * Activity which shows statistics of due time of application to user
- */
-public final class DueTimeStatsActivity extends InjectedAppCompatActivity {
+public final class Statistics extends InjectedAppCompatActivity {
+
     /***
      * Called after calling {@link ActivityContext#inject(any extends InjectedAppCompatActivity)} in context of {@link #onCreate(Bundle)}
      * @param savedInstanceState
      */
     @Override
-    public void onActivityCreate(@Nullable Bundle savedInstanceState) {}
-
-    /***
-     * Register listener for {@link View} here
-     */
-    @Override
-    public void bindListeners() {}
+    public void onActivityCreate(@Nullable Bundle savedInstanceState) {
+        setContentView(R.layout.activity_statistics_page);
+    }
 
     /***
      * Fill the method body to inject subclass of this using {@param context}

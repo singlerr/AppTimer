@@ -35,16 +35,21 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.Nullable;
 import kr.apptimer.R;
+import kr.apptimer.base.InjectedAppCompatActivity;
+import kr.apptimer.dagger.context.ActivityContext;
 
-public class PermissionPage extends AppCompatActivity {
+public class PermissionPage extends InjectedAppCompatActivity {
+    /***
+     * Called after calling {@link ActivityContext#inject(any extends InjectedAppCompatActivity)} in context of {@link #onCreate(Bundle)}
+     * @param savedInstanceState
+     */
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onActivityCreate(@Nullable Bundle savedInstanceState) {
         SharedPreferences pref = getSharedPreferences("isFirst", Activity.MODE_PRIVATE);
         boolean first = pref.getBoolean("isFirst", false);
-        if (first == false) {
+        if (!first) {
             SharedPreferences.Editor editor = pref.edit();
             editor.putBoolean("isFirst", true);
             editor.commit();
@@ -53,28 +58,30 @@ public class PermissionPage extends AppCompatActivity {
             CheckButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(getApplicationContext(), slider.class);
+                    Intent intent = new Intent(getApplicationContext(), Slider.class);
                     startActivity(intent);
                 }
             });
         } else {
-            setContentView(R.layout.activity_main7);
+            setContentView(R.layout.activity_main);
             Button StaticButton = findViewById(R.id.statistics);
-            StaticButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getApplicationContext(), statistics.class);
-                    startActivity(intent);
-                }
+            StaticButton.setOnClickListener(v -> {
+                Intent intent = new Intent(getApplicationContext(), Statistics.class);
+                startActivity(intent);
             });
             Button cancelReservationButton = findViewById(R.id.reservationNo);
-            cancelReservationButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getApplicationContext(), ReservationCancelPage.class);
-                    startActivity(intent);
-                }
+            cancelReservationButton.setOnClickListener(v -> {
+                Intent intent = new Intent(getApplicationContext(), ReservationCancelPage.class);
+                startActivity(intent);
             });
         }
+    }
+    /***
+     * Fill the method body to inject subclass of this using {@param context}
+     * @param context {@link ActivityContext}
+     */
+    @Override
+    protected void inject(ActivityContext context) {
+        context.inject(this);
     }
 }

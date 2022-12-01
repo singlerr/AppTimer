@@ -33,8 +33,11 @@ import dagger.Subcomponent;
 import kr.apptimer.android.activity.ReservationCancellationActivity;
 import kr.apptimer.android.activity.SettingsActivity;
 import kr.apptimer.android.activity.intro.IntroSlideActivity;
+import kr.apptimer.android.activity.main.PermissionPage;
+import kr.apptimer.android.activity.main.ReservationCancelPage;
 import kr.apptimer.android.activity.main.ReservedAppListActivity;
-import kr.apptimer.android.activity.misc.DueTimeStatsActivity;
+import kr.apptimer.android.activity.main.Slider;
+import kr.apptimer.android.activity.main.Statistics;
 import kr.apptimer.android.activity.permission.PermissionRequestActivity;
 import kr.apptimer.base.InjectedAppCompatActivity;
 
@@ -104,11 +107,38 @@ public interface ActivityContext {
     void inject(ReservedAppListActivity activity);
 
     /***
-     * This tells Dagger that {@link DueTimeStatsActivity} requests injection
+     * This tells Dagger that {@link Statistics} requests injection
      * so that fields with {@link javax.inject.Inject} become not null
      *
      * @param activity
      *            activity
      */
-    void inject(DueTimeStatsActivity activity);
+    void inject(Statistics activity);
+
+    /***
+     * This tells Dagger that {@link PermissionPage} requests injection
+     * so that fields with {@link javax.inject.Inject} become not null
+     *
+     * @param activity
+     *            activity
+     */
+    void inject(PermissionPage activity);
+
+    /***
+     * This tells Dagger that {@link ReservationCancelPage} requests injection
+     * so that fields with {@link javax.inject.Inject} become not null
+     *
+     * @param activity
+     *            activity
+     */
+    void inject(ReservationCancelPage activity);
+
+    /***
+     * This tells Dagger that {@link Slider} requests injection
+     * so that fields with {@link javax.inject.Inject} become not null
+     *
+     * @param activity
+     *            activity
+     */
+    void inject(Slider activity);
 }

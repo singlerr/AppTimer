@@ -53,7 +53,7 @@ public abstract class InjectedAppCompatActivity extends AppCompatActivity {
     /***
      * Register listener for {@link android.view.View} here
      */
-    public abstract void bindListeners();
+    public void bindListeners() {}
     /***
      * Fill the method body to inject subclass of this using {@param context}
      * @param context {@link ActivityContext}
