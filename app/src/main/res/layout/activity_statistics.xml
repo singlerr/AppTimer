@@ -51,6 +51,10 @@
         android:layout_marginTop="20dp"
         android:background="@drawable/btn" />
 
+    <com.github.mikephil.charting.charts.BarChart
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"/>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
