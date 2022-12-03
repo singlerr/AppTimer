@@ -39,7 +39,6 @@ import lombok.Getter;
  * Saved in google firebase
  * @author Singlerr
  */
-@Data
 public final class ApplicationStats {
 
     /***
@@ -59,6 +58,27 @@ public final class ApplicationStats {
      */
     @NonNull
     private Map<DueCategory, Integer> dueTimeCounts;
+
+    public ApplicationStats(String applicationName, String packageUri,Map<DueCategory,Integer> dueTimeCounts){
+        this.applicationName = applicationName;
+        this.packageUri = packageUri;
+        this.dueTimeCounts = dueTimeCounts;
+    }
+
+    @NonNull
+    public Map<DueCategory, Integer> getDueTimeCounts() {
+        return dueTimeCounts;
+    }
+
+    @NonNull
+    public String getApplicationName() {
+        return applicationName;
+    }
+
+    @NonNull
+    public String getPackageUri() {
+        return packageUri;
+    }
 
     public enum DueCategory {
         SHORT(1),
