@@ -29,53 +29,30 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package kr.apptimer.android.activity.main;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
 import androidx.annotation.Nullable;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import kr.apptimer.R;
 import kr.apptimer.base.InjectedAppCompatActivity;
+import kr.apptimer.dagger.android.AppAnalyticsHandler;
 import kr.apptimer.dagger.context.ActivityContext;
 
-public class PermissionPage extends InjectedAppCompatActivity {
+public final class StatisticsPage extends InjectedAppCompatActivity {
+
+
+
     /***
      * Called after calling {@link ActivityContext#inject(any extends InjectedAppCompatActivity)} in context of {@link #onCreate(Bundle)}
      * @param savedInstanceState
      */
     @Override
     public void onActivityCreate(@Nullable Bundle savedInstanceState) {
-        SharedPreferences pref = getSharedPreferences("isFirst", Activity.MODE_PRIVATE);
-        boolean first = pref.getBoolean("isFirst", false);
-        if (!first) {
-            SharedPreferences.Editor editor = pref.edit();
-            editor.putBoolean("isFirst", true);
-            editor.commit();
-            setContentView(R.layout.activity_permission_request);
-            Button CheckButton = findViewById(R.id.check);
-            CheckButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getApplicationContext(), Slider.class);
-                    startActivity(intent);
-                }
-            });
-        } else {
-            setContentView(R.layout.activity_main);
-            Button StaticButton = findViewById(R.id.statistics);
-            StaticButton.setOnClickListener(v -> {
-                Intent intent = new Intent(getApplicationContext(), StatisticsPage.class);
-                startActivity(intent);
-            });
-            Button cancelReservationButton = findViewById(R.id.reservationNo);
-            cancelReservationButton.setOnClickListener(v -> {
-                Intent intent = new Intent(getApplicationContext(), ReservationCancelPage.class);
-                startActivity(intent);
-            });
-        }
+        setContentView(R.layout.activity_statistics_page);
     }
+
     /***
      * Fill the method body to inject subclass of this using {@param context}
      * @param context {@link ActivityContext}
