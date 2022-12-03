@@ -31,18 +31,11 @@ package kr.apptimer.android.activity.main;
 
 import android.os.Bundle;
 import androidx.annotation.Nullable;
-
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import kr.apptimer.R;
 import kr.apptimer.base.InjectedAppCompatActivity;
-import kr.apptimer.dagger.android.AppAnalyticsHandler;
 import kr.apptimer.dagger.context.ActivityContext;
 
 public final class StatisticsPage extends InjectedAppCompatActivity {
-
-
 
     /***
      * Called after calling {@link ActivityContext#inject(any extends InjectedAppCompatActivity)} in context of {@link #onCreate(Bundle)}

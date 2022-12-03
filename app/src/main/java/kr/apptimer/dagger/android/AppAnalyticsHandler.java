@@ -31,13 +31,10 @@ package kr.apptimer.dagger.android;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
 import kr.apptimer.database.data.ApplicationStats;
-import kr.apptimer.database.data.InstalledApplication;
 import kr.apptimer.database.utils.DataNotFoundException;
 
 /***
@@ -58,17 +55,24 @@ public final class AppAnalyticsHandler {
      * Add new {@link ApplicationStats} information to database
      * @param info {@link ApplicationStats}
      */
-    public void submitAppInformation(ApplicationStats info, OnSuccessListener<Void> successListener, OnFailureListener failureListener) {
-        database.child("apps").child(info.getPackageUri()).setValue(info).addOnSuccessListener(successListener).addOnFailureListener(failureListener);
+    public void submitAppInformation(
+            ApplicationStats info, OnSuccessListener<Void> successListener, OnFailureListener failureListener) {
+        database.child("apps")
+                .child(info.getPackageUri())
+                .setValue(info)
+                .addOnSuccessListener(successListener)
+                .addOnFailureListener(failureListener);
     }
 
-    public void getAppInformation(String packageUri, OnSuccessListener<ApplicationStats> successListener, OnFailureListener failureListener){
-        database.child("apps").child(packageUri).get().addOnSuccessListener(dataSnapshot -> {
-            if(dataSnapshot.exists())
-                successListener.onSuccess(dataSnapshot.getValue(ApplicationStats.class));
-            else
-                failureListener.onFailure(new DataNotFoundException());
-        })
+    public void getAppInformation(
+            String packageUri, OnSuccessListener<ApplicationStats> successListener, OnFailureListener failureListener) {
+        database.child("apps")
+                .child(packageUri)
+                .get()
+                .addOnSuccessListener(dataSnapshot -> {
+                    if (dataSnapshot.exists()) successListener.onSuccess(dataSnapshot.getValue(ApplicationStats.class));
+                    else failureListener.onFailure(new DataNotFoundException());
+                })
                 .addOnFailureListener(failureListener);
     }
 }
