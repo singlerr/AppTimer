@@ -27,67 +27,31 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package kr.apptimer.android.activity.main.recycler;
+package kr.apptimer.android.activity.main;
 
-import android.database.DataSetObserver;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ListAdapter;
+import android.os.Bundle;
+import androidx.annotation.Nullable;
+import kr.apptimer.R;
+import kr.apptimer.base.InjectedAppCompatActivity;
+import kr.apptimer.dagger.context.ActivityContext;
 
-public final class VerticalViewAdapter implements ListAdapter {
+public final class StatisticsPage extends InjectedAppCompatActivity {
+
+    /***
+     * Called after calling {@link ActivityContext#inject(any extends InjectedAppCompatActivity)} in context of {@link #onCreate(Bundle)}
+     * @param savedInstanceState
+     */
     @Override
-    public boolean areAllItemsEnabled() {
-        return false;
+    public void onActivityCreate(@Nullable Bundle savedInstanceState) {
+        setContentView(R.layout.activity_statistics_page);
     }
 
+    /***
+     * Fill the method body to inject subclass of this using {@param context}
+     * @param context {@link ActivityContext}
+     */
     @Override
-    public boolean isEnabled(int i) {
-        return false;
-    }
-
-    @Override
-    public void registerDataSetObserver(DataSetObserver dataSetObserver) {}
-
-    @Override
-    public void unregisterDataSetObserver(DataSetObserver dataSetObserver) {}
-
-    @Override
-    public int getCount() {
-        return 0;
-    }
-
-    @Override
-    public Object getItem(int i) {
-        return null;
-    }
-
-    @Override
-    public long getItemId(int i) {
-        return 0;
-    }
-
-    @Override
-    public boolean hasStableIds() {
-        return false;
-    }
-
-    @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
-        return null;
-    }
-
-    @Override
-    public int getItemViewType(int i) {
-        return 0;
-    }
-
-    @Override
-    public int getViewTypeCount() {
-        return 0;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return false;
+    protected void inject(ActivityContext context) {
+        context.inject(this);
     }
 }

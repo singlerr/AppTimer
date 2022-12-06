@@ -66,7 +66,7 @@ public class PermissionPage extends InjectedAppCompatActivity {
             setContentView(R.layout.activity_main);
             Button StaticButton = findViewById(R.id.statistics);
             StaticButton.setOnClickListener(v -> {
-                Intent intent = new Intent(getApplicationContext(), Statistics.class);
+                Intent intent = new Intent(getApplicationContext(), StatisticsPage.class);
                 startActivity(intent);
             });
             Button cancelReservationButton = findViewById(R.id.reservationNo);

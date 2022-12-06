@@ -29,4 +29,24 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package kr.apptimer.android.activity.main.recycler;
 
-public final class HorizontalViewAdapter {}
+import android.view.View;
+import android.widget.ImageView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+import kr.apptimer.R;
+import lombok.Getter;
+
+/***
+ * View holder for installed application icon
+ * @author Singlerr
+ */
+public final class AppViewHolder extends RecyclerView.ViewHolder {
+
+    @Getter
+    private ImageView iconImageView;
+
+    public AppViewHolder(@NonNull View itemView) {
+        super(itemView);
+        this.iconImageView = itemView.findViewById(R.id.app_icon);
+    }
+}
