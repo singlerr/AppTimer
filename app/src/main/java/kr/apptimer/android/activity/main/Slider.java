@@ -29,8 +29,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package kr.apptimer.android.activity.main;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -38,6 +40,7 @@ import android.provider.Settings;
 import android.view.View;
 import android.widget.Button;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.tabs.TabLayout;
 import kr.apptimer.R;
@@ -75,9 +78,8 @@ public final class Slider extends InjectedAppCompatActivity {
     public void onActivityCreate(@Nullable Bundle savedInstanceState) {
         setContentView(R.layout.activity_slider);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            startActivity(new Intent(
-                    android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM,
-                    Uri.parse("package:" + getPackageName())));
+            if(ContextCompat.checkSelfPermission(this, Manifest.permission.SCHEDULE_EXACT_ALARM)== PackageManager.PERMISSION_DENIED)
+                startActivity(new Intent(android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM, Uri.parse("package:" + getPackageName())));
         }
         permissionCheck();
         TabLayout tabLayout = findViewById(R.id.tabLayout);
@@ -91,9 +93,10 @@ public final class Slider extends InjectedAppCompatActivity {
             public void onClick(View v) {
                 // TODO MainActivity3
                 /*
-                Intent intent = new Intent(getApplicationContext(), MainActivity3.class);
+                Intent intent = new Intent(getApplicationContext(),MainPage.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
-
                  */
             }
         });

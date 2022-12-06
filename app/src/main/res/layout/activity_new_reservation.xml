@@ -34,31 +34,37 @@
         android:text="일"
         android:textColor="#000000" />
 
-    <NumberPicker
+    <EditText
         android:id="@+id/hour"
         android:layout_width="85dp"
         android:layout_height="60dp"
         android:layout_gravity="center"
+        android:textColor="#ffffff"
+        android:textCursorDrawable="@null"
         android:background="@drawable/btn3"
-        android:theme="@style/Numberpicker" />
+         />
 
-    <NumberPicker
+    <EditText
         android:id="@+id/day"
         android:layout_width="85dp"
         android:layout_height="60dp"
         android:layout_gravity="center|left"
+        android:textColor="#ffffff"
+        android:textCursorDrawable="@null"
         android:layout_marginLeft="28dp"
         android:background="@drawable/btn3"
-        android:theme="@style/Numberpicker" />
+        />
 
-    <NumberPicker
+    <EditText
         android:id="@+id/minute"
         android:layout_width="85dp"
         android:layout_height="60dp"
+        android:textColor="#ffffff"
+        android:textCursorDrawable="@null"
         android:layout_gravity="center|right"
         android:layout_marginRight="28dp"
         android:background="@drawable/btn3"
-        android:theme="@style/Numberpicker" />
+         />
 
     <Button
         android:id="@+id/cancel"
