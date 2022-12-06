@@ -35,6 +35,7 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 import java.util.Date;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 /***
@@ -43,6 +44,7 @@ import lombok.Setter;
  *
  * @author Singlerr
  */
+@RequiredArgsConstructor
 @Getter
 @Setter
 @Entity

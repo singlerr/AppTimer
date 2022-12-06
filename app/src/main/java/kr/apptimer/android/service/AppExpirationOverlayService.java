@@ -52,6 +52,8 @@ import kr.apptimer.dagger.android.ApplicationRemovalExecutor;
 import kr.apptimer.dagger.android.OverlayViewModel;
 import kr.apptimer.dagger.android.TaskScheduler;
 import kr.apptimer.dagger.android.task.SerializableTask;
+import kr.apptimer.database.LocalDatabase;
+import kr.apptimer.database.data.InstalledApplication;
 
 /***
  * Android service class for showing setting overlay In the overlay, user can
@@ -69,6 +71,9 @@ public final class AppExpirationOverlayService extends Service {
 
     @Inject
     ApplicationRemovalExecutor removalExecutor;
+
+    @Inject
+    LocalDatabase database;
 
     private WindowManager windowManager;
 
@@ -126,14 +131,15 @@ public final class AppExpirationOverlayService extends Service {
                     Calendar calendar = Calendar.getInstance();
 
                     calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) - 1, day, hour, second);
+
+                    String applicationName = getPackageManager().getApplicationInfo(packageName, 0).name;
+
+                    database.installedApplicationDao()
+                            .insert(new InstalledApplication(packageName, applicationName, calendar.getTime()));
+
                     taskScheduler.scheduleTask(
                             packageName,
-                            new SerializableTask() {
-                                @Override
-                                public void run() {
-                                    removalExecutor.requestRemoval(packageName);
-                                }
-                            },
+                            (SerializableTask) () -> removalExecutor.requestRemoval(packageName),
                             calendar.getTime());
                     Toast.makeText(getApplicationContext(), "예약되었습니다.", Toast.LENGTH_SHORT)
                             .show();
@@ -145,15 +151,14 @@ public final class AppExpirationOverlayService extends Service {
                 Toast.makeText(getApplicationContext(), "빈 칸이 있습니다.", Toast.LENGTH_SHORT)
                         .show();
                 Log.d(e.toString(), e.getMessage());
+            } catch (PackageManager.NameNotFoundException e) {
+                Log.d(e.toString(), e.getMessage());
             }
         });
-        editDay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                InputMethodManager imm =
-                        (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.showSoftInput(view, 0);
-            }
+        editDay.setOnClickListener(view -> {
+            InputMethodManager imm =
+                    (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.showSoftInput(view, 0);
         });
     }
 
