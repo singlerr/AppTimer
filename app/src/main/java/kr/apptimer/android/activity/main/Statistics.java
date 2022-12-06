@@ -31,10 +31,8 @@ package kr.apptimer.android.activity.main;
 
 import android.graphics.Color;
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.BarLineChartBase;
 import com.github.mikephil.charting.components.XAxis;
@@ -44,11 +42,8 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-
 import java.util.ArrayList;
-
 import javax.inject.Inject;
-
 import kr.apptimer.R;
 import kr.apptimer.base.InjectedAppCompatActivity;
 import kr.apptimer.dagger.android.AppAnalyticsHandler;
@@ -67,30 +62,35 @@ public class Statistics extends InjectedAppCompatActivity {
     @Override
     public void onActivityCreate(@Nullable Bundle savedInstanceState) {
         setContentView(R.layout.activity_statistics);
-        //Package uri 받아오기
+        // Package uri 받아오기
         String packageUri = null;
-
-
 
         ArrayList<BarEntry> entry_chart = new ArrayList<>();
         BarChart chart = findViewById(R.id.statistics);
 
-        analyticsHandler.getAppInformation(packageUri, new OnSuccessListener<ApplicationStats>() {
-            @Override
-            public void onSuccess(ApplicationStats applicationStats) {
-                int val1 = applicationStats.getDueTimeCounts().get(ApplicationStats.DueCategory.SHORT); //30분 미만 삭제 예약한 횟수
-                int val2 = applicationStats.getDueTimeCounts().get(ApplicationStats.DueCategory.MEDIUM); //30분~1시간?
-                int val3 = applicationStats.getDueTimeCounts().get(ApplicationStats.DueCategory.LONG);//그 이상
+        analyticsHandler.getAppInformation(
+                packageUri,
+                new OnSuccessListener<ApplicationStats>() {
+                    @Override
+                    public void onSuccess(ApplicationStats applicationStats) {
+                        int val1 = applicationStats
+                                .getDueTimeCounts()
+                                .get(ApplicationStats.DueCategory.SHORT); // 30분 미만 삭제 예약한 횟수
+                        int val2 = applicationStats
+                                .getDueTimeCounts()
+                                .get(ApplicationStats.DueCategory.MEDIUM); // 30분~1시간?
+                        int val3 = applicationStats.getDueTimeCounts().get(ApplicationStats.DueCategory.LONG); // 그 이상
 
-                entry_chart.add(new BarEntry(ApplicationStats.DueCategory.SHORT.getTypeId(),val1));
-                //이렇게 추가
-            }
-        }, new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                //데이터 없음 혹은 불러올 때 오류 생김
-            }
-        });
+                        entry_chart.add(new BarEntry(ApplicationStats.DueCategory.SHORT.getTypeId(), val1));
+                        // 이렇게 추가
+                    }
+                },
+                new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // 데이터 없음 혹은 불러올 때 오류 생김
+                    }
+                });
 
         entry_chart.add(new BarEntry(1, 10)); // entry_chart에 좌표 데이터를 담는다.y값이 데이터넣는값
         entry_chart.add(new BarEntry(2, 20));
@@ -122,7 +122,6 @@ public class Statistics extends InjectedAppCompatActivity {
     protected void inject(ActivityContext context) {
         context.inject(this);
     }
-
 
     public class DayAxisValueFormatter extends ValueFormatter {
         private final BarLineChartBase<?> chart;

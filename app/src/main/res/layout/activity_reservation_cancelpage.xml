@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
     <Button
@@ -16,11 +17,11 @@
         android:textColor="#ffffff"
         android:textSize="28sp" />
 
-    <Button
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/app"
         android:layout_width="90dp"
         android:layout_height="90dp"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="20dp"
-        android:text="app" />
+    />
 </RelativeLayout>

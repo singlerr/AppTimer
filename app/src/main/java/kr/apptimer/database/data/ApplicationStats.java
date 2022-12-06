@@ -31,7 +31,6 @@ package kr.apptimer.database.data;
 
 import androidx.annotation.NonNull;
 import java.util.Map;
-import lombok.Data;
 import lombok.Getter;
 
 /***
@@ -45,21 +44,24 @@ public final class ApplicationStats {
      * Name of application
      */
     @NonNull
-    private String applicationName;
+    private final String applicationName;
 
     /***
      * Package uri of application
      */
     @NonNull
-    private String packageUri;
+    private final String packageUri;
 
     /***
      * Use count per {@link DueCategory}
      */
     @NonNull
-    private Map<DueCategory, Integer> dueTimeCounts;
+    private final Map<DueCategory, Integer> dueTimeCounts;
 
-    public ApplicationStats(String applicationName, String packageUri,Map<DueCategory,Integer> dueTimeCounts){
+    public ApplicationStats(
+            @NonNull String applicationName,
+            @NonNull String packageUri,
+            @NonNull Map<DueCategory, Integer> dueTimeCounts) {
         this.applicationName = applicationName;
         this.packageUri = packageUri;
         this.dueTimeCounts = dueTimeCounts;
@@ -88,10 +90,8 @@ public final class ApplicationStats {
         @Getter
         private int typeId;
 
-        DueCategory(int typeId){
+        DueCategory(int typeId) {
             this.typeId = typeId;
         }
-
-
     }
 }

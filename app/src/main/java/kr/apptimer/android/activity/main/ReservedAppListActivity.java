@@ -32,25 +32,42 @@ package kr.apptimer.android.activity.main;
 import android.os.Bundle;
 import android.view.View;
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import javax.inject.Inject;
+import kr.apptimer.R;
+import kr.apptimer.android.activity.main.recycler.AppViewAdapter;
 import kr.apptimer.base.InjectedAppCompatActivity;
 import kr.apptimer.dagger.context.ActivityContext;
+import kr.apptimer.database.LocalDatabase;
 
 /***
  * Activity which shows screen that lists applications reserved to be deleted in future to user
  */
 public final class ReservedAppListActivity extends InjectedAppCompatActivity {
+    @Inject
+    LocalDatabase database;
+
+    private static final int SPAN_COUNT = 5;
     /***
      * Called after calling {@link ActivityContext#inject(any extends InjectedAppCompatActivity)} in context of {@link #onCreate(Bundle)}
      * @param savedInstanceState
      */
     @Override
-    public void onActivityCreate(@Nullable Bundle savedInstanceState) {}
+    public void onActivityCreate(@Nullable Bundle savedInstanceState) {
+        setContentView(R.layout.activity_reservation_cancelpage);
+    }
 
     /***
      * Register listener for {@link View} here
      */
     @Override
-    public void bindListeners() {}
+    public void bindListeners() {
+        RecyclerView recyclerView = findViewById(R.id.app);
+        recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), SPAN_COUNT));
+        recyclerView.setAdapter(new AppViewAdapter(
+                database.installedApplicationDao(), getApplicationContext().getPackageManager()));
+    }
 
     /***
      * Fill the method body to inject subclass of this using {@param context}

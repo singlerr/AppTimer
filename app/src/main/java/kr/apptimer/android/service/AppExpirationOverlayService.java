@@ -44,10 +44,14 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
+import java.util.Calendar;
 import javax.inject.Inject;
 import kr.apptimer.R;
 import kr.apptimer.base.InjectApplicationContext;
+import kr.apptimer.dagger.android.ApplicationRemovalExecutor;
 import kr.apptimer.dagger.android.OverlayViewModel;
+import kr.apptimer.dagger.android.TaskScheduler;
+import kr.apptimer.dagger.android.task.SerializableTask;
 
 /***
  * Android service class for showing setting overlay In the overlay, user can
@@ -59,6 +63,12 @@ public final class AppExpirationOverlayService extends Service {
 
     @Inject
     OverlayViewModel viewModel;
+
+    @Inject
+    TaskScheduler taskScheduler;
+
+    @Inject
+    ApplicationRemovalExecutor removalExecutor;
 
     private WindowManager windowManager;
 
@@ -104,10 +114,27 @@ public final class AppExpirationOverlayService extends Service {
         buttonNegative.setOnClickListener(view -> windowManager.removeView(view));
         buttonPositive.setOnClickListener(view -> {
             try {
+
+                int day;
+                int hour;
+                int second;
                 if (validateTime(
-                        Integer.parseInt(editDay.getText().toString()),
-                        Integer.parseInt(editHour.getText().toString()),
-                        Integer.parseInt(editMinute.getText().toString()))) {
+                        (day = Integer.parseInt(editDay.getText().toString())),
+                        (hour = Integer.parseInt(editHour.getText().toString())),
+                        (second = Integer.parseInt(editMinute.getText().toString())))) {
+
+                    Calendar calendar = Calendar.getInstance();
+
+                    calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) - 1, day, hour, second);
+                    taskScheduler.scheduleTask(
+                            packageName,
+                            new SerializableTask() {
+                                @Override
+                                public void run() {
+                                    removalExecutor.requestRemoval(packageName);
+                                }
+                            },
+                            calendar.getTime());
                     Toast.makeText(getApplicationContext(), "예약되었습니다.", Toast.LENGTH_SHORT)
                             .show();
                     windowManager.removeView(view);
