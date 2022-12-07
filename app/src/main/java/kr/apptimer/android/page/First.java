@@ -50,7 +50,7 @@ public class First extends Fragment {
     @Override
     public View onCreateView(
             @NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstance) {
-        View view = inflater.inflate(R.layout.activity_main2, container, false);
+        View view = inflater.inflate(R.layout.activity_slider_page1, container, false);
         return view;
     }
 }

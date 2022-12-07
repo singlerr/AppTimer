@@ -4,28 +4,11 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <Button
-        android:id="@+id/app1"
-        android:layout_width="90dp"
-        android:layout_height="90dp"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/app"
+        android:layout_width="368dp"
+        android:layout_height="491dp"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
-        android:text="app" />
-
-    <Button
-        android:id="@+id/app2"
-        android:layout_width="90dp"
-        android:layout_height="90dp"
-        android:layout_marginLeft="120dp"
-        android:layout_marginTop="20dp"
-        android:text="app" />
-
-    <Button
-        android:id="@+id/app3"
-        android:layout_width="90dp"
-        android:layout_height="90dp"
-        android:layout_marginLeft="220dp"
-        android:layout_marginTop="20dp"
-        android:text="app" />
+        android:layout_marginTop="20dp" />
 
 </RelativeLayout>
