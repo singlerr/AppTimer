@@ -29,17 +29,24 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package kr.apptimer.android.activity.main;
 
+import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import javax.inject.Inject;
 import kr.apptimer.R;
 import kr.apptimer.android.activity.main.recycler.AppViewAdapter;
+import kr.apptimer.android.activity.main.recycler.AppViewHolder;
 import kr.apptimer.base.InjectedAppCompatActivity;
+import kr.apptimer.dagger.android.IntentCache;
 import kr.apptimer.dagger.context.ActivityContext;
 import kr.apptimer.database.LocalDatabase;
+import kr.apptimer.database.data.InstalledApplication;
 
 /***
  * Activity which shows screen that lists applications reserved to be deleted in future to user
@@ -47,6 +54,9 @@ import kr.apptimer.database.LocalDatabase;
 public final class ReservedAppListActivity extends InjectedAppCompatActivity {
     @Inject
     LocalDatabase database;
+
+    @Inject
+    IntentCache cache;
 
     private static final int SPAN_COUNT = 5;
     /***
@@ -65,8 +75,54 @@ public final class ReservedAppListActivity extends InjectedAppCompatActivity {
     public void bindListeners() {
         RecyclerView recyclerView = findViewById(R.id.app);
         recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), SPAN_COUNT));
-        recyclerView.setAdapter(new AppViewAdapter(
-                database.installedApplicationDao(), getApplicationContext().getPackageManager()));
+
+        AppViewAdapter appViewAdapter = new AppViewAdapter(
+                database.installedApplicationDao(), getApplicationContext().getPackageManager());
+
+        recyclerView.setAdapter(appViewAdapter);
+
+        Button cancelButton = findViewById(R.id.deleteNo);
+        cancelButton.setOnClickListener(view -> {
+            for (int i = 0; i < recyclerView.getChildCount(); i++) {
+                RecyclerView.ViewHolder viewHolder = recyclerView.getChildViewHolder(recyclerView.getChildAt(i));
+                if (viewHolder instanceof AppViewHolder) {
+                    AppViewHolder app = (AppViewHolder) viewHolder;
+
+                    if (app.isSelected()) {
+                        AlertDialog dialog = new AlertDialog.Builder(this)
+                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                .setTitle("알림")
+                                .setMessage("삭제 예정을 취소하시겠어요?")
+                                .setPositiveButton("예", (dialogInterface, i1) -> {
+                                    InstalledApplication application =
+                                            database.installedApplicationDao().findByPackageUri(app.getPackageUri());
+                                    cancel(application);
+
+                                    database.installedApplicationDao().delete(application);
+
+                                    appViewAdapter.reload();
+                                    appViewAdapter.notifyDataSetChanged();
+
+                                    Toast toast = Toast.makeText(
+                                            ReservedAppListActivity.this, "예약이 취소되었습니다.", Toast.LENGTH_SHORT);
+                                    toast.show();
+                                })
+                                .setNegativeButton("아니요", null)
+                                .create();
+
+                        dialog.show();
+                    }
+                }
+            }
+        });
+    }
+
+    private void cancel(InstalledApplication installedApplication) {
+        PendingIntent pendingIntent = cache.getCachedIntent(installedApplication.getPackageUri());
+
+        if (pendingIntent == null) return;
+
+        pendingIntent.cancel();
     }
 
     /***

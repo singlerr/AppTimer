@@ -18,7 +18,7 @@
         android:theme="@style/Theme.MyApplication"
         tools:targetApi="31">
         <activity
-            android:name=".android.activity.main.Statistics"
+            android:name=".android.activity.main.Slider"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

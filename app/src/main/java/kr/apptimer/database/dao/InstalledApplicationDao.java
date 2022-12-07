@@ -53,6 +53,14 @@ public interface InstalledApplicationDao {
     List<InstalledApplication> findAll();
 
     /***
+     * Returns {@link InstalledApplication} by {@param packageUri}
+     * @param packageUri package uri of application
+     * @return {@link InstalledApplication} with {@param packageUri}
+     */
+    @Query("SELECT * FROM installedapplication WHERE package_uri= :packageUri")
+    InstalledApplication findByPackageUri(String packageUri);
+
+    /***
      * Returns unique {@link InstalledApplication} by {@param name}
      *
      * @param name

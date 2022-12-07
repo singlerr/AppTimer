@@ -35,12 +35,21 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import kr.apptimer.R;
 import lombok.Getter;
+import lombok.Setter;
 
 /***
  * View holder for installed application icon
  * @author Singlerr
  */
 public final class AppViewHolder extends RecyclerView.ViewHolder {
+
+    @Setter
+    @Getter
+    private String packageUri;
+
+    @Getter
+    @Setter
+    private boolean selected;
 
     @Getter
     private ImageView iconImageView;

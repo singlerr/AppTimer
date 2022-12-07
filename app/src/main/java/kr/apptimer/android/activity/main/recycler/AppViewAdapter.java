@@ -73,9 +73,23 @@ public final class AppViewAdapter extends RecyclerView.Adapter<AppViewHolder> {
         try {
             Drawable icon = packageManager.getApplicationIcon(application.getPackageUri());
             holder.getIconImageView().setImageDrawable(icon);
+            holder.setPackageUri(application.getPackageUri());
+
+            holder.getIconImageView().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int alpha = holder.getIconImageView().getBackground().getAlpha() == 255 ? 128 : 255;
+                    holder.getIconImageView().getBackground().setAlpha(alpha);
+                    holder.setSelected(!holder.isSelected());
+                }
+            });
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    public void reload() {
+        applicationList = database.findAll();
     }
 
     @Override

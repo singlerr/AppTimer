@@ -44,7 +44,7 @@ import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.tabs.TabLayout;
 import kr.apptimer.R;
-import kr.apptimer.android.page.PagerAdater;
+import kr.apptimer.android.page.PagerAdapter;
 import kr.apptimer.base.InjectedAppCompatActivity;
 import kr.apptimer.dagger.context.ActivityContext;
 
@@ -78,14 +78,17 @@ public final class Slider extends InjectedAppCompatActivity {
     public void onActivityCreate(@Nullable Bundle savedInstanceState) {
         setContentView(R.layout.activity_slider);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            if(ContextCompat.checkSelfPermission(this, Manifest.permission.SCHEDULE_EXACT_ALARM)== PackageManager.PERMISSION_DENIED)
-                startActivity(new Intent(android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM, Uri.parse("package:" + getPackageName())));
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.SCHEDULE_EXACT_ALARM)
+                    == PackageManager.PERMISSION_DENIED)
+                startActivity(new Intent(
+                        android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM,
+                        Uri.parse("package:" + getPackageName())));
         }
         permissionCheck();
         TabLayout tabLayout = findViewById(R.id.tabLayout);
         ViewPager viewPager = findViewById(R.id.vpPager);
-        PagerAdater pagerAdater = new PagerAdater(getSupportFragmentManager());
-        viewPager.setAdapter(pagerAdater);
+        PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(pagerAdapter);
         tabLayout.setupWithViewPager(viewPager, true);
         Button StartButton = findViewById(R.id.start);
         StartButton.setOnClickListener(new View.OnClickListener() {

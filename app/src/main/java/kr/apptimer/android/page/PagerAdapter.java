@@ -34,8 +34,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
-public class PagerAdater extends FragmentPagerAdapter {
-    public PagerAdater(@NonNull FragmentManager fm) {
+public class PagerAdapter extends FragmentPagerAdapter {
+    public PagerAdapter(@NonNull FragmentManager fm) {
         super(fm);
     }
 
