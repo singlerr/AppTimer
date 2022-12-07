@@ -30,17 +30,36 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package kr.apptimer.android.activity.main;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+import javax.inject.Inject;
 import kr.apptimer.R;
+import kr.apptimer.android.activity.main.recycler.AppViewAdapter;
+import kr.apptimer.android.activity.main.recycler.AppViewHolder;
 import kr.apptimer.base.InjectedAppCompatActivity;
+import kr.apptimer.dagger.android.IntentCache;
 import kr.apptimer.dagger.context.ActivityContext;
+import kr.apptimer.database.LocalDatabase;
+import kr.apptimer.database.data.InstalledApplication;
 
 public class PermissionPage extends InjectedAppCompatActivity {
+    private static final int SPAN_COUNT = 5;
+
+    @Inject
+    LocalDatabase database;
+
+    @Inject
+    IntentCache cache;
+
     /***
      * Called after calling {@link ActivityContext#inject(any extends InjectedAppCompatActivity)} in context of {@link #onCreate(Bundle)}
      * @param savedInstanceState
@@ -55,12 +74,9 @@ public class PermissionPage extends InjectedAppCompatActivity {
             editor.commit();
             setContentView(R.layout.activity_permission_request);
             Button CheckButton = findViewById(R.id.check);
-            CheckButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getApplicationContext(), Slider.class);
-                    startActivity(intent);
-                }
+            CheckButton.setOnClickListener(v -> {
+                Intent intent = new Intent(getApplicationContext(), Slider.class);
+                startActivity(intent);
             });
         } else {
             setContentView(R.layout.activity_main);
@@ -74,7 +90,62 @@ public class PermissionPage extends InjectedAppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), ReservationCancelPage.class);
                 startActivity(intent);
             });
+
+            RecyclerView recyclerView = findViewById(R.id.app);
+            recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), SPAN_COUNT));
+
+            AppViewAdapter appViewAdapter = new AppViewAdapter(
+                    database.installedApplicationDao(), getApplicationContext().getPackageManager());
+
+            recyclerView.setAdapter(appViewAdapter);
+
+            Button cancelButton = findViewById(R.id.reservationNo);
+
+            cancelButton.setOnClickListener(view -> {
+                for (int i = 0; i < recyclerView.getChildCount(); i++) {
+                    RecyclerView.ViewHolder viewHolder = recyclerView.getChildViewHolder(recyclerView.getChildAt(i));
+                    if (viewHolder instanceof AppViewHolder) {
+                        AppViewHolder app = (AppViewHolder) viewHolder;
+
+                        if (app.isSelected()) {
+                            AlertDialog dialog = new AlertDialog.Builder(this)
+                                    .setIcon(android.R.drawable.ic_dialog_alert)
+                                    .setTitle("알림")
+                                    .setMessage("삭제 예정을 취소하시겠어요?")
+                                    .setPositiveButton("예", (dialogInterface, i1) -> {
+                                        database.installedApplicationDao()
+                                                .findByPackageUri(app.getPackageUri())
+                                                .observeOn(Schedulers.io())
+                                                .subscribe(application -> {
+                                                    cancel(application);
+
+                                                    database.installedApplicationDao()
+                                                            .delete(application);
+
+                                                    appViewAdapter.reload();
+
+                                                    Toast toast = Toast.makeText(
+                                                            PermissionPage.this, "예약이 취소되었습니다.", Toast.LENGTH_SHORT);
+                                                    toast.show();
+                                                });
+                                    })
+                                    .setNegativeButton("아니요", null)
+                                    .create();
+
+                            dialog.show();
+                        }
+                    }
+                }
+            });
         }
+    }
+
+    private void cancel(InstalledApplication installedApplication) {
+        PendingIntent pendingIntent = cache.getCachedIntent(installedApplication.getPackageUri());
+
+        if (pendingIntent == null) return;
+
+        pendingIntent.cancel();
     }
     /***
      * Fill the method body to inject subclass of this using {@param context}

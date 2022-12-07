@@ -36,6 +36,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+import java.util.ArrayList;
 import java.util.List;
 import kr.apptimer.R;
 import kr.apptimer.database.dao.InstalledApplicationDao;
@@ -55,8 +57,13 @@ public final class AppViewAdapter extends RecyclerView.Adapter<AppViewHolder> {
 
     public AppViewAdapter(InstalledApplicationDao database, PackageManager packageManager) {
         this.database = database;
-        this.applicationList = database.findAll();
+        this.applicationList = new ArrayList<>();
         this.packageManager = packageManager;
+
+        database.findAll().observeOn(Schedulers.io()).subscribe(apps -> {
+            applicationList = apps;
+            notifyDataSetChanged();
+        });
     }
 
     @NonNull
@@ -89,7 +96,10 @@ public final class AppViewAdapter extends RecyclerView.Adapter<AppViewHolder> {
     }
 
     public void reload() {
-        applicationList = database.findAll();
+        database.findAll().observeOn(Schedulers.io()).subscribe(apps -> {
+            applicationList = apps;
+            notifyDataSetChanged();
+        });
     }
 
     @Override

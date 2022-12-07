@@ -60,6 +60,7 @@ dependencies {
      */
     implementation "androidx.room:room-runtime:$roomVersion"
     annotationProcessor "androidx.room:room-compiler:$roomVersion"
+    implementation "androidx.room:room-rxjava3:$roomVersion"
 
     //--------------------------------
     implementation 'androidx.appcompat:appcompat:1.5.1'

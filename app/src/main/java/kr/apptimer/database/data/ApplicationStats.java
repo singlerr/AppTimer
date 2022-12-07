@@ -82,6 +82,18 @@ public final class ApplicationStats {
         return packageUri;
     }
 
+    public DueCategory getMostCommon() {
+        int max = 0;
+        DueCategory dueCategory = null;
+        for (Map.Entry<DueCategory, Integer> stat : dueTimeCounts.entrySet()) {
+            if (stat.getValue() > max) {
+                dueCategory = stat.getKey();
+                max = stat.getValue();
+            }
+        }
+        return dueCategory;
+    }
+
     public enum DueCategory {
         SHORT(1),
         MEDIUM(2),

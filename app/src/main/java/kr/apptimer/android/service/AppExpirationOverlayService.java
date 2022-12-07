@@ -33,6 +33,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.os.IBinder;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -41,17 +42,21 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
 import java.util.Calendar;
 import javax.inject.Inject;
 import kr.apptimer.R;
 import kr.apptimer.base.InjectApplicationContext;
+import kr.apptimer.dagger.android.AppAnalyticsHandler;
 import kr.apptimer.dagger.android.ApplicationRemovalExecutor;
 import kr.apptimer.dagger.android.OverlayViewModel;
 import kr.apptimer.dagger.android.TaskScheduler;
 import kr.apptimer.dagger.android.task.SerializableTask;
 import kr.apptimer.database.LocalDatabase;
+import kr.apptimer.database.data.ApplicationStats;
 import kr.apptimer.database.data.InstalledApplication;
 
 /***
@@ -61,6 +66,9 @@ import kr.apptimer.database.data.InstalledApplication;
  * @author Singlerr
  */
 public final class AppExpirationOverlayService extends Service {
+
+    @Inject
+    AppAnalyticsHandler analyticsHandler;
 
     @Inject
     OverlayViewModel viewModel;
@@ -106,13 +114,14 @@ public final class AppExpirationOverlayService extends Service {
         editHour = view.findViewById(R.id.hour);
         editMinute = view.findViewById(R.id.minute);
 
-        buttonNegative.setOnClickListener(view -> windowManager.removeView(view));
+        buttonNegative.setOnClickListener(
+                view -> stopService(new Intent(getApplicationContext(), AppExpirationOverlayService.class)));
         buttonPositive.setOnClickListener(view -> {
             try {
-
                 int day;
                 int hour;
                 int second;
+
                 if (validateTime(
                         (day = Integer.parseInt(editDay.getText().toString())),
                         (hour = Integer.parseInt(editHour.getText().toString())),
@@ -143,6 +152,9 @@ public final class AppExpirationOverlayService extends Service {
                 Log.d(e.toString(), e.getMessage());
             } catch (PackageManager.NameNotFoundException e) {
                 Log.d(e.toString(), e.getMessage());
+            } catch (NumberFormatException ex) {
+                Toast.makeText(getApplicationContext(), "빈 칸이 있습니다.", Toast.LENGTH_SHORT)
+                        .show();
             }
         });
         editDay.setOnClickListener(view -> {
@@ -150,16 +162,52 @@ public final class AppExpirationOverlayService extends Service {
                     (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.showSoftInput(view, 0);
         });
+
+        editDay.setFocusableInTouchMode(true);
+        editDay.requestFocus();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         packageName = intent.getStringExtra("pkgName");
+        ImageView appIcon = view.findViewById(R.id.appicon);
+
+        TextView statsView = view.findViewById(R.id.stat_description);
+
+        analyticsHandler.getAppInformation(
+                packageName,
+                applicationStats -> {
+                    ApplicationStats.DueCategory dueCategory = applicationStats.getMostCommon();
+                    if (dueCategory == null) statsView.setText("");
+                    statsView.setText(formatText(dueCategory));
+                },
+                e -> statsView.setText(""));
+
+        try {
+            Drawable icon = getPackageManager().getApplicationIcon(packageName);
+            appIcon.setImageDrawable(icon);
+        } catch (PackageManager.NameNotFoundException e) {
+            Log.d(getClass().getName(), "Cannot load application icon");
+        }
         return super.onStartCommand(intent, flags, startId);
     }
 
     private boolean validateTime(int day, int hour, int minute) {
         return day >= 0 && hour >= 0 && hour <= 24 && minute >= 0 && minute <= 60;
+    }
+
+    private String formatText(ApplicationStats.DueCategory dueCategory) {
+        String format = "이 앱은 보통 %s 삭제돼요.";
+        switch (dueCategory) {
+            case SHORT:
+                return String.format(format, "30분 이내에");
+            case MEDIUM:
+                return String.format(format, "1시간 이내에");
+            case LONG:
+                return String.format(format, "2시간 넘어서");
+            default:
+                return null;
+        }
     }
 
     @Override

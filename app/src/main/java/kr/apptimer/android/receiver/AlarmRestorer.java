@@ -34,7 +34,6 @@ import android.content.Context;
 import android.content.Intent;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import javax.inject.Inject;
 import kr.apptimer.base.InjectApplicationContext;
 import kr.apptimer.dagger.android.ApplicationRemovalExecutor;
@@ -72,13 +71,13 @@ public final class AlarmRestorer extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
 
         if (intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)) {
-            List<InstalledApplication> reservedApplications =
-                    database.installedApplicationDao().findAll();
-            Date currentTime = Calendar.getInstance().getTime();
-            for (InstalledApplication reservedApplication : reservedApplications) {
-                if (reservedApplication.getTime().before(currentTime)) handleOutdatedSchedule(reservedApplication);
-                else handleYetSchedule(reservedApplication);
-            }
+            database.installedApplicationDao().findAll().subscribe(reservedApplications -> {
+                Date currentTime = Calendar.getInstance().getTime();
+                for (InstalledApplication reservedApplication : reservedApplications) {
+                    if (reservedApplication.getTime().before(currentTime)) handleOutdatedSchedule(reservedApplication);
+                    else handleYetSchedule(reservedApplication);
+                }
+            });
         }
     }
 

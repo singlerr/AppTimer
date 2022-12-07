@@ -58,7 +58,7 @@ public final class AppAnalyticsHandler {
     public void submitAppInformation(
             ApplicationStats info, OnSuccessListener<Void> successListener, OnFailureListener failureListener) {
         database.child("apps")
-                .child(info.getPackageUri())
+                .child(info.getPackageUri().replaceAll("\\.", "?"))
                 .setValue(info)
                 .addOnSuccessListener(successListener)
                 .addOnFailureListener(failureListener);
@@ -67,7 +67,7 @@ public final class AppAnalyticsHandler {
     public void getAppInformation(
             String packageUri, OnSuccessListener<ApplicationStats> successListener, OnFailureListener failureListener) {
         database.child("apps")
-                .child(packageUri)
+                .child(packageUri.replaceAll("\\.", "?"))
                 .get()
                 .addOnSuccessListener(dataSnapshot -> {
                     if (dataSnapshot.exists()) successListener.onSuccess(dataSnapshot.getValue(ApplicationStats.class));

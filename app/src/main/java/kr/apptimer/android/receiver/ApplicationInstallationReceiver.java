@@ -59,6 +59,7 @@ public final class ApplicationInstallationReceiver extends BroadcastReceiver {
 
             String packageName = intent.getData().getEncodedSchemeSpecificPart();
             Intent serviceIntent = new Intent(context, AppExpirationOverlayService.class);
+
             serviceIntent.putExtra("pkgName", packageName);
             context.startService(serviceIntent);
         }

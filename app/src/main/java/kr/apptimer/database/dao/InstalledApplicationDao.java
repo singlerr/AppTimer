@@ -33,6 +33,8 @@ import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Observable;
 import java.util.List;
 import kr.apptimer.database.data.InstalledApplication;
 
@@ -50,7 +52,7 @@ public interface InstalledApplicationDao {
      * @return all {@link InstalledApplication} stored in database
      */
     @Query("SELECT * FROM installedapplication")
-    List<InstalledApplication> findAll();
+    Observable<List<InstalledApplication>> findAll();
 
     /***
      * Returns {@link InstalledApplication} by {@param packageUri}
@@ -58,7 +60,7 @@ public interface InstalledApplicationDao {
      * @return {@link InstalledApplication} with {@param packageUri}
      */
     @Query("SELECT * FROM installedapplication WHERE package_uri= :packageUri")
-    InstalledApplication findByPackageUri(String packageUri);
+    Observable<InstalledApplication> findByPackageUri(String packageUri);
 
     /***
      * Returns unique {@link InstalledApplication} by {@param name}
@@ -68,7 +70,7 @@ public interface InstalledApplicationDao {
      * @return {@link InstalledApplication} with {@param name}
      */
     @Query("SELECT * FROM installedapplication WHERE app_name = :name")
-    InstalledApplication findByName(String name);
+    Observable<InstalledApplication> findByName(String name);
 
     /***
      * Returns unique {@link InstalledApplication} by {@param id}
@@ -78,7 +80,7 @@ public interface InstalledApplicationDao {
      * @return {@link InstalledApplication} with {@param id}
      */
     @Query("SELECT * FROM installedapplication WHERE id = :id")
-    InstalledApplication findById(int id);
+    Observable<InstalledApplication> findById(int id);
 
     /***
      * Insert new {@link InstalledApplication} to database Do not insert
@@ -88,7 +90,7 @@ public interface InstalledApplicationDao {
      *            {@link InstalledApplication} to insert
      */
     @Insert
-    void insert(InstalledApplication installedApplication);
+    Completable insert(InstalledApplication installedApplication);
 
     /***
      * Delete existing {@link InstalledApplication} from database.
@@ -97,7 +99,7 @@ public interface InstalledApplicationDao {
      *            {@link InstalledApplication} to delete
      */
     @Delete
-    void delete(InstalledApplication installedApplication);
+    Completable delete(InstalledApplication installedApplication);
 
     /***
      * Insert new {@link InstalledApplication} to database Do not insert
@@ -107,5 +109,5 @@ public interface InstalledApplicationDao {
      *            {@link InstalledApplication}(s) to insert
      */
     @Insert
-    void insertAll(InstalledApplication... installedApplications);
+    Completable insertAll(InstalledApplication... installedApplications);
 }
