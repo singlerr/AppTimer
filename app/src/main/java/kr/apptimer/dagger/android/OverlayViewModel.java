@@ -65,6 +65,6 @@ public final class OverlayViewModel {
                         | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
                 PixelFormat.TRANSLUCENT);
         this.layoutParams.gravity = Gravity.CENTER;
-        this.layoutId = R.layout.activity_overlay_on_package_added;
+        this.layoutId = R.layout.activity_new_reservation;
     }
 }

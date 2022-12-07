@@ -100,21 +100,12 @@ public final class AppExpirationOverlayService extends Service {
         view = inflater.inflate(viewModel.getLayoutId(), null);
 
         windowManager.addView(view, viewModel.getLayoutParams());
-
-        final ImageView appIcon = view.findViewById(R.id.addedPackageIcon);
-        try {
-            appIcon.setImageDrawable(getPackageManager().getApplicationIcon(packageName));
-        } catch (PackageManager.NameNotFoundException nameNotFoundException) {
-            Log.d(nameNotFoundException.toString(), nameNotFoundException.getMessage());
-        }
-        windowManager.addView(view, viewModel.getLayoutParams());
-
         // View 연결
-        buttonPositive = view.findViewById(R.id.buttonPositive);
-        buttonNegative = view.findViewById(R.id.buttonNegative);
-        editDay = view.findViewById(R.id.editDay);
-        editHour = view.findViewById(R.id.editHour);
-        editMinute = view.findViewById(R.id.editMinute);
+        buttonPositive = view.findViewById(R.id.ok);
+        buttonNegative = view.findViewById(R.id.cancel);
+        editDay = view.findViewById(R.id.day);
+        editHour = view.findViewById(R.id.hour);
+        editMinute = view.findViewById(R.id.minute);
 
         buttonNegative.setOnClickListener(view -> windowManager.removeView(view));
         buttonPositive.setOnClickListener(view -> {

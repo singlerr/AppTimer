@@ -30,9 +30,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package kr.apptimer.dagger.context;
 
 import dagger.Subcomponent;
-import kr.apptimer.android.activity.ReservationCancellationActivity;
 import kr.apptimer.android.activity.SettingsActivity;
-import kr.apptimer.android.activity.intro.IntroSlideActivity;
 import kr.apptimer.android.activity.main.PermissionPage;
 import kr.apptimer.android.activity.main.ReservationCancelPage;
 import kr.apptimer.android.activity.main.ReservedAppListActivity;
@@ -71,14 +69,6 @@ public interface ActivityContext {
      */
     void inject(SettingsActivity activity);
 
-    /***
-     * This tells Dagger that {@link ReservationCancellationActivity} requests injection
-     * so that fields with {@link javax.inject.Inject} become not null
-     *
-     * @param activity
-     *            activity
-     */
-    void inject(ReservationCancellationActivity activity);
 
     /***
      * This tells Dagger that {@link PermissionRequestActivity} requests injection
@@ -88,15 +78,6 @@ public interface ActivityContext {
      *            activity
      */
     void inject(PermissionRequestActivity activity);
-
-    /***
-     * This tells Dagger that {@link IntroSlideActivity} requests injection
-     * so that fields with {@link javax.inject.Inject} become not null
-     *
-     * @param activity
-     *            activity
-     */
-    void inject(IntroSlideActivity activity);
 
     /***
      * This tells Dagger that {@link ReservedAppListActivity} requests injection

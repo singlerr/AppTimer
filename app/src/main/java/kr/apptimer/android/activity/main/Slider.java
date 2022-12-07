@@ -94,13 +94,10 @@ public final class Slider extends InjectedAppCompatActivity {
         StartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO MainActivity3
-                /*
-                Intent intent = new Intent(getApplicationContext(),MainPage.class);
+                Intent intent = new Intent(getApplicationContext(), ReservedAppListActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
-                 */
             }
         });
     }

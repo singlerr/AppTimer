@@ -89,4 +89,4 @@ spotless {
     }
 }
 
-preBuild.dependsOn spotlessJavaCheck
+//preBuild.dependsOn spotlessJavaCheck
