@@ -50,7 +50,7 @@ public class Forth extends Fragment {
     @Override
     public View onCreateView(
             @NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstance) {
-        View view = inflater.inflate(R.layout.activity_main5, container, false);
+        View view = inflater.inflate(R.layout.activity_slider_page4, container, false);
         return view;
     }
 }
