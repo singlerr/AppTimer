@@ -45,12 +45,12 @@
         android:textColor="#000000"
         android:textSize="16dp" />
 
-    <View
-        android:layout_width="90dp"
-        android:layout_height="90dp"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/app"
+        android:layout_width="368dp"
+        android:layout_height="491dp"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/btn" />
+        android:layout_marginTop="20dp" />
 
 
 </RelativeLayout>
