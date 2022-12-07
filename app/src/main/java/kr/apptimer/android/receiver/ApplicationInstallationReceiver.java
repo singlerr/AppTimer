@@ -58,7 +58,6 @@ public final class ApplicationInstallationReceiver extends BroadcastReceiver {
             Log.d(context.getPackageName(), "Package Added Detected!!");
 
             String packageName = intent.getData().getEncodedSchemeSpecificPart();
-
             Intent serviceIntent = new Intent(context, AppExpirationOverlayService.class);
             serviceIntent.putExtra("pkgName", packageName);
             context.startService(serviceIntent);

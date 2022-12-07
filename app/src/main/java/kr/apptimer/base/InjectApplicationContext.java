@@ -34,7 +34,6 @@ import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.util.Log;
-
 import kr.apptimer.android.receiver.ApplicationInstallationReceiver;
 import kr.apptimer.dagger.context.ApplicationContext;
 import kr.apptimer.dagger.context.DaggerApplicationContext;
@@ -70,8 +69,6 @@ public final class InjectApplicationContext extends Application {
         BroadcastReceiver receiver = new ApplicationInstallationReceiver();
         IntentFilter filter = new IntentFilter();
         filter.addAction(Intent.ACTION_PACKAGE_ADDED);
-        filter.addAction(Intent.ACTION_PACKAGE_CHANGED);
-        filter.addAction(Intent.ACTION_PACKAGE_REMOVED);
         filter.addDataScheme("package");
 
         registerReceiver(receiver, filter);

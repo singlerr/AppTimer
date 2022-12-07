@@ -69,7 +69,6 @@ public interface ActivityContext {
      */
     void inject(SettingsActivity activity);
 
-
     /***
      * This tells Dagger that {@link PermissionRequestActivity} requests injection
      * so that fields with {@link javax.inject.Inject} become not null

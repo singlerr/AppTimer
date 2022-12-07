@@ -29,10 +29,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package kr.apptimer.dagger.android;
 
+import android.content.Context;
 import android.graphics.PixelFormat;
-import android.view.Gravity;
-import android.view.ViewGroup;
+import android.os.Build;
+import android.util.TypedValue;
 import android.view.WindowManager;
+import androidx.annotation.RequiresApi;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import kr.apptimer.R;
@@ -52,19 +54,19 @@ public final class OverlayViewModel {
 
     private int layoutId;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Inject
-    public OverlayViewModel() {
+    public OverlayViewModel(Context context) {
         this.layoutParams = new WindowManager.LayoutParams(
-                300,
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                150,
-                150,
+                (int) TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP, 370, context.getResources().getDisplayMetrics()),
+                (int) TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP, 200, context.getResources().getDisplayMetrics()),
                 WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
                         | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
                         | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
                 PixelFormat.TRANSLUCENT);
-        this.layoutParams.gravity = Gravity.CENTER;
         this.layoutId = R.layout.activity_new_reservation;
     }
 }

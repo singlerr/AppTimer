@@ -85,6 +85,7 @@ public final class Slider extends InjectedAppCompatActivity {
                         Uri.parse("package:" + getPackageName())));
         }
         permissionCheck();
+
         TabLayout tabLayout = findViewById(R.id.tabLayout);
         ViewPager viewPager = findViewById(R.id.vpPager);
         PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager());
