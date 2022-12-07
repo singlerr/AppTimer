@@ -6,6 +6,14 @@
     android:layout_marginBottom="50dp"
     android:background="@drawable/overlay"
     android:orientation="vertical">
+    <ImageView
+        android:id="@+id/appicon"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+
+        />
 
     <TextView
         android:layout_width="20sp"
@@ -41,7 +49,7 @@
         android:layout_gravity="center"
         android:textColor="#ffffff"
         android:textCursorDrawable="@null"
-        android:background="@drawable/btn3"
+        android:background="@drawable/edit_text"
          />
 
     <EditText
@@ -52,7 +60,7 @@
         android:textColor="#ffffff"
         android:textCursorDrawable="@null"
         android:layout_marginLeft="28dp"
-        android:background="@drawable/btn3"
+        android:background="@drawable/edit_text"
         />
 
     <EditText
@@ -63,7 +71,7 @@
         android:textCursorDrawable="@null"
         android:layout_gravity="center|right"
         android:layout_marginRight="28dp"
-        android:background="@drawable/btn3"
+        android:background="@drawable/edit_text"
          />
 
     <Button
@@ -101,13 +109,22 @@
         android:background="#bebebe" />
 
     <TextView
+        android:id="@+id/time_text"
         android:layout_width="300dp"
-        android:layout_height="50dp"
+        android:layout_height="20dp"
         android:layout_marginLeft="65dp"
         android:layout_marginTop="15dp"
         android:text="이 앱은 사람들이 삭제예약을 하였습니다"
         android:textColor="#000000"
         android:textSize="16dp" />
 
+    <TextView
+        android:layout_width="300dp"
+        android:layout_height="20dp"
+        android:layout_marginLeft="105dp"
+        android:layout_marginTop="40dp"
+        android:text="*이 앱은 언제 삭제되면 좋을까요?"
+        android:textColor="#808080"
+        android:textSize="13dp" />
 
 </FrameLayout>
