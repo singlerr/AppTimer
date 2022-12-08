@@ -48,9 +48,10 @@
         android:layout_height="60dp"
         android:layout_gravity="center"
         android:inputType="number"
-        android:textColor="#ffffff"
+        android:textColor="#000000"
         android:textCursorDrawable="@null"
         android:background="@drawable/edit_text"
+        android:gravity="center"
          />
 
     <EditText
@@ -59,22 +60,24 @@
         android:layout_height="60dp"
         android:inputType="number"
         android:layout_gravity="center|left"
-        android:textColor="#ffffff"
+        android:textColor="#000000"
         android:textCursorDrawable="@null"
         android:layout_marginLeft="28dp"
         android:background="@drawable/edit_text"
+        android:gravity="center"
         />
 
     <EditText
         android:id="@+id/minute"
         android:layout_width="85dp"
         android:layout_height="60dp"
-        android:textColor="#ffffff"
+        android:textColor="#000000"
         android:textCursorDrawable="@null"
         android:layout_gravity="center|right"
         android:inputType="number"
         android:layout_marginRight="28dp"
         android:background="@drawable/edit_text"
+        android:gravity="center"
          />
 
     <Button

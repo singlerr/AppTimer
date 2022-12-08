@@ -33,10 +33,12 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.IBinder;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -83,6 +85,7 @@ public final class AppExpirationOverlayService extends Service {
     LocalDatabase database;
 
     private WindowManager windowManager;
+    private WindowManager.LayoutParams params;
 
     private View view;
 
@@ -157,15 +160,8 @@ public final class AppExpirationOverlayService extends Service {
                         .show();
             }
         });
-        editDay.setOnClickListener(view -> {
-            InputMethodManager imm =
-                    (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.showSoftInput(view, 0);
-        });
-
-        editDay.setFocusableInTouchMode(true);
-        editDay.requestFocus();
     }
+
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {

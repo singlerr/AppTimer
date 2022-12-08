@@ -63,8 +63,7 @@ public final class OverlayViewModel {
                 (int) TypedValue.applyDimension(
                         TypedValue.COMPLEX_UNIT_DIP, 200, context.getResources().getDisplayMetrics()),
                 WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
-                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-                        | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
                         | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
                 PixelFormat.TRANSLUCENT);
         this.layoutId = R.layout.activity_new_reservation;
