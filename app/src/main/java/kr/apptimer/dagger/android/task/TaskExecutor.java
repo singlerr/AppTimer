@@ -33,6 +33,11 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import javax.inject.Inject;
+import kr.apptimer.base.InjectApplicationContext;
+import kr.apptimer.dagger.android.ApplicationRemovalExecutor;
+import kr.apptimer.dagger.android.NotificationHelper;
+import kr.apptimer.database.data.InstalledApplication;
 
 /***
  * Executes a task reserved at a time by
@@ -44,11 +49,25 @@ public final class TaskExecutor extends BroadcastReceiver {
 
     public static final String TASK_EXECUTOR_BUNDLE = "task_executor";
 
+    @Inject
+    NotificationHelper notificationHelper;
+
+    @Inject
+    ApplicationRemovalExecutor removalExecutor;
+
+    public TaskExecutor() {
+        super();
+        InjectApplicationContext.getInstance().getContext().inject(this);
+    }
+
     @Override
     public void onReceive(Context context, Intent intent) {
         if (intent.hasExtra(TASK_EXECUTOR_BUNDLE)) {
-            SerializableTask task = (SerializableTask) intent.getSerializableExtra(TASK_EXECUTOR_BUNDLE);
-            task.run();
+            InstalledApplication installedApplication =
+                    (InstalledApplication) intent.getSerializableExtra(TASK_EXECUTOR_BUNDLE);
+
+            removalExecutor.requestRemoval(installedApplication.getPackageUri());
+            notificationHelper.sendNotification("앱 예약 삭제", installedApplication.getName() + "이(가) 삭제되었습니다.");
         }
     }
 }

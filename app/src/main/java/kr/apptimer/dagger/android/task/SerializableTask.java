@@ -39,6 +39,8 @@ import java.io.Serializable;
  */
 public interface SerializableTask extends Serializable {
 
+    static final long serialVersionUID = 362498820763181265L;
+
     /***
      * Run task Define what this task must do here.
      */

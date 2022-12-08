@@ -32,9 +32,9 @@ package kr.apptimer.database.dao;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
-import io.reactivex.rxjava3.core.Completable;
-import io.reactivex.rxjava3.core.Observable;
+import com.google.common.util.concurrent.ListenableFuture;
 import java.util.List;
 import kr.apptimer.database.data.InstalledApplication;
 
@@ -52,7 +52,7 @@ public interface InstalledApplicationDao {
      * @return all {@link InstalledApplication} stored in database
      */
     @Query("SELECT * FROM installedapplication")
-    Observable<List<InstalledApplication>> findAll();
+    ListenableFuture<List<InstalledApplication>> findAll();
 
     /***
      * Returns {@link InstalledApplication} by {@param packageUri}
@@ -60,7 +60,7 @@ public interface InstalledApplicationDao {
      * @return {@link InstalledApplication} with {@param packageUri}
      */
     @Query("SELECT * FROM installedapplication WHERE package_uri= :packageUri")
-    Observable<InstalledApplication> findByPackageUri(String packageUri);
+    ListenableFuture<InstalledApplication> findByPackageUri(String packageUri);
 
     /***
      * Returns unique {@link InstalledApplication} by {@param name}
@@ -70,7 +70,7 @@ public interface InstalledApplicationDao {
      * @return {@link InstalledApplication} with {@param name}
      */
     @Query("SELECT * FROM installedapplication WHERE app_name = :name")
-    Observable<InstalledApplication> findByName(String name);
+    ListenableFuture<InstalledApplication> findByName(String name);
 
     /***
      * Returns unique {@link InstalledApplication} by {@param id}
@@ -80,7 +80,7 @@ public interface InstalledApplicationDao {
      * @return {@link InstalledApplication} with {@param id}
      */
     @Query("SELECT * FROM installedapplication WHERE id = :id")
-    Observable<InstalledApplication> findById(int id);
+    ListenableFuture<InstalledApplication> findById(int id);
 
     /***
      * Insert new {@link InstalledApplication} to database Do not insert
@@ -89,8 +89,8 @@ public interface InstalledApplicationDao {
      * @param installedApplication
      *            {@link InstalledApplication} to insert
      */
-    @Insert
-    Completable insert(InstalledApplication installedApplication);
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    ListenableFuture<Void> insert(InstalledApplication installedApplication);
 
     /***
      * Delete existing {@link InstalledApplication} from database.
@@ -99,7 +99,7 @@ public interface InstalledApplicationDao {
      *            {@link InstalledApplication} to delete
      */
     @Delete
-    Completable delete(InstalledApplication installedApplication);
+    ListenableFuture<Void> delete(InstalledApplication installedApplication);
 
     /***
      * Insert new {@link InstalledApplication} to database Do not insert
@@ -109,5 +109,8 @@ public interface InstalledApplicationDao {
      *            {@link InstalledApplication}(s) to insert
      */
     @Insert
-    Completable insertAll(InstalledApplication... installedApplications);
+    ListenableFuture<Void> insertAll(InstalledApplication... installedApplications);
+
+    @Query("DELETE FROM installedapplication")
+    ListenableFuture<Void> deleteAll();
 }

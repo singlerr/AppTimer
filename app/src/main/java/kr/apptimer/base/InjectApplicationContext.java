@@ -34,6 +34,9 @@ import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.util.Log;
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.common.util.concurrent.MoreExecutors;
+import java.util.concurrent.Executors;
 import kr.apptimer.android.receiver.ApplicationInstallationReceiver;
 import kr.apptimer.dagger.context.ApplicationContext;
 import kr.apptimer.dagger.context.DaggerApplicationContext;
@@ -54,9 +57,13 @@ public final class InjectApplicationContext extends Application {
     @Getter
     private final ApplicationContext context = DaggerApplicationContext.create();
 
+    @Getter
+    private static ListeningExecutorService executorService;
+
     public InjectApplicationContext() {
 
         instance = this;
+        executorService = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(5));
     }
 
     @Override

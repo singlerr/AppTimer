@@ -52,7 +52,9 @@ public final class IntentCache {
     private HashMap<String, PendingIntent> caches;
 
     @Inject
-    public IntentCache() {}
+    public IntentCache() {
+        caches = new HashMap<>();
+    }
 
     public PendingIntent getCachedIntent(String packageUri) {
         return caches.get(packageUri);

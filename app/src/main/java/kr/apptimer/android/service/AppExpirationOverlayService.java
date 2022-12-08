@@ -35,17 +35,22 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.os.IBinder;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
+
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFuture;
+
 import java.util.Calendar;
 import javax.inject.Inject;
 import kr.apptimer.R;
@@ -54,7 +59,6 @@ import kr.apptimer.dagger.android.AppAnalyticsHandler;
 import kr.apptimer.dagger.android.ApplicationRemovalExecutor;
 import kr.apptimer.dagger.android.OverlayViewModel;
 import kr.apptimer.dagger.android.TaskScheduler;
-import kr.apptimer.dagger.android.task.SerializableTask;
 import kr.apptimer.database.LocalDatabase;
 import kr.apptimer.database.data.ApplicationStats;
 import kr.apptimer.database.data.InstalledApplication;
@@ -114,14 +118,16 @@ public final class AppExpirationOverlayService extends Service {
         editHour = view.findViewById(R.id.hour);
         editMinute = view.findViewById(R.id.minute);
 
-        buttonNegative.setOnClickListener(
-                view -> stopService(new Intent(getApplicationContext(), AppExpirationOverlayService.class)));
+        buttonNegative.setOnClickListener(view -> exit());
         buttonPositive.setOnClickListener(view -> {
             try {
                 int day;
                 int hour;
                 int second;
 
+                editDay.setText("0");
+                editHour.setText("0");
+                editMinute.setText("1");
                 if (validateTime(
                         (day = Integer.parseInt(editDay.getText().toString())),
                         (hour = Integer.parseInt(editHour.getText().toString())),
@@ -131,40 +137,49 @@ public final class AppExpirationOverlayService extends Service {
 
                     calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) - 1, day, hour, second);
 
-                    String applicationName = getPackageManager().getApplicationInfo(packageName, 0).name;
+                    String applicationName = (String) getPackageManager()
+                            .getApplicationLabel(
+                                    getPackageManager().getApplicationInfo(packageName, PackageManager.GET_META_DATA));
 
-                    database.installedApplicationDao()
-                            .insert(new InstalledApplication(packageName, applicationName, calendar.getTime()));
+                    InstalledApplication application =
+                            new InstalledApplication(packageName, applicationName, calendar.getTime());
 
-                    taskScheduler.scheduleTask(
-                            packageName,
-                            (SerializableTask) () -> removalExecutor.requestRemoval(packageName),
-                            calendar.getTime());
-                    Toast.makeText(getApplicationContext(), "예약되었습니다.", Toast.LENGTH_SHORT)
-                            .show();
-                    windowManager.removeView(view);
+                    ListenableFuture<Void> future = database.installedApplicationDao()
+                            .insert(application);
+
+                    Futures.addCallback(future, new FutureCallback<Void>() {
+                        @Override
+                        public void onSuccess(Void result) {
+                            Looper.prepare();
+                            taskScheduler.scheduleApplicationRemoval(application, calendar.getTime());
+                            Toast.makeText(getApplicationContext(), "예약되었습니다.", Toast.LENGTH_SHORT)
+                                    .show();
+                        }
+
+                        @Override
+                        public void onFailure(Throwable t) {
+
+                        }
+                    }, InjectApplicationContext.getExecutorService());
+                    exit();
                 } else
                     Toast.makeText(getApplicationContext(), "비정상적인 수치를 입력했습니다.", Toast.LENGTH_SHORT)
                             .show();
-            } catch (NullPointerException e) {
-                Toast.makeText(getApplicationContext(), "빈 칸이 있습니다.", Toast.LENGTH_SHORT)
-                        .show();
-                Log.d(e.toString(), e.getMessage());
             } catch (PackageManager.NameNotFoundException e) {
                 Log.d(e.toString(), e.getMessage());
             } catch (NumberFormatException ex) {
-                Toast.makeText(getApplicationContext(), "빈 칸이 있습니다.", Toast.LENGTH_SHORT)
+                Toast.makeText(getApplicationContext(), "숫자를 입력해주세요.", Toast.LENGTH_SHORT)
                         .show();
             }
         });
         editDay.setOnClickListener(view -> {
+            /*
             InputMethodManager imm =
-                    (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            		(InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.showSoftInput(view, 0);
-        });
 
-        editDay.setFocusableInTouchMode(true);
-        editDay.requestFocus();
+             */
+        });
     }
 
     @Override
@@ -190,6 +205,10 @@ public final class AppExpirationOverlayService extends Service {
             Log.d(getClass().getName(), "Cannot load application icon");
         }
         return super.onStartCommand(intent, flags, startId);
+    }
+
+    private void exit() {
+        stopService(new Intent(getApplicationContext(), AppExpirationOverlayService.class));
     }
 
     private boolean validateTime(int day, int hour, int minute) {

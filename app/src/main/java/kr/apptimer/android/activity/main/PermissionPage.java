@@ -35,16 +35,23 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Looper;
 import android.widget.Button;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import io.reactivex.rxjava3.schedulers.Schedulers;
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFuture;
+
+import java.util.concurrent.ExecutionException;
+
 import javax.inject.Inject;
 import kr.apptimer.R;
 import kr.apptimer.android.activity.main.recycler.AppViewAdapter;
 import kr.apptimer.android.activity.main.recycler.AppViewHolder;
+import kr.apptimer.base.InjectApplicationContext;
 import kr.apptimer.base.InjectedAppCompatActivity;
 import kr.apptimer.dagger.android.IntentCache;
 import kr.apptimer.dagger.context.ActivityContext;
@@ -60,12 +67,22 @@ public class PermissionPage extends InjectedAppCompatActivity {
     @Inject
     IntentCache cache;
 
+    private RecyclerView recyclerView;
     /***
      * Called after calling {@link ActivityContext#inject(any extends InjectedAppCompatActivity)} in context of {@link #onCreate(Bundle)}
      * @param savedInstanceState
      */
     @Override
     public void onActivityCreate(@Nullable Bundle savedInstanceState) {
+
+        try {
+            database.installedApplicationDao().deleteAll().get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         SharedPreferences pref = getSharedPreferences("isFirst", Activity.MODE_PRIVATE);
         boolean first = pref.getBoolean("isFirst", false);
         if (!first) {
@@ -91,7 +108,7 @@ public class PermissionPage extends InjectedAppCompatActivity {
                 startActivity(intent);
             });
 
-            RecyclerView recyclerView = findViewById(R.id.app);
+            recyclerView = findViewById(R.id.app);
             recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), SPAN_COUNT));
 
             AppViewAdapter appViewAdapter = new AppViewAdapter(
@@ -113,21 +130,35 @@ public class PermissionPage extends InjectedAppCompatActivity {
                                     .setTitle("알림")
                                     .setMessage("삭제 예정을 취소하시겠어요?")
                                     .setPositiveButton("예", (dialogInterface, i1) -> {
-                                        database.installedApplicationDao()
-                                                .findByPackageUri(app.getPackageUri())
-                                                .observeOn(Schedulers.io())
-                                                .subscribe(application -> {
-                                                    cancel(application);
+                                        ListenableFuture<InstalledApplication> future =
+                                                database.installedApplicationDao()
+                                                        .findByPackageUri(app.getPackageUri());
 
-                                                    database.installedApplicationDao()
-                                                            .delete(application);
+                                        Futures.addCallback(
+                                                future,
+                                                new FutureCallback<InstalledApplication>() {
+                                                    @Override
+                                                    public void onSuccess(InstalledApplication result) {
+                                                        Looper.prepare();
+                                                        cancel(result);
 
-                                                    appViewAdapter.reload();
+                                                        database.installedApplicationDao()
+                                                                .delete(result)
+                                                                .addListener(
+                                                                        () -> {},
+                                                                        InjectApplicationContext.getExecutorService());
+                                                        appViewAdapter.reload();
+                                                        Toast toast = Toast.makeText(
+                                                                PermissionPage.this,
+                                                                "예약이 취소되었습니다.",
+                                                                Toast.LENGTH_SHORT);
+                                                        toast.show();
+                                                    }
 
-                                                    Toast toast = Toast.makeText(
-                                                            PermissionPage.this, "예약이 취소되었습니다.", Toast.LENGTH_SHORT);
-                                                    toast.show();
-                                                });
+                                                    @Override
+                                                    public void onFailure(Throwable t) {}
+                                                },
+                                                InjectApplicationContext.getExecutorService());
                                     })
                                     .setNegativeButton("아니요", null)
                                     .create();
@@ -138,6 +169,13 @@ public class PermissionPage extends InjectedAppCompatActivity {
                 }
             });
         }
+    }
+
+    @Override
+    protected void onRestart() {
+        AppViewAdapter viewAdapter = (AppViewAdapter) recyclerView.getAdapter();
+        viewAdapter.reload();
+        super.onRestart();
     }
 
     private void cancel(InstalledApplication installedApplication) {

@@ -36,10 +36,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import io.reactivex.rxjava3.schedulers.Schedulers;
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFuture;
 import java.util.ArrayList;
 import java.util.List;
 import kr.apptimer.R;
+import kr.apptimer.base.InjectApplicationContext;
 import kr.apptimer.database.dao.InstalledApplicationDao;
 import kr.apptimer.database.data.InstalledApplication;
 
@@ -49,21 +52,31 @@ import kr.apptimer.database.data.InstalledApplication;
  */
 public final class AppViewAdapter extends RecyclerView.Adapter<AppViewHolder> {
 
-    private InstalledApplicationDao database;
+    private final InstalledApplicationDao database;
 
     private List<InstalledApplication> applicationList;
 
-    private PackageManager packageManager;
+    private final PackageManager packageManager;
 
     public AppViewAdapter(InstalledApplicationDao database, PackageManager packageManager) {
         this.database = database;
         this.applicationList = new ArrayList<>();
         this.packageManager = packageManager;
 
-        database.findAll().observeOn(Schedulers.io()).subscribe(apps -> {
-            applicationList = apps;
-            notifyDataSetChanged();
-        });
+        ListenableFuture<List<InstalledApplication>> future = database.findAll();
+        Futures.addCallback(
+                future,
+                new FutureCallback<List<InstalledApplication>>() {
+                    @Override
+                    public void onSuccess(List<InstalledApplication> result) {
+                        applicationList = result;
+                        notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onFailure(Throwable t) {}
+                },
+                InjectApplicationContext.getExecutorService());
     }
 
     @NonNull
@@ -85,8 +98,8 @@ public final class AppViewAdapter extends RecyclerView.Adapter<AppViewHolder> {
             holder.getIconImageView().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    int alpha = holder.getIconImageView().getBackground().getAlpha() == 255 ? 128 : 255;
-                    holder.getIconImageView().getBackground().setAlpha(alpha);
+                    int alpha = holder.getIconImageView().getImageAlpha() == 255 ? 128 : 255;
+                    holder.getIconImageView().setImageAlpha(alpha);
                     holder.setSelected(!holder.isSelected());
                 }
             });
@@ -96,10 +109,20 @@ public final class AppViewAdapter extends RecyclerView.Adapter<AppViewHolder> {
     }
 
     public void reload() {
-        database.findAll().observeOn(Schedulers.io()).subscribe(apps -> {
-            applicationList = apps;
-            notifyDataSetChanged();
-        });
+        ListenableFuture<List<InstalledApplication>> future = database.findAll();
+        Futures.addCallback(
+                future,
+                new FutureCallback<List<InstalledApplication>>() {
+                    @Override
+                    public void onSuccess(List<InstalledApplication> result) {
+                        applicationList = result;
+                        notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onFailure(Throwable t) {}
+                },
+                InjectApplicationContext.getExecutorService());
     }
 
     @Override

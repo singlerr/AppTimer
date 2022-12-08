@@ -34,6 +34,7 @@ import javax.inject.Singleton;
 import kr.apptimer.android.receiver.AlarmRestorer;
 import kr.apptimer.android.receiver.ApplicationInstallationReceiver;
 import kr.apptimer.android.service.AppExpirationOverlayService;
+import kr.apptimer.dagger.android.task.TaskExecutor;
 import kr.apptimer.dagger.module.ActivityContextModule;
 import kr.apptimer.dagger.module.ApplicationContextProvider;
 import kr.apptimer.dagger.module.DatabaseProvider;
@@ -80,4 +81,13 @@ public interface ApplicationContext {
      *            boot broadcast receiver instance
      */
     void inject(AlarmRestorer restorer);
+
+    /***
+     * This tells Dagger that {@link TaskExecutor} requests injection
+     * so that fields with {@link javax.inject.Inject} become not null
+     *
+     * @param executor
+     *            task executor
+     */
+    void inject(TaskExecutor executor);
 }

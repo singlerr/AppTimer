@@ -40,6 +40,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import kr.apptimer.dagger.android.task.SerializableTask;
 import kr.apptimer.dagger.android.task.TaskExecutor;
+import kr.apptimer.database.data.InstalledApplication;
 
 /***
  * Schedule a task at a specific time(or date) by
@@ -75,11 +76,30 @@ public final class TaskScheduler {
      *            task
      * @param time
      *            time at the task to be executed
+     * @deprecated Cannot pass {@link SerializableTask} within intent
      */
+    @Deprecated
     @SuppressLint("NewApi")
     public void scheduleTask(SerializableTask task, Date time) {
         Intent intent = new Intent(context, TaskExecutor.class);
         intent.putExtra(TaskExecutor.TASK_EXECUTOR_BUNDLE, task);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
+
+        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time.getTime(), pendingIntent);
+    }
+    /***
+     * Schedule a task at a specific time
+     *
+     * @param application
+     *            application
+     * @param time
+     *            time at the task to be executed
+     */
+    @SuppressLint("NewApi")
+    public void scheduleApplicationRemoval(InstalledApplication application, Date time) {
+        Intent intent = new Intent(context, TaskExecutor.class);
+        intent.putExtra(TaskExecutor.TASK_EXECUTOR_BUNDLE, application);
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
 
@@ -95,6 +115,7 @@ public final class TaskScheduler {
      *            task
      * @param time
      *            time at the task to be executed
+     * @deprecated Cannot pass {@link SerializableTask} within intent
      */
     @SuppressLint("NewApi")
     public void scheduleTask(String packageUri, SerializableTask task, Date time) {

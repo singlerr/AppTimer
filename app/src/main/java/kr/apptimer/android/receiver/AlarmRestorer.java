@@ -32,8 +32,12 @@ package kr.apptimer.android.receiver;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFuture;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import javax.inject.Inject;
 import kr.apptimer.base.InjectApplicationContext;
 import kr.apptimer.dagger.android.ApplicationRemovalExecutor;
@@ -71,13 +75,25 @@ public final class AlarmRestorer extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
 
         if (intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)) {
-            database.installedApplicationDao().findAll().subscribe(reservedApplications -> {
-                Date currentTime = Calendar.getInstance().getTime();
-                for (InstalledApplication reservedApplication : reservedApplications) {
-                    if (reservedApplication.getTime().before(currentTime)) handleOutdatedSchedule(reservedApplication);
-                    else handleYetSchedule(reservedApplication);
-                }
-            });
+            ListenableFuture<List<InstalledApplication>> future =
+                    database.installedApplicationDao().findAll();
+            Futures.addCallback(
+                    future,
+                    new FutureCallback<List<InstalledApplication>>() {
+                        @Override
+                        public void onSuccess(List<InstalledApplication> result) {
+                            Date currentTime = Calendar.getInstance().getTime();
+                            for (InstalledApplication reservedApplication : result) {
+                                if (reservedApplication.getTime().before(currentTime))
+                                    handleOutdatedSchedule(reservedApplication);
+                                else handleYetSchedule(reservedApplication);
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Throwable t) {}
+                    },
+                    InjectApplicationContext.getExecutorService());
         }
     }
 

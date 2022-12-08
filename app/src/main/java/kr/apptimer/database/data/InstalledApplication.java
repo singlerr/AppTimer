@@ -33,6 +33,7 @@ import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+import java.io.Serializable;
 import java.util.Date;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -48,7 +49,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-public final class InstalledApplication {
+public final class InstalledApplication implements Serializable {
 
     @PrimaryKey
     private int id;
