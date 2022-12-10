@@ -42,46 +42,34 @@
         android:text="일"
         android:textColor="#000000" />
 
-    <EditText
+    <NumberPicker
         android:id="@+id/hour"
-        android:layout_width="85dp"
-        android:layout_height="60dp"
         android:layout_gravity="center"
-        android:inputType="number"
-        android:textColor="#ffffff"
-        android:textCursorDrawable="@null"
-        android:background="@drawable/edit_text"
-        android:text="0"
-         />
-
-    <EditText
-        android:id="@+id/day"
         android:layout_width="85dp"
         android:layout_height="60dp"
-        android:inputType="number"
-        android:layout_gravity="center|left"
-        android:textColor="#ffffff"
-        android:textCursorDrawable="@null"
-        android:layout_marginLeft="28dp"
-        android:background="@drawable/edit_text"
-        android:text="0"
+        android:background="@drawable/btn3"
+        android:theme="@style/Numberpicker"
         />
-
-    <EditText
-        android:id="@+id/minute"
+    <NumberPicker
+        android:id="@+id/day"
+        android:layout_marginLeft="28dp"
+        android:layout_gravity="center|left"
         android:layout_width="85dp"
         android:layout_height="60dp"
-        android:textColor="#ffffff"
-        android:textCursorDrawable="@null"
-        android:layout_gravity="center|right"
-        android:inputType="number"
+        android:background="@drawable/btn3"
+        android:theme="@style/Numberpicker"
+        />
+    <NumberPicker
+        android:id="@+id/minute"
         android:layout_marginRight="28dp"
-        android:background="@drawable/edit_text"
-        android:text="1"
-         />
+        android:layout_gravity="center|right"
+        android:layout_width="85dp"
+        android:layout_height="60dp"
+        android:background="@drawable/btn3"
+        android:theme="@style/Numberpicker"/>
 
     <Button
-        android:id="@+id/ok"
+        android:id="@+id/cancel"
         android:layout_width="182dp"
         android:layout_height="30dp"
         android:layout_gravity="bottom"
@@ -91,7 +79,7 @@
         android:text="확인"
         android:textColor="#000000" />
     <Button
-        android:id="@+id/cancel"
+        android:id="@+id/ok"
         android:layout_width="182dp"
         android:layout_height="30dp"
         android:layout_gravity="bottom"
@@ -125,7 +113,6 @@
         android:textSize="16dp" />
 
     <TextView
-        android:id="@+id/stat_description"
         android:layout_width="300dp"
         android:layout_height="20dp"
         android:layout_marginLeft="105dp"
