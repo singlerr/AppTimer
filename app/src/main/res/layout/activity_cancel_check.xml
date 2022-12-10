@@ -73,7 +73,7 @@
         android:layout_height="30dp"
         android:layout_marginLeft="125dp"
         android:layout_marginTop="65dp"
-        android:text="* 확인 하시겠습니까?"
+        android:text="* 계속 할까요?"
         android:textColor="#808080"
         android:textSize="15dp" />
 

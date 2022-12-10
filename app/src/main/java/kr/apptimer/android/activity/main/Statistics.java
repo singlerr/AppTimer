@@ -76,11 +76,11 @@ public class Statistics extends InjectedAppCompatActivity {
 
         ImageView appImageView = findViewById(R.id.appImage);
 
-        try{
+        try {
             Drawable icon = getPackageManager().getApplicationIcon(packageUri);
             appImageView.setImageDrawable(icon);
         } catch (PackageManager.NameNotFoundException e) {
-            //No-op
+            // No-op
         }
 
         BarChart chart = findViewById(R.id.statistics);
@@ -96,9 +96,9 @@ public class Statistics extends InjectedAppCompatActivity {
 
                     ArrayList<BarEntry> entry_chart = new ArrayList<>();
 
-                    entry_chart.add(new BarEntry(ApplicationStats.DueCategory.SHORT.getTypeId(), shortCount ));
-                    entry_chart.add(new BarEntry(ApplicationStats.DueCategory.MEDIUM.getTypeId(), mediumCount ));
-                    entry_chart.add(new BarEntry(ApplicationStats.DueCategory.LONG.getTypeId(), longCount ));
+                    entry_chart.add(new BarEntry(ApplicationStats.DueCategory.SHORT.getTypeId(), shortCount));
+                    entry_chart.add(new BarEntry(ApplicationStats.DueCategory.MEDIUM.getTypeId(), mediumCount));
+                    entry_chart.add(new BarEntry(ApplicationStats.DueCategory.LONG.getTypeId(), longCount));
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override
                         public void run() {
@@ -113,7 +113,6 @@ public class Statistics extends InjectedAppCompatActivity {
                 e -> {
                     Toast.makeText(this, "아직 이 앱은 통계가 없어요.", Toast.LENGTH_LONG);
                 });
-
 
         ValueFormatter xAxisFormatter = new DayAxisValueFormatter(chart);
         XAxis xAxis = chart.getXAxis();

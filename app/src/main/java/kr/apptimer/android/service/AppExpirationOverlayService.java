@@ -41,8 +41,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
@@ -89,9 +89,9 @@ public final class AppExpirationOverlayService extends Service {
 
     private View view;
 
-    private EditText editDay;
-    private EditText editHour;
-    private EditText editMinute;
+    private NumberPicker pickerDay;
+    private NumberPicker pickerHour;
+    private NumberPicker pickerMinute;
 
     private String packageName;
 
@@ -110,72 +110,69 @@ public final class AppExpirationOverlayService extends Service {
         // View 연결
         Button buttonPositive = view.findViewById(R.id.ok);
         Button buttonNegative = view.findViewById(R.id.cancel);
-        editDay = view.findViewById(R.id.day);
-        editHour = view.findViewById(R.id.hour);
-        editMinute = view.findViewById(R.id.minute);
+        pickerDay = view.findViewById(R.id.pickerDay);
+        pickerHour = view.findViewById(R.id.pickerHour);
+        pickerMinute = view.findViewById(R.id.pickerMinute);
+
+        pickerDay.setMinValue(0);
+        pickerDay.setMaxValue(100);
+
+        pickerHour.setMinValue(0);
+        pickerHour.setMaxValue(23);
+
+        pickerMinute.setMinValue(0);
+        pickerMinute.setMaxValue(59);
 
         buttonNegative.setOnClickListener(view -> exit());
         buttonPositive.setOnClickListener(view -> {
             try {
-                int day;
-                int hour;
-                int minute;
+                int day = pickerDay.getValue();
+                int hour = pickerHour.getValue();
+                int minute = pickerMinute.getValue();
 
-                editDay.setText("0");
-                editHour.setText("0");
-                editMinute.setText("1");
-                if (validateTime(
-                        (day = Integer.parseInt(editDay.getText().toString())),
-                        (hour = Integer.parseInt(editHour.getText().toString())),
-                        (minute = Integer.parseInt(editMinute.getText().toString())))) {
+                Calendar calendar = Calendar.getInstance();
 
-                    Calendar calendar = Calendar.getInstance();
+                calendar.add(Calendar.DATE, day);
+                calendar.add(Calendar.HOUR_OF_DAY, hour);
+                calendar.add(Calendar.MINUTE, minute);
 
-                    calendar.add(Calendar.DATE, day);
-                    calendar.add(Calendar.HOUR_OF_DAY, hour);
-                    calendar.add(Calendar.MINUTE, minute);
+                String applicationName = (String) getPackageManager()
+                        .getApplicationLabel(
+                                getPackageManager().getApplicationInfo(packageName, PackageManager.GET_META_DATA));
 
-                    String applicationName = (String) getPackageManager()
-                            .getApplicationLabel(
-                                    getPackageManager().getApplicationInfo(packageName, PackageManager.GET_META_DATA));
+                InstalledApplication application =
+                        new InstalledApplication(packageName, applicationName, calendar.getTime());
 
-                    InstalledApplication application =
-                            new InstalledApplication(packageName, applicationName, calendar.getTime());
+                ListenableFuture<Void> future =
+                        database.installedApplicationDao().insert(application);
 
-                    ListenableFuture<Void> future =
-                            database.installedApplicationDao().insert(application);
+                Futures.addCallback(
+                        future,
+                        new FutureCallback<Void>() {
+                            @Override
+                            public void onSuccess(Void result) {
+                                Looper.prepare();
+                                taskScheduler.scheduleApplicationRemoval(application, calendar.getTime());
 
-                    Futures.addCallback(
-                            future,
-                            new FutureCallback<Void>() {
-                                @Override
-                                public void onSuccess(Void result) {
-                                    Looper.prepare();
-                                    taskScheduler.scheduleApplicationRemoval(application, calendar.getTime());
+                                ApplicationStats stats = new ApplicationStats(application, new HashMap<>());
+                                long millis = (long) day * 24 * 60 * 60 * 1000
+                                        + (long) hour * 60 * 60 * 1000
+                                        + (long) minute * 60 * 1000;
+                                ApplicationStats.DueCategory category = ApplicationStats.DueCategory.fromMillis(millis);
+                                stats.getDueTimeCounts()
+                                        .put(
+                                                category.toString(),
+                                                stats.getDueTimeCounts().get(category.toString()) + 1);
+                                analyticsHandler.submitOrUpdateAppInformation(stats, null, null);
+                                Toast.makeText(getApplicationContext(), "예약되었습니다.", Toast.LENGTH_SHORT)
+                                        .show();
+                            }
 
-                                    ApplicationStats stats = new ApplicationStats(application, new HashMap<>());
-                                    long millis = (long) day * 24 * 60 * 60 * 1000
-                                            + (long) hour * 60 * 60 * 1000
-                                            + (long) minute * 60 * 1000;
-                                    ApplicationStats.DueCategory category =
-                                            ApplicationStats.DueCategory.fromMillis(millis);
-                                    stats.getDueTimeCounts()
-                                            .put(
-                                                    category.toString(),
-                                                    stats.getDueTimeCounts().get(category.toString()) + 1);
-                                    analyticsHandler.submitOrUpdateAppInformation(stats, null, null);
-                                    Toast.makeText(getApplicationContext(), "예약되었습니다.", Toast.LENGTH_SHORT)
-                                            .show();
-                                }
-
-                                @Override
-                                public void onFailure(Throwable t) {}
-                            },
-                            InjectApplicationContext.getExecutorService());
-                    exit();
-                } else
-                    Toast.makeText(getApplicationContext(), "비정상적인 수치를 입력했습니다.", Toast.LENGTH_SHORT)
-                            .show();
+                            @Override
+                            public void onFailure(Throwable t) {}
+                        },
+                        InjectApplicationContext.getExecutorService());
+                exit();
             } catch (PackageManager.NameNotFoundException e) {
                 Log.d(e.toString(), e.getMessage());
             } catch (NumberFormatException ex) {
@@ -191,7 +188,7 @@ public final class AppExpirationOverlayService extends Service {
         packageName = intent.getStringExtra("pkgName");
         ImageView appIcon = view.findViewById(R.id.appicon);
 
-        TextView statsView = view.findViewById(R.id.stat_description);
+        TextView statsView = view.findViewById(R.id.time_text);
 
         analyticsHandler.getAppInformation(
                 packageName,

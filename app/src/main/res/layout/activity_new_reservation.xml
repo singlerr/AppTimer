@@ -43,33 +43,41 @@
         android:textColor="#000000" />
 
     <NumberPicker
-        android:id="@+id/hour"
+        android:id="@+id/pickerHour"
         android:layout_gravity="center"
         android:layout_width="85dp"
         android:layout_height="60dp"
         android:background="@drawable/btn3"
+        android:clickable="true"
+        android:focusable="true"
         android:theme="@style/Numberpicker"
+
         />
     <NumberPicker
-        android:id="@+id/day"
+        android:id="@+id/pickerDay"
         android:layout_marginLeft="28dp"
         android:layout_gravity="center|left"
         android:layout_width="85dp"
         android:layout_height="60dp"
         android:background="@drawable/btn3"
+        android:clickable="true"
+        android:focusable="true"
         android:theme="@style/Numberpicker"
         />
     <NumberPicker
-        android:id="@+id/minute"
+        android:id="@+id/pickerMinute"
         android:layout_marginRight="28dp"
         android:layout_gravity="center|right"
         android:layout_width="85dp"
         android:layout_height="60dp"
         android:background="@drawable/btn3"
-        android:theme="@style/Numberpicker"/>
+        android:clickable="true"
+        android:focusable="true"
+        android:theme="@style/Numberpicker"
+    />
 
     <Button
-        android:id="@+id/cancel"
+        android:id="@+id/ok"
         android:layout_width="182dp"
         android:layout_height="30dp"
         android:layout_gravity="bottom"
@@ -79,7 +87,7 @@
         android:text="확인"
         android:textColor="#000000" />
     <Button
-        android:id="@+id/ok"
+        android:id="@+id/cancel"
         android:layout_width="182dp"
         android:layout_height="30dp"
         android:layout_gravity="bottom"
