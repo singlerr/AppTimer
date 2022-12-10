@@ -33,11 +33,20 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
+
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFuture;
+
 import javax.inject.Inject;
 import kr.apptimer.base.InjectApplicationContext;
 import kr.apptimer.dagger.android.ApplicationRemovalExecutor;
 import kr.apptimer.dagger.android.NotificationHelper;
+import kr.apptimer.database.LocalDatabase;
 import kr.apptimer.database.data.InstalledApplication;
+import kr.apptimer.database.data.InstalledApplicationParcelable;
 
 /***
  * Executes a task reserved at a time by
@@ -47,7 +56,12 @@ import kr.apptimer.database.data.InstalledApplication;
  */
 public final class TaskExecutor extends BroadcastReceiver {
 
-    public static final String TASK_EXECUTOR_BUNDLE = "task_executor";
+    public static final String EXECUTOR_PACKAGE_URI = "package_uri";
+
+    public static final String EXECUTOR_NAME = "name";
+
+    @Inject
+    LocalDatabase database;
 
     @Inject
     NotificationHelper notificationHelper;
@@ -62,12 +76,24 @@ public final class TaskExecutor extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (intent.hasExtra(TASK_EXECUTOR_BUNDLE)) {
-            InstalledApplication installedApplication =
-                    (InstalledApplication) intent.getSerializableExtra(TASK_EXECUTOR_BUNDLE);
+        if(intent.hasExtra(EXECUTOR_NAME) && intent.hasExtra(EXECUTOR_PACKAGE_URI)){
 
-            removalExecutor.requestRemoval(installedApplication.getPackageUri());
-            notificationHelper.sendNotification("앱 예약 삭제", installedApplication.getName() + "이(가) 삭제되었습니다.");
+            String packageUri = intent.getStringExtra(EXECUTOR_PACKAGE_URI);
+
+
+
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    removalExecutor.requestRemoval(packageUri);
+                }
+            });
+
+            notificationHelper.sendNotification("앱 예약 삭제", intent.getStringExtra(EXECUTOR_NAME) + "이(가) 삭제되었습니다.");
+            Log.d("taskExecutor", "removed");
+
+            database.installedApplicationDao().deleteByPackageUri(packageUri);
+
         }
     }
 }

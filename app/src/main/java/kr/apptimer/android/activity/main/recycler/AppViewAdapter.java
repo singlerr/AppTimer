@@ -31,6 +31,8 @@ package kr.apptimer.android.activity.main.recycler;
 
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -116,7 +118,12 @@ public final class AppViewAdapter extends RecyclerView.Adapter<AppViewHolder> {
                     @Override
                     public void onSuccess(List<InstalledApplication> result) {
                         applicationList = result;
-                        notifyDataSetChanged();
+                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+                            @Override
+                            public void run() {
+                                notifyDataSetChanged();
+                            }
+                        });
                     }
 
                     @Override

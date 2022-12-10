@@ -55,7 +55,7 @@ public final class ApplicationRemovalExecutor {
     }
 
     public void requestRemoval(Uri uri) {
-        requestRemoval(context, new Intent(Intent.ACTION_DELETE, uri));
+        requestRemoval(context, new Intent(Intent.ACTION_DELETE, uri).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
     }
 
     private void requestRemoval(Context context, Intent intent) {

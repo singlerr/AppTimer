@@ -44,9 +44,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
-
 import java.util.concurrent.ExecutionException;
-
 import javax.inject.Inject;
 import kr.apptimer.R;
 import kr.apptimer.android.activity.main.recycler.AppViewAdapter;

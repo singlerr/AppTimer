@@ -35,12 +35,15 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.util.Log;
+
 import java.util.Date;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import kr.apptimer.dagger.android.task.SerializableTask;
 import kr.apptimer.dagger.android.task.TaskExecutor;
 import kr.apptimer.database.data.InstalledApplication;
+import kr.apptimer.database.data.InstalledApplicationParcelable;
 
 /***
  * Schedule a task at a specific time(or date) by
@@ -81,12 +84,15 @@ public final class TaskScheduler {
     @Deprecated
     @SuppressLint("NewApi")
     public void scheduleTask(SerializableTask task, Date time) {
+        /*
         Intent intent = new Intent(context, TaskExecutor.class);
         intent.putExtra(TaskExecutor.TASK_EXECUTOR_BUNDLE, task);
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
 
         alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time.getTime(), pendingIntent);
+
+         */
     }
     /***
      * Schedule a task at a specific time
@@ -99,11 +105,15 @@ public final class TaskScheduler {
     @SuppressLint("NewApi")
     public void scheduleApplicationRemoval(InstalledApplication application, Date time) {
         Intent intent = new Intent(context, TaskExecutor.class);
-        intent.putExtra(TaskExecutor.TASK_EXECUTOR_BUNDLE, application);
 
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
+        intent.putExtra(TaskExecutor.EXECUTOR_NAME, application.getName());
+        intent.putExtra(TaskExecutor.EXECUTOR_PACKAGE_URI,application.getPackageUri());
 
-        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time.getTime(), pendingIntent);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        cache.putCache(application.getPackageUri(), pendingIntent);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, time.getTime(), pendingIntent);
+        Log.d("alarm", time.toString());
     }
 
     /***
@@ -119,6 +129,7 @@ public final class TaskScheduler {
      */
     @SuppressLint("NewApi")
     public void scheduleTask(String packageUri, SerializableTask task, Date time) {
+        /*
         Intent intent = new Intent(context, TaskExecutor.class);
         intent.putExtra(TaskExecutor.TASK_EXECUTOR_BUNDLE, task);
 
@@ -126,5 +137,7 @@ public final class TaskScheduler {
 
         alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time.getTime(), pendingIntent);
         cache.putCache(packageUri, pendingIntent);
+
+         */
     }
 }

@@ -113,4 +113,7 @@ public interface InstalledApplicationDao {
 
     @Query("DELETE FROM installedapplication")
     ListenableFuture<Void> deleteAll();
+
+    @Query("DELETE FROM installedapplication WHERE package_uri = :packageUri")
+    ListenableFuture<Void> deleteByPackageUri(String packageUri);
 }
