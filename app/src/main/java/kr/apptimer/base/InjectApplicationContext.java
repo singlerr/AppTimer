@@ -61,7 +61,6 @@ public final class InjectApplicationContext extends Application {
     private static ListeningExecutorService executorService;
 
     public InjectApplicationContext() {
-
         instance = this;
         executorService = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(5));
     }
@@ -69,6 +68,7 @@ public final class InjectApplicationContext extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
         appInstallationReceiver = registerReceiver();
     }
 

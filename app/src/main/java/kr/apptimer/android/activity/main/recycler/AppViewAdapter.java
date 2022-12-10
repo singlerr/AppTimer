@@ -96,6 +96,7 @@ public final class AppViewAdapter extends RecyclerView.Adapter<AppViewHolder> {
             Drawable icon = packageManager.getApplicationIcon(application.getPackageUri());
             holder.getIconImageView().setImageDrawable(icon);
             holder.setPackageUri(application.getPackageUri());
+            holder.setName(application.getName());
 
             holder.getIconImageView().setOnClickListener(new View.OnClickListener() {
                 @Override

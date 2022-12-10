@@ -51,11 +51,11 @@ public final class ApplicationRemovalExecutor {
     }
 
     public void requestRemoval(String packageUri) {
-        requestRemoval(Uri.parse(packageUri));
+        requestRemoval(Uri.parse("package:" + packageUri));
     }
 
     public void requestRemoval(Uri uri) {
-        requestRemoval(context, new Intent(Intent.ACTION_DELETE, uri).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+        requestRemoval(context, new Intent(Intent.ACTION_DELETE).setData(uri).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
     }
 
     private void requestRemoval(Context context, Intent intent) {

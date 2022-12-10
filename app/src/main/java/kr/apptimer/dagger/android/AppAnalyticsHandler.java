@@ -29,6 +29,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package kr.apptimer.dagger.android;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
@@ -56,7 +58,14 @@ public final class AppAnalyticsHandler {
      * @param info {@link ApplicationStats}
      */
     public void submitAppInformation(
-            ApplicationStats info, OnSuccessListener<Void> successListener, OnFailureListener failureListener) {
+            ApplicationStats info,
+            @Nullable OnSuccessListener<Void> successListener,
+            @Nullable OnFailureListener failureListener) {
+
+        if (successListener == null) successListener = unused -> {};
+
+        if (failureListener == null) failureListener = unused -> {};
+
         database.child("apps")
                 .child(info.getPackageUri().replaceAll("\\.", "?"))
                 .setValue(info)
@@ -64,8 +73,23 @@ public final class AppAnalyticsHandler {
                 .addOnFailureListener(failureListener);
     }
 
+    public void submitOrUpdateAppInformation(
+            ApplicationStats info,
+            @Nullable OnSuccessListener<Void> successListener,
+            @Nullable OnFailureListener failureListener) {
+        getAppInformation(
+                info.getPackageUri(),
+                applicationStats -> {
+                    applicationStats.add(info);
+                    submitAppInformation(applicationStats, successListener, failureListener);
+                },
+                e -> submitAppInformation(info, successListener, failureListener));
+    }
+
     public void getAppInformation(
-            String packageUri, OnSuccessListener<ApplicationStats> successListener, OnFailureListener failureListener) {
+            String packageUri,
+            @NonNull OnSuccessListener<ApplicationStats> successListener,
+            @NonNull OnFailureListener failureListener) {
         database.child("apps")
                 .child(packageUri.replaceAll("\\.", "?"))
                 .get()

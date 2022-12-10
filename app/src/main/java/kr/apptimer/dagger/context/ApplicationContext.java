@@ -34,6 +34,7 @@ import javax.inject.Singleton;
 import kr.apptimer.android.receiver.AlarmRestorer;
 import kr.apptimer.android.receiver.ApplicationInstallationReceiver;
 import kr.apptimer.android.service.AppExpirationOverlayService;
+import kr.apptimer.android.service.RemovalNotificationService;
 import kr.apptimer.dagger.android.task.TaskExecutor;
 import kr.apptimer.dagger.module.ActivityContextModule;
 import kr.apptimer.dagger.module.ApplicationContextProvider;
@@ -90,4 +91,13 @@ public interface ApplicationContext {
      *            task executor
      */
     void inject(TaskExecutor executor);
+
+    /***
+     * This tells Dagger that {@link RemovalNotificationService} requests injection
+     * so that fields with {@link javax.inject.Inject} become not null
+     *
+     * @param service
+     *            service
+     */
+    void inject(RemovalNotificationService service);
 }

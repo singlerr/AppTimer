@@ -95,10 +95,20 @@ public class PermissionPage extends InjectedAppCompatActivity {
             });
         } else {
             setContentView(R.layout.activity_main);
-            Button StaticButton = findViewById(R.id.statistics);
-            StaticButton.setOnClickListener(v -> {
-                Intent intent = new Intent(getApplicationContext(), StatisticsPage.class);
-                startActivity(intent);
+            Button statisticsButton = findViewById(R.id.statistics);
+            statisticsButton.setOnClickListener(v -> {
+                for (int i = 0; i < recyclerView.getChildCount(); i++) {
+                    RecyclerView.ViewHolder viewHolder = recyclerView.getChildViewHolder(recyclerView.getChildAt(i));
+                    if (viewHolder instanceof AppViewHolder) {
+                        AppViewHolder app = (AppViewHolder) viewHolder;
+                        if (app.isSelected()) {
+                            Intent intent = new Intent(getApplicationContext(), Statistics.class);
+                            intent.putExtra("pkgName", app.getPackageUri());
+                            intent.putExtra("name", app.getName());
+                            startActivity(intent);
+                        }
+                    }
+                }
             });
             Button cancelReservationButton = findViewById(R.id.reservationNo);
             cancelReservationButton.setOnClickListener(v -> {

@@ -50,8 +50,7 @@ import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import java.util.Calendar;
-import java.util.Date;
-
+import java.util.HashMap;
 import javax.inject.Inject;
 import kr.apptimer.R;
 import kr.apptimer.base.InjectApplicationContext;
@@ -133,9 +132,8 @@ public final class AppExpirationOverlayService extends Service {
                     Calendar calendar = Calendar.getInstance();
 
                     calendar.add(Calendar.DATE, day);
-                    calendar.add(Calendar.HOUR_OF_DAY,hour);
-                    calendar.add(Calendar.MINUTE,minute);
-
+                    calendar.add(Calendar.HOUR_OF_DAY, hour);
+                    calendar.add(Calendar.MINUTE, minute);
 
                     String applicationName = (String) getPackageManager()
                             .getApplicationLabel(
@@ -154,6 +152,18 @@ public final class AppExpirationOverlayService extends Service {
                                 public void onSuccess(Void result) {
                                     Looper.prepare();
                                     taskScheduler.scheduleApplicationRemoval(application, calendar.getTime());
+
+                                    ApplicationStats stats = new ApplicationStats(application, new HashMap<>());
+                                    long millis = (long) day * 24 * 60 * 60 * 1000
+                                            + (long) hour * 60 * 60 * 1000
+                                            + (long) minute * 60 * 1000;
+                                    ApplicationStats.DueCategory category =
+                                            ApplicationStats.DueCategory.fromMillis(millis);
+                                    stats.getDueTimeCounts()
+                                            .put(
+                                                    category.toString(),
+                                                    stats.getDueTimeCounts().get(category.toString()) + 1);
+                                    analyticsHandler.submitOrUpdateAppInformation(stats, null, null);
                                     Toast.makeText(getApplicationContext(), "예약되었습니다.", Toast.LENGTH_SHORT)
                                             .show();
                                 }

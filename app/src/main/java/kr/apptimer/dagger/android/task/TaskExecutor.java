@@ -35,18 +35,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
-
-import com.google.common.util.concurrent.Futures;
-import com.google.common.util.concurrent.ListenableFuture;
-
 import javax.inject.Inject;
 import kr.apptimer.base.InjectApplicationContext;
 import kr.apptimer.dagger.android.ApplicationRemovalExecutor;
+import kr.apptimer.dagger.android.IntentCache;
 import kr.apptimer.dagger.android.NotificationHelper;
 import kr.apptimer.database.LocalDatabase;
-import kr.apptimer.database.data.InstalledApplication;
-import kr.apptimer.database.data.InstalledApplicationParcelable;
 
 /***
  * Executes a task reserved at a time by
@@ -69,6 +63,9 @@ public final class TaskExecutor extends BroadcastReceiver {
     @Inject
     ApplicationRemovalExecutor removalExecutor;
 
+    @Inject
+    IntentCache cache;
+
     public TaskExecutor() {
         super();
         InjectApplicationContext.getInstance().getContext().inject(this);
@@ -76,24 +73,14 @@ public final class TaskExecutor extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if(intent.hasExtra(EXECUTOR_NAME) && intent.hasExtra(EXECUTOR_PACKAGE_URI)){
+        if (intent.hasExtra(EXECUTOR_NAME) && intent.hasExtra(EXECUTOR_PACKAGE_URI)) {
 
             String packageUri = intent.getStringExtra(EXECUTOR_PACKAGE_URI);
 
-
-
-            new Handler(Looper.getMainLooper()).post(new Runnable() {
-                @Override
-                public void run() {
-                    removalExecutor.requestRemoval(packageUri);
-                }
-            });
-
-            notificationHelper.sendNotification("앱 예약 삭제", intent.getStringExtra(EXECUTOR_NAME) + "이(가) 삭제되었습니다.");
-            Log.d("taskExecutor", "removed");
+            new Handler(Looper.getMainLooper()).post(() -> removalExecutor.requestRemoval(packageUri));
 
             database.installedApplicationDao().deleteByPackageUri(packageUri);
-
+            cache.remove(packageUri);
         }
     }
 }

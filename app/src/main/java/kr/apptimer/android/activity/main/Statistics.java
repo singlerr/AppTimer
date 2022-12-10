@@ -29,9 +29,15 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package kr.apptimer.android.activity.main;
 
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
+import android.os.Handler;
+import android.os.Looper;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 import androidx.annotation.Nullable;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.BarLineChartBase;
@@ -40,8 +46,6 @@ import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.formatter.ValueFormatter;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import java.util.ArrayList;
 import javax.inject.Inject;
 import kr.apptimer.R;
@@ -63,44 +67,53 @@ public class Statistics extends InjectedAppCompatActivity {
     public void onActivityCreate(@Nullable Bundle savedInstanceState) {
         setContentView(R.layout.activity_statistics);
         // Package uri 받아오기
-        String packageUri = null;
+        String packageUri = getIntent().getStringExtra("pkgName");
+        String name = getIntent().getStringExtra("name");
 
-        ArrayList<BarEntry> entry_chart = new ArrayList<>();
+        TextView appNameView = findViewById(R.id.appname);
+
+        appNameView.setText(name);
+
+        ImageView appImageView = findViewById(R.id.appImage);
+
+        try{
+            Drawable icon = getPackageManager().getApplicationIcon(packageUri);
+            appImageView.setImageDrawable(icon);
+        } catch (PackageManager.NameNotFoundException e) {
+            //No-op
+        }
+
         BarChart chart = findViewById(R.id.statistics);
-
         analyticsHandler.getAppInformation(
                 packageUri,
-                new OnSuccessListener<ApplicationStats>() {
-                    @Override
-                    public void onSuccess(ApplicationStats applicationStats) {
-                        int val1 = applicationStats
-                                .getDueTimeCounts()
-                                .get(ApplicationStats.DueCategory.SHORT); // 30분 미만 삭제 예약한 횟수
-                        int val2 = applicationStats
-                                .getDueTimeCounts()
-                                .get(ApplicationStats.DueCategory.MEDIUM); // 30분~1시간?
-                        int val3 = applicationStats.getDueTimeCounts().get(ApplicationStats.DueCategory.LONG); // 그 이상
+                applicationStats -> {
+                    int shortCount =
+                            applicationStats.getDueTimeCounts().get(ApplicationStats.DueCategory.SHORT.toString());
+                    int mediumCount =
+                            applicationStats.getDueTimeCounts().get(ApplicationStats.DueCategory.MEDIUM.toString());
+                    int longCount =
+                            applicationStats.getDueTimeCounts().get(ApplicationStats.DueCategory.LONG.toString());
 
-                        entry_chart.add(new BarEntry(ApplicationStats.DueCategory.SHORT.getTypeId(), val1));
-                        // 이렇게 추가
-                    }
+                    ArrayList<BarEntry> entry_chart = new ArrayList<>();
+
+                    entry_chart.add(new BarEntry(ApplicationStats.DueCategory.SHORT.getTypeId(), shortCount ));
+                    entry_chart.add(new BarEntry(ApplicationStats.DueCategory.MEDIUM.getTypeId(), mediumCount ));
+                    entry_chart.add(new BarEntry(ApplicationStats.DueCategory.LONG.getTypeId(), longCount ));
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            BarDataSet dataSet = new BarDataSet(entry_chart, "시간");
+                            BarData data = new BarData(dataSet);
+                            dataSet.setColor(Color.parseColor("#80c2fe"));
+                            chart.setData(data);
+                            chart.invalidate();
+                        }
+                    });
                 },
-                new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        // 데이터 없음 혹은 불러올 때 오류 생김
-                    }
+                e -> {
+                    Toast.makeText(this, "아직 이 앱은 통계가 없어요.", Toast.LENGTH_LONG);
                 });
 
-        entry_chart.add(new BarEntry(1, 10)); // entry_chart에 좌표 데이터를 담는다.y값이 데이터넣는값
-        entry_chart.add(new BarEntry(2, 20));
-        entry_chart.add(new BarEntry(3, 30));
-
-        BarDataSet dataSet = new BarDataSet(entry_chart, "시간");
-
-        BarData data = new BarData(dataSet);
-
-        dataSet.setColor(Color.parseColor("#80c2fe"));
 
         ValueFormatter xAxisFormatter = new DayAxisValueFormatter(chart);
         XAxis xAxis = chart.getXAxis();
@@ -109,8 +122,6 @@ public class Statistics extends InjectedAppCompatActivity {
         xAxis.setTextSize(12f);
         xAxis.setLabelCount(3);
         xAxis.setValueFormatter(xAxisFormatter);
-
-        chart.setData(data);
         chart.invalidate();
     }
 

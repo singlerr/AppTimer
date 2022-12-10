@@ -36,14 +36,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.util.Log;
-
 import java.util.Date;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import kr.apptimer.dagger.android.task.SerializableTask;
 import kr.apptimer.dagger.android.task.TaskExecutor;
 import kr.apptimer.database.data.InstalledApplication;
-import kr.apptimer.database.data.InstalledApplicationParcelable;
 
 /***
  * Schedule a task at a specific time(or date) by
@@ -107,7 +105,7 @@ public final class TaskScheduler {
         Intent intent = new Intent(context, TaskExecutor.class);
 
         intent.putExtra(TaskExecutor.EXECUTOR_NAME, application.getName());
-        intent.putExtra(TaskExecutor.EXECUTOR_PACKAGE_URI,application.getPackageUri());
+        intent.putExtra(TaskExecutor.EXECUTOR_PACKAGE_URI, application.getPackageUri());
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 

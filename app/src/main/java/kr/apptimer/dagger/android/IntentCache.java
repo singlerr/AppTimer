@@ -70,4 +70,8 @@ public final class IntentCache {
     public void putCache(String packageUri, PendingIntent intent) {
         caches.put(packageUri, intent);
     }
+
+    public void remove(String packageUri) {
+        caches.remove(packageUri);
+    }
 }

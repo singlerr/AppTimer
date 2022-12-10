@@ -49,6 +49,10 @@ public final class AppViewHolder extends RecyclerView.ViewHolder {
 
     @Getter
     @Setter
+    private String name;
+
+    @Getter
+    @Setter
     private boolean selected;
 
     @Getter

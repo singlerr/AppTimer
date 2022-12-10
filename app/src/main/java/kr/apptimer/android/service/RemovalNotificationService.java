@@ -27,21 +27,35 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package kr.apptimer.android.activity.main;
+package kr.apptimer.android.service;
 
-import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
-import kr.apptimer.R;
+import android.app.Service;
+import android.content.Intent;
+import android.os.IBinder;
+import androidx.annotation.Nullable;
+import kr.apptimer.base.InjectApplicationContext;
 
 /***
- * Leave for legacy
- * @deprecated use {@link PermissionPage}
+ * A service that shows overlay which tells user that it will remove the reserved app
+ * @author Singlerr
  */
-public class MainActivity extends AppCompatActivity {
+public final class RemovalNotificationService extends Service {
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        super.onStartCommand(intent, flags, startId);
+        return START_NOT_STICKY;
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        InjectApplicationContext.getInstance().getContext().inject(this);
     }
 }
