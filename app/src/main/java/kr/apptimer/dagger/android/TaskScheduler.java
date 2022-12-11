@@ -109,7 +109,7 @@ public final class TaskScheduler {
         intent.putExtra(InjectApplicationContext.KEY_NAME, application.getName());
         intent.putExtra(InjectApplicationContext.KEY_PACKAGE_URI, application.getPackageUri());
 
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT|PendingIntent.FLAG_IMMUTABLE);
 
         cache.putCache(application.getPackageUri(), pendingIntent);
         alarmManager.set(AlarmManager.RTC_WAKEUP, time.getTime(), pendingIntent);
