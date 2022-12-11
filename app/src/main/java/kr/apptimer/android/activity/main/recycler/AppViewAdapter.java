@@ -72,7 +72,7 @@ public final class AppViewAdapter extends RecyclerView.Adapter<AppViewHolder> {
                     @Override
                     public void onSuccess(List<InstalledApplication> result) {
                         applicationList = result;
-                        notifyDataSetChanged();
+                        InjectApplicationContext.getMainHandler().post(() -> notifyDataSetChanged());
                     }
 
                     @Override

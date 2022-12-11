@@ -136,11 +136,7 @@ public final class TaskScheduler {
         new Thread("repeatingTask-" + millis) {
             @Override
             public void run() {
-                while (true) {
-                    Log.d("Cancelled", task.isCancelled() + "");
-                    if (task.isCancelled()){
-                        break;
-                    }
+                while (!task.isCancelled()) {
                     task.run();
                 }
             }

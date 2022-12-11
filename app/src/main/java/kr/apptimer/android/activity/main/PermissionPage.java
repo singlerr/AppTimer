@@ -85,6 +85,7 @@ public class PermissionPage extends InjectedAppCompatActivity {
             Button CheckButton = findViewById(R.id.check);
             CheckButton.setOnClickListener(v -> {
                 Intent intent = new Intent(getApplicationContext(), SliderActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
             });
         } else {

@@ -70,16 +70,17 @@ public final class SliderActivity extends InjectedAppCompatActivity {
                             @Override
                             public void run() {
                                 if (Settings.canDrawOverlays(SliderActivity.this)) {
-                                    Log.d("test","test");
                                     InjectApplicationContext.getMainHandler().post(() -> {
                                         Intent intent = new Intent(getApplicationContext(), SliderActivity.class);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                         startActivity(intent);
                                     });
                                     setCancelled(true);
                                 }
                             }
                         },
-                        1L);
+                        100L);
+
                 Intent intent =
                         new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
                 startActivityForResult(intent, ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE);
