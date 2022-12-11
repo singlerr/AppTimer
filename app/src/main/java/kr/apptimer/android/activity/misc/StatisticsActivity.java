@@ -122,7 +122,7 @@ public final class StatisticsActivity extends InjectedAppCompatActivity {
 
         ValueFormatter xAxisFormatter = new DayAxisValueFormatter();
         XAxis xAxis = chart.getXAxis();
-
+        chart.getDescription().setEnabled(false);
         chart.animateXY(2000,2000);
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setDrawGridLines(false);
