@@ -30,10 +30,23 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package kr.apptimer.android.service;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.os.IBinder;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 import androidx.annotation.Nullable;
+import javax.inject.Inject;
+import kr.apptimer.R;
 import kr.apptimer.base.InjectApplicationContext;
+import kr.apptimer.dagger.android.ApplicationRemovalExecutor;
+import kr.apptimer.dagger.android.RemovalNotificationViewModel;
 
 /***
  * A service that shows overlay which tells user that it will remove the reserved app
@@ -44,6 +57,12 @@ public final class RemovalNotificationService extends Service {
     private String packageUri;
 
     private String name;
+
+    @Inject
+    RemovalNotificationViewModel viewModel;
+
+    @Inject
+    ApplicationRemovalExecutor removalExecutor;
 
     @Nullable
     @Override
@@ -66,5 +85,32 @@ public final class RemovalNotificationService extends Service {
         super.onCreate();
 
         InjectApplicationContext.getInstance().getContext().inject(this);
+
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        WindowManager windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
+
+        View view = inflater.inflate(viewModel.getLayoutId(), null);
+
+        windowManager.addView(view, viewModel.getLayoutParams());
+
+        ImageView iconView = view.findViewById(R.id.appicon);
+
+        TextView appNameView = view.findViewById(R.id.app_name);
+
+        Button confirmButton = view.findViewById(R.id.ok);
+        Button cancelButton = view.findViewById(R.id.cancel);
+
+        try {
+            Drawable iconImage = getPackageManager().getApplicationIcon(packageUri);
+            iconView.setImageDrawable(iconImage);
+        } catch (PackageManager.NameNotFoundException e) {
+            // No-op
+        }
+
+        appNameView.setText(name);
+
+        confirmButton.setOnClickListener(v -> removalExecutor.requestRemoval(packageUri));
+
+        cancelButton.setOnClickListener(v -> stopService(new Intent(this, RemovalNotificationService.class)));
     }
 }

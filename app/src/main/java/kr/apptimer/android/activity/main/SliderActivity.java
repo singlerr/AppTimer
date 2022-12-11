@@ -69,7 +69,6 @@ public final class SliderActivity extends InjectedAppCompatActivity {
                                         startActivity(intent);
                                         setCancelled(true);
                                     });
-
                                 }
                             }
                         },
@@ -77,7 +76,6 @@ public final class SliderActivity extends InjectedAppCompatActivity {
                 Intent intent =
                         new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
                 startActivityForResult(intent, ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE);
-
             }
         }
     }

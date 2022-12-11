@@ -55,9 +55,9 @@ import javax.inject.Inject;
 import kr.apptimer.R;
 import kr.apptimer.base.InjectApplicationContext;
 import kr.apptimer.dagger.android.AppAnalyticsHandler;
+import kr.apptimer.dagger.android.AppExpirationViewModel;
 import kr.apptimer.dagger.android.ApplicationRemovalExecutor;
 import kr.apptimer.dagger.android.NotificationHelper;
-import kr.apptimer.dagger.android.OverlayViewModel;
 import kr.apptimer.dagger.android.TaskScheduler;
 import kr.apptimer.database.LocalDatabase;
 import kr.apptimer.database.data.ApplicationStats;
@@ -75,7 +75,7 @@ public final class AppExpirationOverlayService extends Service {
     AppAnalyticsHandler analyticsHandler;
 
     @Inject
-    OverlayViewModel viewModel;
+    AppExpirationViewModel viewModel;
 
     @Inject
     TaskScheduler taskScheduler;
