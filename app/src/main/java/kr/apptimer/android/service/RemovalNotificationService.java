@@ -46,6 +46,7 @@ import javax.inject.Inject;
 import kr.apptimer.R;
 import kr.apptimer.base.InjectApplicationContext;
 import kr.apptimer.dagger.android.ApplicationRemovalExecutor;
+import kr.apptimer.dagger.android.NotificationHelper;
 import kr.apptimer.dagger.android.RemovalNotificationViewModel;
 
 /***
@@ -58,11 +59,16 @@ public final class RemovalNotificationService extends Service {
 
     private String name;
 
+    private View view;
+
     @Inject
     RemovalNotificationViewModel viewModel;
 
     @Inject
     ApplicationRemovalExecutor removalExecutor;
+
+    @Inject
+    NotificationHelper notificationHelper;
 
     @Nullable
     @Override
@@ -77,6 +83,17 @@ public final class RemovalNotificationService extends Service {
         packageUri = intent.getStringExtra(InjectApplicationContext.KEY_PACKAGE_URI);
         name = intent.getStringExtra(InjectApplicationContext.KEY_NAME);
 
+        ImageView iconView = view.findViewById(R.id.appicon);
+
+        try {
+            Drawable iconImage = getPackageManager().getApplicationIcon(packageUri);
+            iconView.setImageDrawable(iconImage);
+        } catch (PackageManager.NameNotFoundException e) {
+            // No-op
+        }
+        TextView appNameView = view.findViewById(R.id.app_name);
+        appNameView.setText(name);
+
         return START_NOT_STICKY;
     }
 
@@ -89,28 +106,25 @@ public final class RemovalNotificationService extends Service {
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         WindowManager windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
 
-        View view = inflater.inflate(viewModel.getLayoutId(), null);
+        view = inflater.inflate(viewModel.getLayoutId(), null);
 
         windowManager.addView(view, viewModel.getLayoutParams());
-
-        ImageView iconView = view.findViewById(R.id.appicon);
-
-        TextView appNameView = view.findViewById(R.id.app_name);
 
         Button confirmButton = view.findViewById(R.id.ok);
         Button cancelButton = view.findViewById(R.id.cancel);
 
-        try {
-            Drawable iconImage = getPackageManager().getApplicationIcon(packageUri);
-            iconView.setImageDrawable(iconImage);
-        } catch (PackageManager.NameNotFoundException e) {
-            // No-op
-        }
+        confirmButton.setOnClickListener(v -> {
+            view.setVisibility(View.INVISIBLE);
+            removalExecutor.requestRemoval(packageUri);
+            exit();
+        });
 
-        appNameView.setText(name);
+        cancelButton.setOnClickListener(v -> exit());
 
-        confirmButton.setOnClickListener(v -> removalExecutor.requestRemoval(packageUri));
+        startForeground(1, notificationHelper.buildNotification("AppTimer", "오버레이 실행 중"));
+    }
 
-        cancelButton.setOnClickListener(v -> stopService(new Intent(this, RemovalNotificationService.class)));
+    private void exit() {
+        stopService(new Intent(this, RemovalNotificationService.class));
     }
 }

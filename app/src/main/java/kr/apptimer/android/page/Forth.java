@@ -38,7 +38,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import kr.apptimer.R;
 
-public class Forth extends Fragment {
+public final class Forth extends Fragment {
     public static Forth single;
 
     public static Forth instance() {

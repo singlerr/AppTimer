@@ -38,7 +38,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import kr.apptimer.R;
 
-public class Second extends Fragment {
+public final class Second extends Fragment {
     public static Second single;
 
     public static Second instance() {

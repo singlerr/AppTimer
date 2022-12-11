@@ -39,7 +39,6 @@ import android.util.Log;
 import java.util.Date;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
 import kr.apptimer.base.InjectApplicationContext;
 import kr.apptimer.dagger.android.task.SerializableTask;
 import kr.apptimer.dagger.android.task.TaskExecutor;

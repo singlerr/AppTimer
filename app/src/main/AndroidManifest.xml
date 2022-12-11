@@ -30,6 +30,10 @@
             android:enabled="true"
             android:permission="android.permission.SYSTEM_ALERT_WINDOW" />
 
+        <service
+            android:name=".android.service.RemovalNotificationService"
+            android:enabled="true"
+            android:permission="android.permission.SYSTEM_ALERT_WINDOW" />
         <receiver
             android:name=".dagger.android.task.TaskExecutor"
             android:enabled="true"

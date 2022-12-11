@@ -69,6 +69,7 @@ public final class TaskExecutor extends BroadcastReceiver {
                 && intent.hasExtra(InjectApplicationContext.KEY_NAME)) {
 
             String packageUri = intent.getStringExtra(InjectApplicationContext.KEY_PACKAGE_URI);
+            String name = intent.getStringExtra(InjectApplicationContext.KEY_NAME);
 
             database.installedApplicationDao().deleteByPackageUri(packageUri);
             cache.remove(packageUri);
@@ -76,7 +77,7 @@ public final class TaskExecutor extends BroadcastReceiver {
             Intent serviceIntent = new Intent(context, RemovalNotificationService.class);
 
             serviceIntent.putExtra(InjectApplicationContext.KEY_PACKAGE_URI, packageUri);
-
+            serviceIntent.putExtra(InjectApplicationContext.KEY_NAME, name);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 context.startForegroundService(serviceIntent);
             } else {
