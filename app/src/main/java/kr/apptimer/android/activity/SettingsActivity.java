@@ -45,6 +45,7 @@ import kr.apptimer.database.LocalDatabase;
 /***
  * Activity shown first on start of application
  * Request permission here.
+ * @deprecated legacy,do not use
  * @author Singlerr
  */
 public final class SettingsActivity extends InjectedAppCompatActivity {

@@ -35,7 +35,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.os.IBinder;
-import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -155,21 +154,23 @@ public final class AppExpirationOverlayService extends Service {
                         new FutureCallback<Void>() {
                             @Override
                             public void onSuccess(Void result) {
-                                Looper.prepare();
-                                taskScheduler.scheduleApplicationRemoval(application, calendar.getTime());
+                                InjectApplicationContext.getMainHandler().post(() -> {
+                                    taskScheduler.scheduleApplicationRemoval(application, calendar.getTime());
 
-                                ApplicationStats stats = new ApplicationStats(application, new HashMap<>());
-                                long millis = (long) day * 24 * 60 * 60 * 1000
-                                        + (long) hour * 60 * 60 * 1000
-                                        + (long) minute * 60 * 1000;
-                                ApplicationStats.DueCategory category = ApplicationStats.DueCategory.fromMillis(millis);
-                                stats.getDueTimeCounts()
-                                        .put(
-                                                category.toString(),
-                                                stats.getDueTimeCounts().get(category.toString()) + 1);
-                                analyticsHandler.submitOrUpdateAppInformation(stats, null, null);
-                                Toast.makeText(getApplicationContext(), "예약되었습니다.", Toast.LENGTH_SHORT)
-                                        .show();
+                                    ApplicationStats stats = new ApplicationStats(application, new HashMap<>());
+                                    long millis = (long) day * 24 * 60 * 60 * 1000
+                                            + (long) hour * 60 * 60 * 1000
+                                            + (long) minute * 60 * 1000;
+                                    ApplicationStats.DueCategory category =
+                                            ApplicationStats.DueCategory.fromMillis(millis);
+                                    stats.getDueTimeCounts()
+                                            .put(
+                                                    category.toString(),
+                                                    stats.getDueTimeCounts().get(category.toString()) + 1);
+                                    analyticsHandler.submitOrUpdateAppInformation(stats, null, null);
+                                    Toast.makeText(getApplicationContext(), "예약되었습니다.", Toast.LENGTH_SHORT)
+                                            .show();
+                                });
                             }
 
                             @Override

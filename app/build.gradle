@@ -31,8 +31,6 @@ android {
 }
 
 
-
-def permissionLibVersion = "6.2.3"
 def roomVersion = "2.4.3"
 dependencies {
     /***
@@ -77,7 +75,7 @@ dependencies {
 }
 
 spotless {
-    java{
+    java {
         target 'src/*/java/**/*.java'
         importOrder()
 

@@ -115,6 +115,16 @@ public final class TaskScheduler {
         alarmManager.set(AlarmManager.RTC_WAKEUP, time.getTime(), pendingIntent);
         Log.d("alarm", time.toString());
     }
+    /***
+     * Schedule a task at a specific time
+     * @apiNote It will get {@link Date} from {@link InstalledApplication}
+     * @param application
+     *            application
+     */
+    @SuppressLint("NewApi")
+    public void scheduleApplicationRemoval(InstalledApplication application) {
+        scheduleApplicationRemoval(application, application.getTime());
+    }
 
     /***
      * Start a task that will be repeating for certain interval

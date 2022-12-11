@@ -30,8 +30,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package kr.apptimer.android.activity.main;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -179,7 +181,8 @@ public class PermissionPage extends InjectedAppCompatActivity {
 
         if (pendingIntent == null) return;
 
-        pendingIntent.cancel();
+        AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        manager.cancel(pendingIntent);
     }
     /***
      * Fill the method body to inject subclass of this using {@param context}

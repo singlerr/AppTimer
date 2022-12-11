@@ -31,12 +31,12 @@ package kr.apptimer.dagger.context;
 
 import dagger.Subcomponent;
 import kr.apptimer.android.activity.SettingsActivity;
+import kr.apptimer.android.activity.intro.SliderActivity;
 import kr.apptimer.android.activity.main.PermissionPage;
 import kr.apptimer.android.activity.main.ReservationCancelPage;
 import kr.apptimer.android.activity.main.ReservedAppListActivity;
-import kr.apptimer.android.activity.intro.SliderActivity;
-import kr.apptimer.android.activity.misc.StatisticsActivity;
 import kr.apptimer.android.activity.main.StatisticsPage;
+import kr.apptimer.android.activity.misc.StatisticsActivity;
 import kr.apptimer.android.activity.permission.PermissionRequestActivity;
 import kr.apptimer.base.InjectedAppCompatActivity;
 

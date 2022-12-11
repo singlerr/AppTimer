@@ -32,7 +32,6 @@ package kr.apptimer.android.activity.permission;
 import android.os.Bundle;
 import android.view.View;
 import androidx.annotation.Nullable;
-
 import kr.apptimer.android.activity.intro.SliderActivity;
 import kr.apptimer.base.InjectedAppCompatActivity;
 import kr.apptimer.dagger.context.ActivityContext;
