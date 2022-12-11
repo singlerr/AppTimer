@@ -110,7 +110,8 @@ public final class StatisticsActivity extends InjectedAppCompatActivity {
                     InjectApplicationContext.getMainHandler().post(() -> {
                         BarDataSet dataSet = new BarDataSet(entry_chart, "시간");
                         BarData data = new BarData(dataSet);
-                        dataSet.setColor(Color.parseColor("#80c2fe"));
+                        data.setBarWidth(0.5f);
+                        dataSet.setColor(Color.parseColor("#40afff"));
                         chart.setData(data);
                         chart.invalidate();
                     });
@@ -122,7 +123,7 @@ public final class StatisticsActivity extends InjectedAppCompatActivity {
         ValueFormatter xAxisFormatter = new DayAxisValueFormatter();
         XAxis xAxis = chart.getXAxis();
 
-
+        chart.animateXY(2000,2000);
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setDrawGridLines(false);
         xAxis.setTextSize(12f);
