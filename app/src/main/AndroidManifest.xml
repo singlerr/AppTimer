@@ -79,10 +79,10 @@
             android:name=".android.activity.main.ReservedAppListActivity"
             android:exported="true" />
         <activity
-            android:name=".android.activity.main.SliderActivity"
+            android:name=".android.activity.intro.SliderActivity"
             android:exported="true" />
         <activity
-            android:name=".android.activity.main.StatisticsActivity"
+            android:name=".android.activity.misc.StatisticsActivity"
             android:exported="true" />
     </application>
 

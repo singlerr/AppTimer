@@ -32,6 +32,7 @@ package kr.apptimer.android.activity.main;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import kr.apptimer.R;
+import kr.apptimer.android.activity.misc.StatisticsActivity;
 import kr.apptimer.base.InjectedAppCompatActivity;
 import kr.apptimer.dagger.context.ActivityContext;
 

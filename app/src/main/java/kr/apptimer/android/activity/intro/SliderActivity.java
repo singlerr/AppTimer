@@ -27,7 +27,7 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package kr.apptimer.android.activity.main;
+package kr.apptimer.android.activity.intro;
 
 import android.Manifest;
 import android.content.Intent;
@@ -43,13 +43,18 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.tabs.TabLayout;
 import javax.inject.Inject;
 import kr.apptimer.R;
-import kr.apptimer.android.page.PagerAdapter;
+import kr.apptimer.android.activity.main.PermissionPage;
+import kr.apptimer.android.slider.PagerAdapter;
 import kr.apptimer.base.InjectApplicationContext;
 import kr.apptimer.base.InjectedAppCompatActivity;
 import kr.apptimer.dagger.android.TaskScheduler;
 import kr.apptimer.dagger.context.ActivityContext;
 import kr.apptimer.utils.CancellableRunnable;
 
+/***
+ * Activity that requests overlay permission if needed and shows app instructions to user
+ * @author Singlerr,  jaeyoon
+ */
 public final class SliderActivity extends InjectedAppCompatActivity {
     private static final int ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE = 1;
 

@@ -27,7 +27,7 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package kr.apptimer.android.page;
+package kr.apptimer.android.slider;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -38,11 +38,11 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import kr.apptimer.R;
 
-public final class First extends Fragment {
-    public static First single;
+public final class Second extends Fragment {
+    public static Second single;
 
-    public static First instance() {
-        if (single == null) single = new First();
+    public static Second instance() {
+        if (single == null) single = new Second();
         return single;
     }
 
@@ -50,7 +50,7 @@ public final class First extends Fragment {
     @Override
     public View onCreateView(
             @NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstance) {
-        View view = inflater.inflate(R.layout.activity_slider_page1, container, false);
+        View view = inflater.inflate(R.layout.activity_slider_page2, container, false);
         return view;
     }
 }

@@ -27,7 +27,7 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package kr.apptimer.android.activity.main;
+package kr.apptimer.android.activity.misc;
 
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -53,7 +53,13 @@ import kr.apptimer.dagger.context.ActivityContext;
 import kr.apptimer.database.data.ApplicationStats;
 import lombok.NoArgsConstructor;
 
-public class StatisticsActivity extends InjectedAppCompatActivity {
+/***
+ * Activity that shows usage statistics to user
+ * <br>
+ * pass {@link InjectApplicationContext#KEY_NAME} and {@link InjectApplicationContext#KEY_PACKAGE_URI} via intent extra
+ * @author Singlerr, jaeyoon
+ */
+public final class StatisticsActivity extends InjectedAppCompatActivity {
 
     @Inject
     AppAnalyticsHandler analyticsHandler;

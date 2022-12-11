@@ -32,11 +32,14 @@ package kr.apptimer.android.activity.permission;
 import android.os.Bundle;
 import android.view.View;
 import androidx.annotation.Nullable;
+
+import kr.apptimer.android.activity.intro.SliderActivity;
 import kr.apptimer.base.InjectedAppCompatActivity;
 import kr.apptimer.dagger.context.ActivityContext;
 
 /***
  * Activity which shows permission request to user
+ * @deprecated legacy, use {@link kr.apptimer.android.activity.main.PermissionPage} and {@link SliderActivity}
  */
 public final class PermissionRequestActivity extends InjectedAppCompatActivity {
     /***
