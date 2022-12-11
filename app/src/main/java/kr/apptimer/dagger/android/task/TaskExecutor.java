@@ -33,11 +33,10 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
-import android.os.Looper;
+import android.os.Build;
 import javax.inject.Inject;
+import kr.apptimer.android.service.RemovalNotificationService;
 import kr.apptimer.base.InjectApplicationContext;
-import kr.apptimer.dagger.android.ApplicationRemovalExecutor;
 import kr.apptimer.dagger.android.IntentCache;
 import kr.apptimer.dagger.android.NotificationHelper;
 import kr.apptimer.database.LocalDatabase;
@@ -50,18 +49,11 @@ import kr.apptimer.database.LocalDatabase;
  */
 public final class TaskExecutor extends BroadcastReceiver {
 
-    public static final String EXECUTOR_PACKAGE_URI = "package_uri";
-
-    public static final String EXECUTOR_NAME = "name";
-
     @Inject
     LocalDatabase database;
 
     @Inject
     NotificationHelper notificationHelper;
-
-    @Inject
-    ApplicationRemovalExecutor removalExecutor;
 
     @Inject
     IntentCache cache;
@@ -73,14 +65,23 @@ public final class TaskExecutor extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (intent.hasExtra(EXECUTOR_NAME) && intent.hasExtra(EXECUTOR_PACKAGE_URI)) {
+        if (intent.hasExtra(InjectApplicationContext.KEY_PACKAGE_URI)
+                && intent.hasExtra(InjectApplicationContext.KEY_NAME)) {
 
-            String packageUri = intent.getStringExtra(EXECUTOR_PACKAGE_URI);
-
-            new Handler(Looper.getMainLooper()).post(() -> removalExecutor.requestRemoval(packageUri));
+            String packageUri = intent.getStringExtra(InjectApplicationContext.KEY_PACKAGE_URI);
 
             database.installedApplicationDao().deleteByPackageUri(packageUri);
             cache.remove(packageUri);
+
+            Intent serviceIntent = new Intent(context, RemovalNotificationService.class);
+
+            serviceIntent.putExtra(InjectApplicationContext.KEY_PACKAGE_URI, packageUri);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                context.startForegroundService(serviceIntent);
+            } else {
+                context.startService(serviceIntent);
+            }
         }
     }
 }

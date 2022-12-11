@@ -31,10 +31,8 @@ package kr.apptimer.dagger.android;
 
 import android.content.Context;
 import android.graphics.PixelFormat;
-import android.os.Build;
 import android.util.TypedValue;
 import android.view.WindowManager;
-import androidx.annotation.RequiresApi;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import kr.apptimer.R;
@@ -48,15 +46,14 @@ import lombok.Getter;
  */
 @Singleton
 @Getter
-public final class OverlayViewModel {
+public final class AppExpirationViewModel {
 
     private final WindowManager.LayoutParams layoutParams;
 
     private int layoutId;
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @Inject
-    public OverlayViewModel(Context context) {
+    public AppExpirationViewModel(Context context) {
         this.layoutParams = new WindowManager.LayoutParams(
                 (int) TypedValue.applyDimension(
                         TypedValue.COMPLEX_UNIT_DIP, 370, context.getResources().getDisplayMetrics()),
