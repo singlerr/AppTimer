@@ -42,6 +42,7 @@ import javax.inject.Singleton;
 import kr.apptimer.dagger.android.task.SerializableTask;
 import kr.apptimer.dagger.android.task.TaskExecutor;
 import kr.apptimer.database.data.InstalledApplication;
+import kr.apptimer.utils.CancellableRunnable;
 
 /***
  * Schedule a task at a specific time(or date) by
@@ -112,6 +113,25 @@ public final class TaskScheduler {
         cache.putCache(application.getPackageUri(), pendingIntent);
         alarmManager.set(AlarmManager.RTC_WAKEUP, time.getTime(), pendingIntent);
         Log.d("alarm", time.toString());
+    }
+
+    /***
+     * Start a task that will be repeating for certain interval
+     * @apiNote {@link CancellableRunnable} must have condition that cancel itself
+     * @param task task to execute
+     * @param millis interval
+     */
+    public void scheduleAsyncRepeatingTask(CancellableRunnable task, long millis) {
+        new Thread("repeatingTask-" + millis) {
+            @Override
+            public void run() {
+                while (true) {
+                    if (task.isCancelled()) interrupt();
+
+                    task.run();
+                }
+            }
+        }.start();
     }
 
     /***

@@ -37,7 +37,7 @@ import kr.apptimer.dagger.context.ActivityContext;
 
 /***
  * Legacy statistics page
- * @deprecated use {@link Statistics}
+ * @deprecated use {@link StatisticsActivity}
  */
 @Deprecated
 public final class StatisticsPage extends InjectedAppCompatActivity {

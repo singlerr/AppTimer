@@ -34,8 +34,8 @@ import kr.apptimer.android.activity.SettingsActivity;
 import kr.apptimer.android.activity.main.PermissionPage;
 import kr.apptimer.android.activity.main.ReservationCancelPage;
 import kr.apptimer.android.activity.main.ReservedAppListActivity;
-import kr.apptimer.android.activity.main.Slider;
-import kr.apptimer.android.activity.main.Statistics;
+import kr.apptimer.android.activity.main.SliderActivity;
+import kr.apptimer.android.activity.main.StatisticsActivity;
 import kr.apptimer.android.activity.main.StatisticsPage;
 import kr.apptimer.android.activity.permission.PermissionRequestActivity;
 import kr.apptimer.base.InjectedAppCompatActivity;
@@ -115,20 +115,20 @@ public interface ActivityContext {
     void inject(ReservationCancelPage activity);
 
     /***
-     * This tells Dagger that {@link Slider} requests injection
+     * This tells Dagger that {@link SliderActivity} requests injection
      * so that fields with {@link javax.inject.Inject} become not null
      *
      * @param activity
      *            activity
      */
-    void inject(Slider activity);
+    void inject(SliderActivity activity);
 
     /***
-     * This tells Dagger that {@link Statistics} requests injection
+     * This tells Dagger that {@link StatisticsActivity} requests injection
      * so that fields with {@link javax.inject.Inject} become not null
      *
      * @param activity
      *            activity
      */
-    void inject(Statistics activity);
+    void inject(StatisticsActivity activity);
 }

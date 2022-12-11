@@ -191,7 +191,7 @@ public final class AppExpirationOverlayService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
-        packageName = intent.getStringExtra("pkgName");
+        packageName = intent.getStringExtra(InjectApplicationContext.KEY_PACKAGE_URI);
         ImageView appIcon = view.findViewById(R.id.appicon);
 
         TextView statsView = view.findViewById(R.id.time_text);
@@ -200,16 +200,15 @@ public final class AppExpirationOverlayService extends Service {
                 packageName,
                 applicationStats -> {
                     ApplicationStats.DueCategory dueCategory = applicationStats.getMostCommon();
-                    if (dueCategory == null) statsView.setText("");
                     statsView.setText(formatText(dueCategory));
                 },
-                e -> statsView.setText(""));
+                e -> {});
 
         try {
             Drawable icon = getPackageManager().getApplicationIcon(packageName);
             appIcon.setImageDrawable(icon);
         } catch (PackageManager.NameNotFoundException e) {
-            Log.d(getClass().getName(), "Cannot load application icon");
+            Log.d(getClass().getSimpleName(), "Cannot load application icon");
         }
         return START_NOT_STICKY;
     }

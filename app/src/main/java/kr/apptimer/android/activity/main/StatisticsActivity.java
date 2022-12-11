@@ -33,14 +33,11 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.charts.BarLineChartBase;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
@@ -49,12 +46,14 @@ import com.github.mikephil.charting.formatter.ValueFormatter;
 import java.util.ArrayList;
 import javax.inject.Inject;
 import kr.apptimer.R;
+import kr.apptimer.base.InjectApplicationContext;
 import kr.apptimer.base.InjectedAppCompatActivity;
 import kr.apptimer.dagger.android.AppAnalyticsHandler;
 import kr.apptimer.dagger.context.ActivityContext;
 import kr.apptimer.database.data.ApplicationStats;
+import lombok.NoArgsConstructor;
 
-public class Statistics extends InjectedAppCompatActivity {
+public class StatisticsActivity extends InjectedAppCompatActivity {
 
     @Inject
     AppAnalyticsHandler analyticsHandler;
@@ -66,9 +65,9 @@ public class Statistics extends InjectedAppCompatActivity {
     @Override
     public void onActivityCreate(@Nullable Bundle savedInstanceState) {
         setContentView(R.layout.activity_statistics);
-        // Package uri 받아오기
-        String packageUri = getIntent().getStringExtra("pkgName");
-        String name = getIntent().getStringExtra("name");
+
+        String packageUri = getIntent().getStringExtra(InjectApplicationContext.KEY_PACKAGE_URI);
+        String name = getIntent().getStringExtra(InjectApplicationContext.KEY_NAME);
 
         TextView appNameView = findViewById(R.id.appname);
 
@@ -84,6 +83,7 @@ public class Statistics extends InjectedAppCompatActivity {
         }
 
         BarChart chart = findViewById(R.id.statistics);
+
         analyticsHandler.getAppInformation(
                 packageUri,
                 applicationStats -> {
@@ -99,22 +99,19 @@ public class Statistics extends InjectedAppCompatActivity {
                     entry_chart.add(new BarEntry(ApplicationStats.DueCategory.SHORT.getTypeId(), shortCount));
                     entry_chart.add(new BarEntry(ApplicationStats.DueCategory.MEDIUM.getTypeId(), mediumCount));
                     entry_chart.add(new BarEntry(ApplicationStats.DueCategory.LONG.getTypeId(), longCount));
-                    new Handler(Looper.getMainLooper()).post(new Runnable() {
-                        @Override
-                        public void run() {
-                            BarDataSet dataSet = new BarDataSet(entry_chart, "시간");
-                            BarData data = new BarData(dataSet);
-                            dataSet.setColor(Color.parseColor("#80c2fe"));
-                            chart.setData(data);
-                            chart.invalidate();
-                        }
+                    InjectApplicationContext.getMainHandler().post(() -> {
+                        BarDataSet dataSet = new BarDataSet(entry_chart, "시간");
+                        BarData data = new BarData(dataSet);
+                        dataSet.setColor(Color.parseColor("#80c2fe"));
+                        chart.setData(data);
+                        chart.invalidate();
                     });
                 },
                 e -> {
-                    Toast.makeText(this, "아직 이 앱은 통계가 없어요.", Toast.LENGTH_LONG);
+                    Toast.makeText(this, "아직 이 앱은 통계가 없어요.", Toast.LENGTH_LONG).show();
                 });
 
-        ValueFormatter xAxisFormatter = new DayAxisValueFormatter(chart);
+        ValueFormatter xAxisFormatter = new DayAxisValueFormatter();
         XAxis xAxis = chart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setDrawGridLines(false);
@@ -133,12 +130,8 @@ public class Statistics extends InjectedAppCompatActivity {
         context.inject(this);
     }
 
-    public class DayAxisValueFormatter extends ValueFormatter {
-        private final BarLineChartBase<?> chart;
-
-        public DayAxisValueFormatter(BarLineChartBase<?> chart) {
-            this.chart = chart;
-        }
+    @NoArgsConstructor
+    private static class DayAxisValueFormatter extends ValueFormatter {
 
         @Override
         public String getFormattedValue(float value) {

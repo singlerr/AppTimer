@@ -56,12 +56,12 @@ public final class ApplicationInstallationReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         if (intent.getAction().equals(Intent.ACTION_PACKAGE_ADDED)) { // 새로운 패키지가 설치됨을 감지했을 때
-            Log.d(context.getPackageName(), "Package Added Detected!!");
+            Log.d(getClass().getSimpleName(), "Package Added Detected!!");
 
             String packageName = intent.getData().getEncodedSchemeSpecificPart();
             Intent serviceIntent = new Intent(context, AppExpirationOverlayService.class);
 
-            serviceIntent.putExtra("pkgName", packageName);
+            serviceIntent.putExtra(InjectApplicationContext.KEY_PACKAGE_URI, packageName);
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 context.startForegroundService(serviceIntent);

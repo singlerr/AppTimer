@@ -43,6 +43,7 @@ import kr.apptimer.database.data.InstalledApplication;
 
 /***
  * Activity which shows screen that lists applications reserved to be deleted in future to user
+ * @deprecated legacy, use {@link PermissionPage}
  */
 public final class ReservedAppListActivity extends InjectedAppCompatActivity {
     @Inject

@@ -35,6 +35,7 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Looper;
 import android.widget.Button;
 import android.widget.Toast;
@@ -44,7 +45,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
-import java.util.concurrent.ExecutionException;
 import javax.inject.Inject;
 import kr.apptimer.R;
 import kr.apptimer.android.activity.main.recycler.AppViewAdapter;
@@ -72,25 +72,17 @@ public class PermissionPage extends InjectedAppCompatActivity {
      */
     @Override
     public void onActivityCreate(@Nullable Bundle savedInstanceState) {
-
-        try {
-            database.installedApplicationDao().deleteAll().get();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
         SharedPreferences pref = getSharedPreferences("isFirst", Activity.MODE_PRIVATE);
         boolean first = pref.getBoolean("isFirst", false);
+
         if (!first) {
             SharedPreferences.Editor editor = pref.edit();
             editor.putBoolean("isFirst", true);
-            editor.commit();
+            editor.apply();
             setContentView(R.layout.activity_permission_request);
             Button CheckButton = findViewById(R.id.check);
             CheckButton.setOnClickListener(v -> {
-                Intent intent = new Intent(getApplicationContext(), Slider.class);
+                Intent intent = new Intent(getApplicationContext(), SliderActivity.class);
                 startActivity(intent);
             });
         } else {
@@ -102,9 +94,9 @@ public class PermissionPage extends InjectedAppCompatActivity {
                     if (viewHolder instanceof AppViewHolder) {
                         AppViewHolder app = (AppViewHolder) viewHolder;
                         if (app.isSelected()) {
-                            Intent intent = new Intent(getApplicationContext(), Statistics.class);
-                            intent.putExtra("pkgName", app.getPackageUri());
-                            intent.putExtra("name", app.getName());
+                            Intent intent = new Intent(getApplicationContext(), StatisticsActivity.class);
+                            intent.putExtra(InjectApplicationContext.KEY_PACKAGE_URI, app.getPackageUri());
+                            intent.putExtra(InjectApplicationContext.KEY_NAME, app.getName());
                             startActivity(intent);
                         }
                     }
@@ -118,10 +110,8 @@ public class PermissionPage extends InjectedAppCompatActivity {
 
             recyclerView = findViewById(R.id.app);
             recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), SPAN_COUNT));
-
             AppViewAdapter appViewAdapter = new AppViewAdapter(
                     database.installedApplicationDao(), getApplicationContext().getPackageManager());
-
             recyclerView.setAdapter(appViewAdapter);
 
             Button cancelButton = findViewById(R.id.reservationNo);
@@ -147,20 +137,22 @@ public class PermissionPage extends InjectedAppCompatActivity {
                                                 new FutureCallback<InstalledApplication>() {
                                                     @Override
                                                     public void onSuccess(InstalledApplication result) {
-                                                        Looper.prepare();
-                                                        cancel(result);
+                                                        new Handler(Looper.getMainLooper()).post(() -> {
+                                                            cancel(result);
 
-                                                        database.installedApplicationDao()
-                                                                .delete(result)
-                                                                .addListener(
-                                                                        () -> {},
-                                                                        InjectApplicationContext.getExecutorService());
-                                                        appViewAdapter.reload();
-                                                        Toast toast = Toast.makeText(
-                                                                PermissionPage.this,
-                                                                "예약이 취소되었습니다.",
-                                                                Toast.LENGTH_SHORT);
-                                                        toast.show();
+                                                            database.installedApplicationDao()
+                                                                    .delete(result)
+                                                                    .addListener(
+                                                                            () -> {},
+                                                                            InjectApplicationContext
+                                                                                    .getExecutorService());
+                                                            appViewAdapter.reload();
+                                                            Toast toast = Toast.makeText(
+                                                                    PermissionPage.this,
+                                                                    "예약이 취소되었습니다.",
+                                                                    Toast.LENGTH_SHORT);
+                                                            toast.show();
+                                                        });
                                                     }
 
                                                     @Override

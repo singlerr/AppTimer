@@ -27,35 +27,30 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package kr.apptimer.android.activity.main;
-
-import android.os.Bundle;
-import androidx.annotation.Nullable;
-import kr.apptimer.R;
-import kr.apptimer.base.InjectedAppCompatActivity;
-import kr.apptimer.dagger.context.ActivityContext;
+package kr.apptimer.utils;
 
 /***
- * Legacy
- * @deprecated legacy, use {@link PermissionPage}
+ * Cancellable runnable for scheduling repating task
+ * Can cancel task in runnable
+ * @author Singlerr
  */
-public class ReservationCancelPage extends InjectedAppCompatActivity {
+public abstract class CancellableRunnable implements Runnable {
+
+    private boolean cancelled = false;
 
     /***
-     * Called after calling {@link ActivityContext#inject(any extends InjectedAppCompatActivity)} in context of {@link #onCreate(Bundle)}
-     * @param savedInstanceState
+     * Request thread that handling this runnable to cancel it or not
+     * @param cancelled runnable should be cancelled?
      */
-    @Override
-    public void onActivityCreate(@Nullable Bundle savedInstanceState) {
-        setContentView(R.layout.activity_reservation_cancelpage);
+    public void setCancelled(boolean cancelled) {
+        this.cancelled = cancelled;
     }
 
     /***
-     * Fill the method body to inject subclass of this using {@param context}
-     * @param context {@link ActivityContext}
+     * Whether this runnable requested cancellation
+     * @return this runnable should be cancelled?
      */
-    @Override
-    protected void inject(ActivityContext context) {
-        context.inject(this);
+    public boolean isCancelled() {
+        return cancelled;
     }
 }

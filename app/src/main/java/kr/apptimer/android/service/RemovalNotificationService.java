@@ -40,6 +40,11 @@ import kr.apptimer.base.InjectApplicationContext;
  * @author Singlerr
  */
 public final class RemovalNotificationService extends Service {
+
+    private String packageUri;
+
+    private String name;
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -49,6 +54,10 @@ public final class RemovalNotificationService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
+
+        packageUri = intent.getStringExtra(InjectApplicationContext.KEY_PACKAGE_URI);
+        name = intent.getStringExtra(InjectApplicationContext.KEY_NAME);
+
         return START_NOT_STICKY;
     }
 

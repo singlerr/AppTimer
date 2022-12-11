@@ -12,7 +12,7 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
-
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
     <application
         android:name=".base.InjectApplicationContext"
         android:allowBackup="true"
@@ -42,12 +42,13 @@
         <!-- ref: https://developer.android.com/reference/android/content/Intent.html#ACTION_PACKAGE_ADDED
          After Android 26, we need to register receiver for PACKAGE_ADDED from code
          -->
-        <receiver android:name=".android.receiver.ApplicationInstallationReceiver"
-            android:exported="true"
-            android:enabled="true">
+        <receiver
+            android:name=".android.receiver.ApplicationInstallationReceiver"
+            android:enabled="true"
+            android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.PACKAGE_ADDED"/>
-                <data android:scheme="package"/>
+                <action android:name="android.intent.action.PACKAGE_ADDED" />
+                <data android:scheme="package" />
             </intent-filter>
         </receiver>
 
@@ -74,10 +75,10 @@
             android:name=".android.activity.main.ReservedAppListActivity"
             android:exported="true" />
         <activity
-            android:name=".android.activity.main.Slider"
+            android:name=".android.activity.main.SliderActivity"
             android:exported="true" />
         <activity
-            android:name=".android.activity.main.Statistics"
+            android:name=".android.activity.main.StatisticsActivity"
             android:exported="true" />
     </application>
 

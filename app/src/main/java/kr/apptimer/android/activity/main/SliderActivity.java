@@ -36,26 +36,48 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.view.View;
 import android.widget.Button;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.tabs.TabLayout;
+import javax.inject.Inject;
 import kr.apptimer.R;
 import kr.apptimer.android.page.PagerAdapter;
+import kr.apptimer.base.InjectApplicationContext;
 import kr.apptimer.base.InjectedAppCompatActivity;
+import kr.apptimer.dagger.android.TaskScheduler;
 import kr.apptimer.dagger.context.ActivityContext;
+import kr.apptimer.utils.CancellableRunnable;
 
-public final class Slider extends InjectedAppCompatActivity {
+public final class SliderActivity extends InjectedAppCompatActivity {
     private static final int ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE = 1;
+
+    @Inject
+    TaskScheduler scheduler;
 
     public void permissionCheck() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!Settings.canDrawOverlays(this)) {
+                scheduler.scheduleAsyncRepeatingTask(
+                        new CancellableRunnable() {
+                            @Override
+                            public void run() {
+                                if (Settings.canDrawOverlays(SliderActivity.this)) {
+                                    InjectApplicationContext.getMainHandler().post(() -> {
+                                        Intent intent = new Intent(getApplicationContext(), SliderActivity.class);
+                                        startActivity(intent);
+                                        setCancelled(true);
+                                    });
+
+                                }
+                            }
+                        },
+                        1L);
                 Intent intent =
                         new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
                 startActivityForResult(intent, ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE);
+
             }
         }
     }
@@ -82,14 +104,12 @@ public final class Slider extends InjectedAppCompatActivity {
         viewPager.setAdapter(pagerAdapter);
         tabLayout.setupWithViewPager(viewPager, true);
         Button StartButton = findViewById(R.id.start);
-        StartButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), PermissionPage.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
-            }
+
+        StartButton.setOnClickListener(v -> {
+            Intent intent = new Intent(getApplicationContext(), PermissionPage.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
         });
     }
 

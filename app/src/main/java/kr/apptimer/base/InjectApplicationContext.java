@@ -33,6 +33,8 @@ import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
@@ -50,6 +52,13 @@ import lombok.Getter;
 public final class InjectApplicationContext extends Application {
 
     private BroadcastReceiver appInstallationReceiver;
+
+    public static final String KEY_PACKAGE_URI = "pgkName";
+
+    public static final String KEY_NAME = "name";
+
+    @Getter
+    private static final Handler mainHandler = new Handler(Looper.getMainLooper());
 
     @Getter
     private static InjectApplicationContext instance;
