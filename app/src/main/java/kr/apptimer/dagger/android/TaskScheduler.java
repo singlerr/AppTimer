@@ -137,8 +137,10 @@ public final class TaskScheduler {
             @Override
             public void run() {
                 while (true) {
-                    if (task.isCancelled()) interrupt();
-
+                    Log.d("Cancelled", task.isCancelled() + "");
+                    if (task.isCancelled()){
+                        break;
+                    }
                     task.run();
                 }
             }
