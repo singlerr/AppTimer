@@ -14,7 +14,7 @@
         android:layout_height="50dp"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="20dp"
-        android:background="@drawable/icon_basic" />
+         />
 
     <TextView
         android:id="@+id/app_name"

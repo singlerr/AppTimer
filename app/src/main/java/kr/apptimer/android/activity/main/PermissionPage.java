@@ -36,7 +36,9 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.widget.Button;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
@@ -74,99 +76,96 @@ public class PermissionPage extends InjectedAppCompatActivity {
      */
     @Override
     public void onActivityCreate(@Nullable Bundle savedInstanceState) {
-        SharedPreferences pref = getSharedPreferences("isFirst", Activity.MODE_PRIVATE);
-        boolean first = pref.getBoolean("isFirst", false);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if ((!Settings.canDrawOverlays(this))) {
 
-        if (!first) {
-            SharedPreferences.Editor editor = pref.edit();
-            editor.putBoolean("isFirst", true);
-            editor.apply();
-            setContentView(R.layout.activity_permission_request);
-            Button CheckButton = findViewById(R.id.check);
-            CheckButton.setOnClickListener(v -> {
-                Intent intent = new Intent(getApplicationContext(), SliderActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                startActivity(intent);
-            });
-        } else {
-            setContentView(R.layout.activity_main);
-            Button statisticsButton = findViewById(R.id.statistics);
-            statisticsButton.setOnClickListener(v -> {
-                for (int i = 0; i < recyclerView.getChildCount(); i++) {
-                    RecyclerView.ViewHolder viewHolder = recyclerView.getChildViewHolder(recyclerView.getChildAt(i));
-                    if (viewHolder instanceof AppViewHolder) {
-                        AppViewHolder app = (AppViewHolder) viewHolder;
-                        if (app.isSelected()) {
-                            Intent intent = new Intent(getApplicationContext(), StatisticsActivity.class);
-                            intent.putExtra(InjectApplicationContext.KEY_PACKAGE_URI, app.getPackageUri());
-                            intent.putExtra(InjectApplicationContext.KEY_NAME, app.getName());
-                            startActivity(intent);
+                setContentView(R.layout.activity_permission_request);
+                Button CheckButton = findViewById(R.id.check);
+                CheckButton.setOnClickListener(v -> {
+                    Intent intent = new Intent(getApplicationContext(), SliderActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    startActivity(intent);
+                });
+            } else {
+                setContentView(R.layout.activity_main);
+                Button statisticsButton = findViewById(R.id.statistics);
+                statisticsButton.setOnClickListener(v -> {
+                    for (int i = 0; i < recyclerView.getChildCount(); i++) {
+                        RecyclerView.ViewHolder viewHolder = recyclerView.getChildViewHolder(recyclerView.getChildAt(i));
+                        if (viewHolder instanceof AppViewHolder) {
+                            AppViewHolder app = (AppViewHolder) viewHolder;
+                            if (app.isSelected()) {
+                                Intent intent = new Intent(getApplicationContext(), StatisticsActivity.class);
+                                intent.putExtra(InjectApplicationContext.KEY_PACKAGE_URI, app.getPackageUri());
+                                intent.putExtra(InjectApplicationContext.KEY_NAME, app.getName());
+                                startActivity(intent);
+                            }
                         }
                     }
-                }
-            });
+                });
 
-            recyclerView = findViewById(R.id.app);
-            recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), SPAN_COUNT));
-            AppViewAdapter appViewAdapter = new AppViewAdapter(
-                    database.installedApplicationDao(), getApplicationContext().getPackageManager());
-            recyclerView.setAdapter(appViewAdapter);
+                recyclerView = findViewById(R.id.app);
+                recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), SPAN_COUNT));
+                AppViewAdapter appViewAdapter = new AppViewAdapter(
+                        database.installedApplicationDao(), getApplicationContext().getPackageManager());
+                recyclerView.setAdapter(appViewAdapter);
 
-            Button cancelButton = findViewById(R.id.reservationNo);
+                Button cancelButton = findViewById(R.id.reservationNo);
 
-            cancelButton.setOnClickListener(view -> {
-                for (int i = 0; i < recyclerView.getChildCount(); i++) {
-                    RecyclerView.ViewHolder viewHolder = recyclerView.getChildViewHolder(recyclerView.getChildAt(i));
-                    if (viewHolder instanceof AppViewHolder) {
-                        AppViewHolder app = (AppViewHolder) viewHolder;
+                cancelButton.setOnClickListener(view -> {
+                    for (int i = 0; i < recyclerView.getChildCount(); i++) {
+                        RecyclerView.ViewHolder viewHolder = recyclerView.getChildViewHolder(recyclerView.getChildAt(i));
+                        if (viewHolder instanceof AppViewHolder) {
+                            AppViewHolder app = (AppViewHolder) viewHolder;
 
-                        if (app.isSelected()) {
-                            AlertDialog dialog = new AlertDialog.Builder(this)
-                                    .setIcon(android.R.drawable.ic_dialog_alert)
-                                    .setTitle("알림")
-                                    .setMessage("삭제 예정을 취소하시겠어요?")
-                                    .setPositiveButton("예", (dialogInterface, i1) -> {
-                                        ListenableFuture<InstalledApplication> future =
-                                                database.installedApplicationDao()
-                                                        .findByPackageUri(app.getPackageUri());
+                            if (app.isSelected()) {
+                                AlertDialog dialog = new AlertDialog.Builder(this)
+                                        .setIcon(android.R.drawable.ic_dialog_alert)
+                                        .setTitle("알림")
+                                        .setMessage("삭제 예정을 취소하시겠어요?")
+                                        .setPositiveButton("예", (dialogInterface, i1) -> {
+                                            ListenableFuture<InstalledApplication> future =
+                                                    database.installedApplicationDao()
+                                                            .findByPackageUri(app.getPackageUri());
 
-                                        Futures.addCallback(
-                                                future,
-                                                new FutureCallback<InstalledApplication>() {
-                                                    @Override
-                                                    public void onSuccess(InstalledApplication result) {
-                                                        InjectApplicationContext.getMainHandler()
-                                                                .post(() -> {
-                                                                    cancel(result);
+                                            Futures.addCallback(
+                                                    future,
+                                                    new FutureCallback<InstalledApplication>() {
+                                                        @Override
+                                                        public void onSuccess(InstalledApplication result) {
+                                                            InjectApplicationContext.getMainHandler()
+                                                                    .post(() -> {
+                                                                        cancel(result);
 
-                                                                    database.installedApplicationDao()
-                                                                            .delete(result)
-                                                                            .addListener(
-                                                                                    () -> {},
-                                                                                    InjectApplicationContext
-                                                                                            .getExecutorService());
-                                                                    appViewAdapter.reload();
-                                                                    Toast toast = Toast.makeText(
-                                                                            PermissionPage.this,
-                                                                            "예약이 취소되었습니다.",
-                                                                            Toast.LENGTH_SHORT);
-                                                                    toast.show();
-                                                                });
-                                                    }
+                                                                        database.installedApplicationDao()
+                                                                                .delete(result)
+                                                                                .addListener(
+                                                                                        () -> {},
+                                                                                        InjectApplicationContext
+                                                                                                .getExecutorService());
+                                                                        appViewAdapter.reload();
+                                                                        Toast toast = Toast.makeText(
+                                                                                PermissionPage.this,
+                                                                                "예약이 취소되었습니다.",
+                                                                                Toast.LENGTH_SHORT);
+                                                                        toast.show();
+                                                                    });
+                                                        }
 
-                                                    @Override
-                                                    public void onFailure(Throwable t) {}
-                                                },
-                                                InjectApplicationContext.getExecutorService());
-                                    })
-                                    .setNegativeButton("아니요", null)
-                                    .create();
+                                                        @Override
+                                                        public void onFailure(Throwable t) {}
+                                                    },
+                                                    InjectApplicationContext.getExecutorService());
+                                        })
+                                        .setNegativeButton("아니요", null)
+                                        .create();
 
-                            dialog.show();
+                                dialog.show();
+                            }
                         }
                     }
-                }
-            });
+                });
+            }
         }
     }
 
