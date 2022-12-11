@@ -30,6 +30,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package kr.apptimer.dagger.android;
 
 import android.annotation.SuppressLint;
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
@@ -55,30 +56,29 @@ public final class NotificationHelper {
 
     private int iconId;
 
-    private Context context;
+    private final Context context;
 
     private NotificationChannel channel;
 
     @Inject
     public NotificationHelper(Context context) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O)
-            throw new IllegalStateException("Only android version over " + Build.VERSION_CODES.O);
         // TODO("Set iconId")
         this.context = context;
-        createNotificationChannel();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            createNotificationChannel();
+        }
     }
 
-    @SuppressLint("InlinedApi")
+    @SuppressLint("NewApi")
     private void createNotificationChannel() {
-        this.channel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
-        this.channel.setDescription(CHANNEL_DESCRIPTION);
-
-        // Default
         this.iconId = R.drawable.ic_launcher_background;
 
+        this.channel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
+        this.channel.setDescription(CHANNEL_DESCRIPTION);
         NotificationManager manager = context.getSystemService(NotificationManager.class);
         manager.createNotificationChannel(channel);
     }
+
     /***
      * Send notification with title {@param title} and content {@param content}
      * @param title title of notification
@@ -95,5 +95,15 @@ public final class NotificationHelper {
         NotificationManagerCompat manager = NotificationManagerCompat.from(context);
 
         manager.notify(NOTIFICATION_ID, builder.build());
+    }
+
+    public Notification buildNotification(String title, String content) {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
+                .setSmallIcon(iconId)
+                .setContentTitle(title)
+                .setContentText(content)
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(content))
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+        return builder.build();
     }
 }

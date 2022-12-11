@@ -32,6 +32,7 @@ package kr.apptimer.android.receiver;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.util.Log;
 import javax.inject.Inject;
 import kr.apptimer.android.service.AppExpirationOverlayService;
@@ -61,7 +62,12 @@ public final class ApplicationInstallationReceiver extends BroadcastReceiver {
             Intent serviceIntent = new Intent(context, AppExpirationOverlayService.class);
 
             serviceIntent.putExtra("pkgName", packageName);
-            context.startService(serviceIntent);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                context.startForegroundService(serviceIntent);
+            } else {
+                context.startService(serviceIntent);
+            }
         }
     }
 

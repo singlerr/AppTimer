@@ -56,6 +56,7 @@ import kr.apptimer.R;
 import kr.apptimer.base.InjectApplicationContext;
 import kr.apptimer.dagger.android.AppAnalyticsHandler;
 import kr.apptimer.dagger.android.ApplicationRemovalExecutor;
+import kr.apptimer.dagger.android.NotificationHelper;
 import kr.apptimer.dagger.android.OverlayViewModel;
 import kr.apptimer.dagger.android.TaskScheduler;
 import kr.apptimer.database.LocalDatabase;
@@ -84,6 +85,9 @@ public final class AppExpirationOverlayService extends Service {
 
     @Inject
     LocalDatabase database;
+
+    @Inject
+    NotificationHelper notificationHelper;
 
     private WindowManager windowManager;
 
@@ -180,6 +184,8 @@ public final class AppExpirationOverlayService extends Service {
                         .show();
             }
         });
+
+        startForeground(1, notificationHelper.buildNotification("AppTimer", "오버레이 실행 중"));
     }
 
     @Override

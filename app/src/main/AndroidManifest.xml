@@ -39,6 +39,18 @@
             android:enabled="true"
             android:exported="true" />
 
+        <!-- ref: https://developer.android.com/reference/android/content/Intent.html#ACTION_PACKAGE_ADDED
+         After Android 26, we need to register receiver for PACKAGE_ADDED from code
+         -->
+        <receiver android:name=".android.receiver.ApplicationInstallationReceiver"
+            android:exported="true"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_ADDED"/>
+                <data android:scheme="package"/>
+            </intent-filter>
+        </receiver>
+
         <activity
             android:name=".android.activity.main.PermissionPage"
             android:exported="true">
