@@ -37,7 +37,7 @@
     <ImageView
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:background="@drawable/icon_basic"
+        android:background="@drawable/giear"
         android:layout_marginTop="255dp"
         android:layout_marginLeft="75dp"
         />
