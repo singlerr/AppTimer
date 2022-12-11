@@ -61,6 +61,8 @@ public final class RemovalNotificationService extends Service {
 
     private View view;
 
+    private WindowManager windowManager;
+
     @Inject
     RemovalNotificationViewModel viewModel;
 
@@ -96,7 +98,6 @@ public final class RemovalNotificationService extends Service {
 
         return START_NOT_STICKY;
     }
-
     @Override
     public void onCreate() {
         super.onCreate();
@@ -104,14 +105,14 @@ public final class RemovalNotificationService extends Service {
         InjectApplicationContext.getInstance().getContext().inject(this);
 
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        WindowManager windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
+        windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
 
         view = inflater.inflate(viewModel.getLayoutId(), null);
 
         windowManager.addView(view, viewModel.getLayoutParams());
 
         Button confirmButton = view.findViewById(R.id.ok);
-        Button cancelButton = view.findViewById(R.id.cancel);
+        Button cancelButton = view.findViewById(R.id.cancel_btn);
 
         confirmButton.setOnClickListener(v -> {
             view.setVisibility(View.INVISIBLE);
@@ -119,12 +120,15 @@ public final class RemovalNotificationService extends Service {
             exit();
         });
 
-        cancelButton.setOnClickListener(v -> exit());
+        cancelButton.setOnClickListener(v -> {
+            exit();
+        });
 
         startForeground(1, notificationHelper.buildNotification("AppTimer", "오버레이 실행 중"));
     }
 
     private void exit() {
-        stopService(new Intent(this, RemovalNotificationService.class));
+        windowManager.removeView(view);
+        stopService(new Intent(getApplicationContext(), RemovalNotificationService.class));
     }
 }

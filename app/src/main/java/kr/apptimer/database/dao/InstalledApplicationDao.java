@@ -108,7 +108,7 @@ public interface InstalledApplicationDao {
      * @param installedApplications
      *            {@link InstalledApplication}(s) to insert
      */
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     ListenableFuture<Void> insertAll(InstalledApplication... installedApplications);
 
     @Query("DELETE FROM installedapplication")
