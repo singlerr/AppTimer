@@ -92,6 +92,10 @@ spotless {
     }
 }
 
+task testClasses{
+    //No-op
+}
+
 
 
 //preBuild.dependsOn spotlessJavaCheck
