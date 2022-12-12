@@ -37,8 +37,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
-
-import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
@@ -123,7 +121,7 @@ public final class StatisticsActivity extends InjectedAppCompatActivity {
         ValueFormatter xAxisFormatter = new DayAxisValueFormatter();
         XAxis xAxis = chart.getXAxis();
         chart.getDescription().setEnabled(false);
-        chart.animateXY(2000,2000);
+        chart.animateXY(2000, 2000);
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setDrawGridLines(false);
         xAxis.setTextSize(12f);

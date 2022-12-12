@@ -29,13 +29,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package kr.apptimer.android.activity.main;
 
-import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -91,10 +89,13 @@ public class PermissionPage extends InjectedAppCompatActivity {
                 Button statisticsButton = findViewById(R.id.statistics);
                 statisticsButton.setOnClickListener(v -> {
                     for (int i = 0; i < recyclerView.getChildCount(); i++) {
-                        RecyclerView.ViewHolder viewHolder = recyclerView.getChildViewHolder(recyclerView.getChildAt(i));
+                        RecyclerView.ViewHolder viewHolder =
+                                recyclerView.getChildViewHolder(recyclerView.getChildAt(i));
                         if (viewHolder instanceof AppViewHolder) {
                             AppViewHolder app = (AppViewHolder) viewHolder;
                             if (app.isSelected()) {
+                                app.setSelected(false);
+                                app.getIconImageView().setImageAlpha(255);
                                 Intent intent = new Intent(getApplicationContext(), StatisticsActivity.class);
                                 intent.putExtra(InjectApplicationContext.KEY_PACKAGE_URI, app.getPackageUri());
                                 intent.putExtra(InjectApplicationContext.KEY_NAME, app.getName());
@@ -107,14 +108,16 @@ public class PermissionPage extends InjectedAppCompatActivity {
                 recyclerView = findViewById(R.id.app);
                 recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), SPAN_COUNT));
                 AppViewAdapter appViewAdapter = new AppViewAdapter(
-                        database.installedApplicationDao(), getApplicationContext().getPackageManager());
+                        database.installedApplicationDao(),
+                        getApplicationContext().getPackageManager());
                 recyclerView.setAdapter(appViewAdapter);
 
                 Button cancelButton = findViewById(R.id.reservationNo);
 
                 cancelButton.setOnClickListener(view -> {
                     for (int i = 0; i < recyclerView.getChildCount(); i++) {
-                        RecyclerView.ViewHolder viewHolder = recyclerView.getChildViewHolder(recyclerView.getChildAt(i));
+                        RecyclerView.ViewHolder viewHolder =
+                                recyclerView.getChildViewHolder(recyclerView.getChildAt(i));
                         if (viewHolder instanceof AppViewHolder) {
                             AppViewHolder app = (AppViewHolder) viewHolder;
 
@@ -171,8 +174,10 @@ public class PermissionPage extends InjectedAppCompatActivity {
 
     @Override
     protected void onRestart() {
-        AppViewAdapter viewAdapter = (AppViewAdapter) recyclerView.getAdapter();
-        viewAdapter.reload();
+        if (recyclerView != null) {
+            AppViewAdapter viewAdapter = (AppViewAdapter) recyclerView.getAdapter();
+            viewAdapter.reload();
+        }
         super.onRestart();
     }
 

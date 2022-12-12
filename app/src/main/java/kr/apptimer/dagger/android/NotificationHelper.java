@@ -71,7 +71,7 @@ public final class NotificationHelper {
 
     @SuppressLint("NewApi")
     private void createNotificationChannel() {
-        this.iconId = R.drawable.ic_launcher_background;
+        this.iconId = R.mipmap.ic_icon;
 
         this.channel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
         this.channel.setDescription(CHANNEL_DESCRIPTION);

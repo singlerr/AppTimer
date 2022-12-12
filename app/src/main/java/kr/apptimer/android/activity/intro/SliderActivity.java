@@ -36,7 +36,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.util.Log;
 import android.widget.Button;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
@@ -72,7 +71,8 @@ public final class SliderActivity extends InjectedAppCompatActivity {
                                 if (Settings.canDrawOverlays(SliderActivity.this)) {
                                     InjectApplicationContext.getMainHandler().post(() -> {
                                         Intent intent = new Intent(getApplicationContext(), SliderActivity.class);
-                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        intent.addFlags(
+                                                Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                         startActivity(intent);
                                     });
                                     setCancelled(true);

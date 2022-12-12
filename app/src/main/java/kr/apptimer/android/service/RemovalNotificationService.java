@@ -98,6 +98,7 @@ public final class RemovalNotificationService extends Service {
 
         return START_NOT_STICKY;
     }
+
     @Override
     public void onCreate() {
         super.onCreate();
